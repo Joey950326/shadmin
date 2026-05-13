@@ -1,0 +1,12 @@
+echo "🔍 Pre-push checks..."
+
+# 完整测试
+# npm test
+
+# 构建检查
+pnpm build
+
+# E2E测试(可选)
+# npm run test:e2e
+
+echo "✅ Pre-push checks passed!"

@@ -1,0 +1,9 @@
+echo "🔍 Running pre-commit checks..."
+
+# Lint-staged
+pnpx lint-staged
+
+# 类型检查
+pnpm typecheck
+
+echo "✅ Pre-commit checks passed!"
