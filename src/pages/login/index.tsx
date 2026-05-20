@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import * as z from 'zod'
 import welcomeSvg from '@/assets/local-svg/welcome.svg'
+
 import { Button } from '@/components/ui/button'
 
 import {
@@ -23,9 +24,11 @@ import {
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
-
 import { Input } from '@/components/ui/input'
 import { useLogin } from '@/services/api/hooks/auth'
+import { useAppDispatch } from '@/store/hooks'
+
+import { setToken } from '@/store/modules/user'
 import { hashPassword } from '@/utils'
 
 /** 定义表单类型 */
@@ -37,6 +40,7 @@ const loginFormSchema = z.object({
 type LoginFormValues = z.infer<typeof loginFormSchema>
 
 function LoginPage() {
+  const dispatch = useAppDispatch()
   const loginMutaition = useLogin()
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -67,12 +71,13 @@ function LoginPage() {
 
     // await delay(3000) // 模拟登录请求
     loginMutaition.mutate(postData, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast.success('登录成功！', {
           position: 'top-center',
         })
+        dispatch(setToken(res.data.access_token)) // 模拟设置token
       },
-      onError: (error) => {
+      onError: (error: unknown) => {
         console.error('登录失败:', error)
         toast.error('登录失败，请检查用户名和密码！', {
           position: 'top-center',

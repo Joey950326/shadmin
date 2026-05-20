@@ -4,6 +4,6 @@ import { loginApi } from '../modules/auth'
 
 export function useLogin() {
   return useMutation({
-    mutationFn: (data: Api.Auth.LoginParams) => loginApi(data),
+    mutationFn: (data: Api.Auth.LoginParams): Promise<Api.Auth.LoginResponse> => loginApi(data),
   })
 }
