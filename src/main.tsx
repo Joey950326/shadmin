@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router/dom'
 import { StoreProvider } from '@/features/store/provider'
 import router from '@/routers/'
 import { queryClient } from './services/api/queryClient'
+import '@/features/lang'
 
 import './index.css'
 

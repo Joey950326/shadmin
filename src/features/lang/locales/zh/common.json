@@ -1,0 +1,12 @@
+{
+  "changeLanguage": "切换语言",
+  "changeTheme": "切换主题",
+  "confirm": "确认",
+  "cancel": "取消",
+  "loading": "加载中...",
+  "error": "发生错误",
+  "success": "成功",
+  "fail": "失败",
+  "oprationSuccess": "操作成功",
+  "oprationFailed": "操作失败"
+}

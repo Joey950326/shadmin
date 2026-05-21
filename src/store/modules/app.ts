@@ -101,6 +101,9 @@ const appSlice = createSlice({
 export const { setThemeMode, setPrimaryColor, setIsDark, setLanguage } = appSlice.actions
 export const { selectThemeMode, selectPrimaryColor, selectIsDark, selectLanguage } = appSlice.selectors
 
+export const appSelectors = appSlice.selectors
+export const appActions = appSlice.actions
+
 export const appPersistedReducer = persistReducer(appPersistConfig, appSlice.reducer)
 
 export default appSlice.reducer

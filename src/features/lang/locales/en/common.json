@@ -1,0 +1,12 @@
+{
+  "changeLanguage": "change language",
+  "changeTheme": "change theme",
+  "confirm": "confirm",
+  "cancel": "cancel",
+  "loading": "loading...",
+  "error": "an error occurred",
+  "success": "success",
+  "fail": "fail",
+  "oprationSuccess": "operation successful",
+  "oprationFailed": "operation failed"
+}
