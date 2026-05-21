@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { FLUSH, PAUSE, PERSIST, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
+import { appPersistedReducer } from './modules/app'
 import { userPersistedReducer } from './modules/user'
 
 const rootReducer = combineReducers({
   user: userPersistedReducer,
+  app: appPersistedReducer,
 })
 
 export const store = configureStore({
