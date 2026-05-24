@@ -4,7 +4,33 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>vite-app</title>
+    <script>
+      try {
+        const app = window.localStorage.getItem('persist:shadmin-app')
+        if (app) {
+          const parsedApp = JSON.parse(app)
+          if (parsedApp.themeMode.includes('dark')) {
+            document.documentElement.classList.add('dark')
+          } else if (parsedApp.themeMode.includes('light')) {
+            document.documentElement.classList.remove('dark')
+          } else if (parsedApp.themeMode.includes('system')) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              document.documentElement.classList.add('dark')
+            } else {
+              document.documentElement.classList.remove('dark')
+            }
+          }
+        } else {
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark')
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing theme from localStorage:', error)
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
