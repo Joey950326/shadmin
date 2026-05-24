@@ -29,7 +29,7 @@ export default function SettingSheet() {
           </TooltipContent>
         </Tooltip>
 
-        <SheetContent side="right">
+        <SheetContent side="right" onCloseAutoFocus={e => e.preventDefault()} className="size-full max-w-md">
           <SheetHeader className="h-24">
             <SheetTitle>{t('header:customSetting')}</SheetTitle>
             <SheetDescription>
