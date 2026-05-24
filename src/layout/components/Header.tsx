@@ -1,5 +1,6 @@
 import { PanelLeftOpenIcon, PanelRightOpenIcon } from 'lucide-react'
 import AvatarDropdown from '@/components/AvatarDropdown'
+import FullscreenButton from '@/components/FullscreenButton'
 import { Button } from '@/components/ui/button'
 import { useSidebar } from '@/components/ui/sidebar'
 import LanguageDropMenu from '@/features/lang/LanguageDropMenu'
@@ -19,10 +20,10 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-2">
+        <FullscreenButton />
         <LanguageDropMenu />
         <ThemeToggler />
         <AvatarDropdown />
-
       </div>
     </header>
   )
