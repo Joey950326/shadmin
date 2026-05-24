@@ -1,0 +1,15 @@
+{
+  "home": "首页",
+  "dashboard": "仪表盘",
+  "dataScreen": "数据大屏",
+  "proTable": "超级表格",
+  "rightManage": "权限管理",
+  "commonComponent": "常用组件",
+  "userManage": "用户管理",
+  "commonForm": "常用表单",
+  "commonChart": "常用图表",
+  "menuCollapse": "菜单嵌套",
+  "systemManage": "系统管理",
+  "externalLink": "外部链接",
+  "about": "关于我们"
+}

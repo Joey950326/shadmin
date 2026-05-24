@@ -3,7 +3,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useNavigate } from 'react-router'
+import { NavLink } from 'react-router'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
@@ -29,9 +29,8 @@ import {
 import { Input } from '@/components/ui/input'
 
 import { useLogin } from '@/services/api/hooks/auth'
-
 import { useAppDispatch } from '@/store/hooks'
-import { setToken } from '@/store/modules/user'
+import { setManualLogin, setToken, setUserInfo } from '@/store/modules/user'
 import { hashPassword } from '@/utils'
 
 /** 定义表单类型 */
@@ -40,7 +39,7 @@ interface LoginFormValues {
   password: string
 }
 
-function LoginPage() {
+export default function LoginPage() {
   const { i18n, t } = useTranslation()
   const dispatch = useAppDispatch()
   const loginMutaition = useLogin()
@@ -67,12 +66,6 @@ function LoginPage() {
     }
   }, [i18n.language, form]) // 监听语言变化和表单实例变化
 
-  const navigate = useNavigate()
-  /** 路由跳转到注册页面 */
-  const handleRegisterClick = () => {
-    navigate('/auth/register')
-  }
-
   const handleLoginClick = async (data: LoginFormValues) => {
     const postData = {
       username: data.username,
@@ -82,10 +75,13 @@ function LoginPage() {
     // await delay(3000) // 模拟登录请求
     loginMutaition.mutate(postData, {
       onSuccess: (res) => {
-        toast.success(t('auth:login.loginSuccess'), {
-          position: 'top-center',
-        })
+        // toast.success(t('auth:login.loginSuccess'), {
+        //   position: 'top-center',
+        //   id: 'login-success-toast',
+        // })
         dispatch(setToken(res.data.access_token)) // 模拟设置token
+        dispatch(setUserInfo(res.data.userInfo || { username: postData.username })) // 模拟设置用户信息
+        dispatch(setManualLogin(true)) // 设置手动登录状态，防止自动重定向到登录页
       },
       onError: (error: unknown) => {
         console.error('登录失败:', error)
@@ -111,11 +107,10 @@ function LoginPage() {
               {t('auth:login.loginWithUsernameDescription')}
             </CardDescription>
             <CardAction>
-              <Button variant="link" onClick={handleRegisterClick}>
-                <ArrowLeftIcon />
-                {t('auth:common.register')}
-              </Button>
-
+              <NavLink to="/auth/register" className="flex flex-row items-center gap-2 ">
+                <ArrowLeftIcon size={16} />
+                <span>{t('auth:common.register')}</span>
+              </NavLink>
             </CardAction>
           </CardHeader>
           <CardContent>
@@ -180,4 +175,3 @@ function LoginPage() {
     </div>
   )
 }
-export default LoginPage

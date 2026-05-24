@@ -6,7 +6,7 @@ import { resources } from './locales'
 i18n.use(LanguageDetector).use(initReactI18next).init({
   resources,
   fallbackLng: 'en',
-  ns: ['common', 'auth'],
+  ns: ['common', 'auth', 'menu'],
   defaultNS: 'common',
   interpolation: {
     escapeValue: false,

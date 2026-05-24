@@ -11,7 +11,7 @@ interface ThemeToggleProps {
 type ThemeMode = 'light' | 'dark' | 'system'
 const themeModeSquences: ThemeMode[] = ['light', 'dark', 'system']
 
-export function ThemeToggle({ className }: ThemeToggleProps) {
+export default function ThemeToggle({ className }: ThemeToggleProps) {
   const dispatch = useAppDispatch()
   const [themeMode, setThemeMode] = useState<ThemeMode>(useAppSelector(selectThemeMode) || 'system')
 

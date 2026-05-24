@@ -1,8 +1,11 @@
-import { Outlet } from 'react-router'
-import { LanguageDropMenu } from '@/features/lang/LanguageDropMenu'
-import { ThemeToggle } from '@/features/theme/ThemeToggle'
+import { useOutlet } from 'react-router'
+import LanguageDropMenu from '@/features/lang/LanguageDropMenu'
+import AnimatedOutlet from '@/features/router/AnimatedOutlet'
+import ThemeToggle from '@/features/theme/ThemeToggle'
 
 const LoginLayout: React.FC = () => {
+  const OutletElement = useOutlet()
+
   return (
     <div className="box-border bg-background h-screen w-screen flex items-center justify-center overflow-hidden">
 
@@ -13,9 +16,12 @@ const LoginLayout: React.FC = () => {
           <LanguageDropMenu buttonClassName="size-8" />
         </section>
         {/* 内容区 */}
-        <section className="flex-1">
-          <Outlet />
-        </section>
+        {/* 使用AnimatePresence和motion实现路由切换动画 */}
+
+        <AnimatedOutlet className="flex-1">
+          {OutletElement}
+        </AnimatedOutlet>
+
       </div>
 
     </div>

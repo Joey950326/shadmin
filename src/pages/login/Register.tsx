@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRightIcon } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router'
 import * as z from 'zod'
 import registerSvg from '@/assets/local-svg/register.svg'
 import { Button } from '@/components/ui/button'
@@ -36,12 +37,6 @@ const registerFormSchema = z
 type RegisterFormValues = z.infer<typeof registerFormSchema>
 
 function RegisterPage() {
-  const navigate = useNavigate()
-  // 路由跳转到登录页面
-  const handleLoginClick = () => {
-    navigate('/auth/login')
-  }
-
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -56,6 +51,8 @@ function RegisterPage() {
     console.warn('注册表单数据：', data)
   }
 
+  const { t } = useTranslation()
+
   return (
     <div className="flex justify-center items-center gap-2 size-full">
       <section className="flex-1 sm:flex-1/2">
@@ -66,10 +63,10 @@ function RegisterPage() {
               输入用户名或密码进行注册
             </CardDescription>
             <CardAction>
-              <Button variant="link" onClick={handleLoginClick}>
-                登录
-                <ArrowRightIcon />
-              </Button>
+              <NavLink to="/auth/login" className="flex flex-row items-center gap-2">
+                <ArrowRightIcon size={16} />
+                <span>{t('auth:common.login')}</span>
+              </NavLink>
             </CardAction>
           </CardHeader>
           <CardContent>

@@ -1,7 +1,8 @@
 import { createBrowserRouter } from 'react-router'
 import { App } from '@/App.tsx'
 import HomePage from '@/pages/home/index.tsx'
-import staticRoutes from './modules/staticRoutes.ts'
+import dynamicRoutes from './modules/dynamicRoutes.tsx'
+import staticRoutes from './modules/staticRoutes.tsx'
 
 const router = createBrowserRouter([{
   path: '/',
@@ -12,6 +13,7 @@ const router = createBrowserRouter([{
       Component: HomePage,
     },
     ...staticRoutes,
+    ...dynamicRoutes,
   ],
 }])
 

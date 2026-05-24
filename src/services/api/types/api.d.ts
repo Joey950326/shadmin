@@ -29,6 +29,10 @@ declare namespace Api {
     }
     interface LoginResponse extends Base.ResponseData<{
       access_token: string
+      userInfo?: {
+        username: string
+        [key: string]: any
+      }
     }> {}
   }
 }

@@ -1,4 +1,5 @@
 /** 静态路由 */
+import NoAuthGate from '@/features/router/NoAuthGate'
 import Exception403 from '@/pages/403/index.tsx'
 
 const staticRoutes = [
@@ -32,8 +33,8 @@ const staticRoutes = [
   {
     path: 'auth',
     lazy: async () => {
-      const Component = (await import('@/pages/login/layout.tsx')).default
-      return { Component }
+      const Mod = (await import('@/pages/login/layout.tsx')).default
+      return { Component: () => <NoAuthGate><Mod /></NoAuthGate> }
     },
     handle: {
       title: '登录',

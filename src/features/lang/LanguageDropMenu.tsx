@@ -21,7 +21,7 @@ interface LanguageDropMenuProps {
   buttonClassName?: string
 }
 
-export function LanguageDropMenu({ buttonClassName }: LanguageDropMenuProps) {
+export default function LanguageDropMenu({ buttonClassName }: LanguageDropMenuProps) {
   const dispatch = useAppDispatch()
   const [currentLanguage, setCurrentLanguage] = useState(useAppSelector(appSelectors.selectLanguage) || i18n.language || DEFAULT_LANGUAGE)
   const { t } = useTranslation()
