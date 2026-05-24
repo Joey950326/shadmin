@@ -81,6 +81,11 @@ const appSlice = createSlice({
       state.language = action.payload
     },
 
+    // 设置app任意状态
+    setAppState(state, action: PayloadAction<Partial<AppState>>) {
+      return { ...state, ...action.payload }
+    },
+
   },
 
   selectors: {
@@ -95,11 +100,14 @@ const appSlice = createSlice({
 
     // 获取语言
     selectLanguage: app => app.language,
+
+    // 获取整个 app 状态
+    selectAppState: app => app,
   },
 })
 
-export const { setThemeMode, setPrimaryColor, setIsDark, setLanguage } = appSlice.actions
-export const { selectThemeMode, selectPrimaryColor, selectIsDark, selectLanguage } = appSlice.selectors
+export const { setThemeMode, setPrimaryColor, setIsDark, setLanguage, setAppState } = appSlice.actions
+export const { selectThemeMode, selectPrimaryColor, selectIsDark, selectLanguage, selectAppState } = appSlice.selectors
 
 export const appSelectors = appSlice.selectors
 export const appActions = appSlice.actions

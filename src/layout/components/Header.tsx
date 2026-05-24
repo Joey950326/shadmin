@@ -1,6 +1,7 @@
 import { PanelLeftOpenIcon, PanelRightOpenIcon } from 'lucide-react'
 import AvatarDropdown from '@/components/AvatarDropdown'
 import FullscreenButton from '@/components/FullscreenButton'
+import SettingSheet from '@/components/settingSheet'
 import { Button } from '@/components/ui/button'
 import { useSidebar } from '@/components/ui/sidebar'
 import LanguageDropMenu from '@/features/lang/LanguageDropMenu'
@@ -23,6 +24,7 @@ export default function Header() {
         <FullscreenButton />
         <LanguageDropMenu />
         <ThemeToggler />
+        <SettingSheet />
         <AvatarDropdown />
       </div>
     </header>

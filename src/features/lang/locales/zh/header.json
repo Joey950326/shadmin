@@ -1,4 +1,6 @@
 {
   "expandFullscreen": "进入全屏",
-  "shrinkFullscreen": "退出全屏"
+  "shrinkFullscreen": "退出全屏",
+  "customSetting": "偏好设置",
+  "customSettingDesc": "管理你的账户和应用偏好设置"
 }
