@@ -10,7 +10,7 @@ interface ThemeTabContentProps {
 
 export default function ThemeTabContent({ className }: ThemeTabContentProps) {
   return (
-    <FieldGroup className={cn('h-full max-w-sm px-4 py-2', className)}>
+    <FieldGroup className={cn('h-full max-w-sm', className)}>
       <FieldLabel htmlFor="switch-theme-mode">
         <Field orientation="horizontal">
           <FieldContent>

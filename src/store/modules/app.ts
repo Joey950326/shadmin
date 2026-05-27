@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-type LayoutType = 'vertical' | 'horizontal' | 'classic' | 'column'
+export type LayoutType = 'vertical' | 'horizontal' | 'classic' | 'column'
 
 type AssemblemblySize = 'default' | 'small' | 'large'
 
@@ -103,6 +103,7 @@ const appSlice = createSlice({
 
     // 获取整个 app 状态
     selectAppState: app => app,
+
   },
 })
 

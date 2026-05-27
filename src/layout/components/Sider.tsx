@@ -2,9 +2,14 @@ import type { MenuItem } from './MenuItem'
 import { useTranslation } from 'react-i18next'
 import Logo from '@/assets/react.svg'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
 import NavMenu from './Menu'
 
-export default function Sider() {
+interface SiderProps {
+  className?: string
+}
+
+export default function Sider({ className }: SiderProps) {
   const { t } = useTranslation()
   const menuData: MenuItem[] = [
     { name: 'home', path: '/home/index', meta: { icon: 'home', title: t('menu:home') } },
@@ -104,12 +109,12 @@ export default function Sider() {
     },
   ]
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className={cn('h-full', className)}>
       <SidebarHeader className="h-16 w-full flex flex-row items-center group-data-[collapsible=icon]:items-center">
         <object className="w-8 h-8" data={Logo} type="image/svg+xml" />
         <span className="text-xl font-semibold overflow-hidden">{t('appTitle')}</span>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="pt-2">
         <SidebarMenu className="group-data-[collapsible=icon]:items-center">
           <NavMenu items={menuData} />
         </SidebarMenu>

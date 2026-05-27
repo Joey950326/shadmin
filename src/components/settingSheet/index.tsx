@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ScrollArea } from '../ui/scroll-area'
-import LayoutTabContent from './LayoutTabContent'
+import LayoutTabContent from './layoutTabContent'
 import OtherTabContent from './OtherTabContent'
 import ThemeTabContent from './ThemeTabContent'
 
@@ -29,7 +29,12 @@ export default function SettingSheet() {
           </TooltipContent>
         </Tooltip>
 
-        <SheetContent side="right" onCloseAutoFocus={e => e.preventDefault()} className="size-full max-w-md">
+        <SheetContent
+          side="right"
+          onCloseAutoFocus={e => e.preventDefault()}
+          // onInteractOutside={e => e.preventDefault()} // 阻止交互关闭
+          className="size-full max-w-md"
+        >
           <SheetHeader className="h-24">
             <SheetTitle>{t('header:customSetting')}</SheetTitle>
             <SheetDescription>
@@ -58,13 +63,13 @@ export default function SettingSheet() {
 
               {/* Tab 内容区 - 自动占满剩余高度并支持滚动 */}
               <TabsContent value="theme" className="size-full overflow-hidden">
-                <ScrollArea className="size-full max-h-[calc(100vh-10rem)]">
+                <ScrollArea className="size-full max-h-[calc(100vh-10rem)]  px-4 py-2">
                   <ThemeTabContent />
                 </ScrollArea>
               </TabsContent>
 
               <TabsContent value="layout" className="size-full overflow-hidden">
-                <ScrollArea className="size-full max-h-[calc(100vh-10rem)]">
+                <ScrollArea className="size-full max-h-[calc(100vh-10rem)]  px-4 py-2">
 
                   {/* 这里放布局设置内容 */}
                   <LayoutTabContent />
@@ -73,7 +78,7 @@ export default function SettingSheet() {
               </TabsContent>
 
               <TabsContent value="other" className="size-full overflow-hidden">
-                <ScrollArea className="size-full max-h-[calc(100vh-10rem)]">
+                <ScrollArea className="size-full max-h-[calc(100vh-10rem)]  px-4 py-2">
 
                   <OtherTabContent />
                 </ScrollArea>

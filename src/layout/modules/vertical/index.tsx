@@ -1,6 +1,6 @@
 import { useOutlet } from 'react-router'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import AnimateMotionProvider from '@/features/motion/animateMotionProvider'
+import AnimateMotionProvider from '@/features/motion/AnimateMotionProvider'
 import Header from '@/layout/components/Header'
 import Sider from '@/layout/components/Sider'
 
