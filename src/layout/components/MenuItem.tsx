@@ -12,7 +12,7 @@ interface ItemMeta {
   isHide?: boolean
   isKeepAlive?: boolean
   isLink?: string
-  title?: string
+  title: string
 }
 
 export interface MenuItem {
