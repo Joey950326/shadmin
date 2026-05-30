@@ -2,12 +2,13 @@ import type { MenuItem } from '@/layout/components/MenuItem'
 import { MapIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate, useOutlet } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import AnimateMotionProvider from '@/features/motion/AnimateMotionProvider'
+import ChildrenRoute from '@/layout/components/ChildrenRoute'
 import Header from '@/layout/components/Header'
 import Logo from '@/layout/components/Logo'
+import RouteTabs from '@/layout/components/routeTabs'
 import Sider from '@/layout/components/Sider'
 
 interface FirstMenuItemProps extends MenuItem {
@@ -56,7 +57,6 @@ export default function ColumnLayout() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
-  const outletElement = useOutlet()
 
   const menuData: MenuItem[] = useMemo(() => [
     { name: 'home', path: '/home/index', meta: { icon: 'home', title: t('menu:home') } },
@@ -200,10 +200,9 @@ export default function ColumnLayout() {
           {/* 主要内容区 */}
           <div className="flex-1 h-full bg-primary/10 flex flex-col size-full">
             <Header className="shrink-0" />
+            <RouteTabs />
             <main className="flex-1 overflow-auto p-6">
-              <AnimateMotionProvider>
-                {outletElement}
-              </AnimateMotionProvider>
+              <ChildrenRoute />
             </main>
           </div>
 

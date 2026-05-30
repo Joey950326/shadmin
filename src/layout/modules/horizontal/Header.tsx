@@ -109,7 +109,7 @@ export default function Header({ className }: HeaderProps) {
     },
   ]
   return (
-    <header className={cn('h-16 w-full flex flex-row items-center px-2', className)}>
+    <header className={cn('h-16 w-full flex flex-row items-center px-2 z-10', className)}>
       <Logo className="min-w-0 shrink-0" />
       <div className="flex-1 h-full relative">
         {/* <NavMenu menuItems={menuItems} className="absolute inset-0 pr-4" /> */}

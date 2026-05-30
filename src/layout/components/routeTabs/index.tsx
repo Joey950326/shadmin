@@ -27,6 +27,7 @@ function getActiveMenuItem(path: string, menuData: MenuItem[]): MenuItem | null 
 }
 
 export default function RouteTabsIndex() {
+  const showTabs = useAppSelector<boolean>(state => state.app.showTabs)
   const location = useLocation()
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -228,7 +229,7 @@ export default function RouteTabsIndex() {
   }, [navigate])
 
   return (
-    tabsData.length > 0 && (
+    showTabs && tabsData.length > 0 && (
       <RouteTabs
         className="h-11 w-full border-b-foreground/10"
         onChange={handleTabsChange}

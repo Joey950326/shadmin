@@ -1,7 +1,7 @@
-import { useOutlet } from 'react-router'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import AnimateMotionProvider from '@/features/motion/AnimateMotionProvider'
+import ChildrenRoute from '@/layout/components/ChildrenRoute'
 import Header from '@/layout/components/Header'
+import RouteTabs from '@/layout/components/routeTabs'
 import Sider from '@/layout/components/Sider'
 
 const SIDEBAR_Z_INDEX = 10
@@ -9,7 +9,6 @@ const HEADER_HEIGHT = 16
 const HEADER_Z_INDEX = SIDEBAR_Z_INDEX + 10
 
 export default function ClassicLayout() {
-  const outletElement = useOutlet()
   return (
 
     <SidebarProvider>
@@ -24,13 +23,15 @@ export default function ClassicLayout() {
           <Sider />
 
           {/* 主要内容区 */}
-          <main
-            className="flex-1 h-full overflow-auto p-6 bg-primary/10"
-          >
-            <AnimateMotionProvider>
-              {outletElement}
-            </AnimateMotionProvider>
-          </main>
+          <div className="flex-1 h-full flex-col">
+            <RouteTabs />
+            <main
+              className="flex-1 h-full overflow-auto p-6 bg-primary/10"
+            >
+              <ChildrenRoute />
+            </main>
+          </div>
+
         </div>
       </div>
     </SidebarProvider>

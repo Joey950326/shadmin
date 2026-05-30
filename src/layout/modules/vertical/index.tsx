@@ -1,16 +1,10 @@
-import { useOutlet } from 'react-router'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import AnimateMotionProvider from '@/features/motion/AnimateMotionProvider'
+import ChildrenRoute from '@/layout/components/ChildrenRoute'
 import Header from '@/layout/components/Header'
 import RouteTabs from '@/layout/components/routeTabs'
 import Sider from '@/layout/components/Sider'
-import { useAppSelector } from '@/store/hooks'
-import { selectTabsReloadFlag } from '@/store/modules/app'
 
 export default function VerticalLayout() {
-  const tabsReloadFlag = useAppSelector(selectTabsReloadFlag)
-  const outletElement = useOutlet()
-
   return (
 
     <SidebarProvider>
@@ -28,9 +22,7 @@ export default function VerticalLayout() {
             className="flex-1 overflow-auto p-6 bg-primary/10"
 
           >
-            <AnimateMotionProvider>
-              {tabsReloadFlag && outletElement}
-            </AnimateMotionProvider>
+            <ChildrenRoute />
           </main>
         </div>
       </div>
