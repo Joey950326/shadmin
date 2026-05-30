@@ -25,6 +25,7 @@ interface AppState {
   showBreadcrumb: boolean // 面包屑
   showBreadcrumbIcon: boolean // 面包屑图标
   showTabs: boolean // 标签页
+  tabsReloadFlag: boolean // 标签页刷新标志
   showTabsIcon: boolean // 标签页图标
   showFooter: boolean // 页脚
 }
@@ -49,6 +50,7 @@ const initialState: AppState = {
   showTabs: true,
   showTabsIcon: true,
   showFooter: true,
+  tabsReloadFlag: true,
 }
 
 const appPersistConfig = {
@@ -104,11 +106,14 @@ const appSlice = createSlice({
     // 获取整个 app 状态
     selectAppState: app => app,
 
+    // 获取标签页刷新标志
+    selectTabsReloadFlag: app => app.tabsReloadFlag,
+
   },
 })
 
 export const { setThemeMode, setPrimaryColor, setIsDark, setLanguage, setAppState } = appSlice.actions
-export const { selectThemeMode, selectPrimaryColor, selectIsDark, selectLanguage, selectAppState } = appSlice.selectors
+export const { selectThemeMode, selectPrimaryColor, selectIsDark, selectLanguage, selectAppState, selectTabsReloadFlag } = appSlice.selectors
 
 export const appSelectors = appSlice.selectors
 export const appActions = appSlice.actions

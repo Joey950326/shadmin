@@ -1,5 +1,6 @@
 import { useAppSelector } from '@/store/hooks.ts'
 import ClassicLayout from './modules/classic/index.tsx'
+import ColumnLayout from './modules/column/index.tsx'
 import HorizontalLayout from './modules/horizontal/index.tsx'
 import VerticalLayout from './modules/vertical/index.tsx'
 
@@ -32,6 +33,14 @@ export default function AuthLayout() {
         aria-hidden={layoutMode !== 'horizontal'}
       >
         <HorizontalLayout />
+      </div>
+      <div
+        className={`absolute inset-0 transition-all duration-500 ease-in-out ${layoutMode === 'column'
+          ? 'opacity-100 visible'
+          : 'opacity-0 invisible pointer-events-none'}`}
+        aria-hidden={layoutMode !== 'column'}
+      >
+        <ColumnLayout />
       </div>
     </div>
   )

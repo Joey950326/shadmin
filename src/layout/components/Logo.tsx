@@ -4,14 +4,20 @@ import { cn } from '@/lib/utils'
 
 interface LogoProps {
   className?: string
+  showTitle?: boolean
+  showLogo?: boolean
 }
 
-export default function Logo({ className }: LogoProps) {
+export default function Logo({ className, showTitle = true, showLogo = true }: LogoProps) {
   const { t } = useTranslation()
   return (
-    <div className={cn('hidden md:block h-full md:flex items-center gap-2 pr-4', className)}>
-      <object className="w-8 h-8" data={logoSvg} type="image/svg+xml" />
-      <span className="text-xl font-semibold overflow-hidden">{t('appTitle')}</span>
+    <div className={cn('hidden md:block h-full md:flex items-center gap-2 overflow-hidden', className)}>
+      {showLogo && (
+        <object className="w-8 h-8" data={logoSvg} type="image/svg+xml" />
+      )}
+      {showTitle && (
+        <span className="text-xl font-semibold overflow-hidden">{t('appTitle')}</span>
+      )}
     </div>
   )
 }

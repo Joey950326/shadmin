@@ -1,15 +1,19 @@
 import type { MenuItem } from './MenuItem'
 import { useTranslation } from 'react-i18next'
-import Logo from '@/assets/react.svg'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
+import Logo from './Logo'
 import NavMenu from './Menu'
 
 interface SiderProps {
   className?: string
+  menuItems?: MenuItem[]
+  showLogo?: boolean
+  showTitle?: boolean
+  collapsible?: 'icon' | 'offcanvas' | 'none'
 }
 
-export default function Sider({ className }: SiderProps) {
+export default function Sider({ className, menuItems, showLogo = true, showTitle = true, collapsible = 'icon' }: SiderProps) {
   const { t } = useTranslation()
   const menuData: MenuItem[] = [
     { name: 'home', path: '/home/index', meta: { icon: 'home', title: t('menu:home') } },
@@ -108,15 +112,15 @@ export default function Sider({ className }: SiderProps) {
       ],
     },
   ]
+
   return (
-    <Sidebar collapsible="icon" className={cn('h-full', className)}>
+    <Sidebar collapsible={collapsible} className={cn('h-full', className)}>
       <SidebarHeader className="h-16 w-full flex flex-row items-center group-data-[collapsible=icon]:items-center">
-        <object className="w-8 h-8" data={Logo} type="image/svg+xml" />
-        <span className="text-xl font-semibold overflow-hidden">{t('appTitle')}</span>
+        <Logo showTitle={showTitle} showLogo={showLogo} />
       </SidebarHeader>
       <SidebarContent className="pt-2">
         <SidebarMenu className="group-data-[collapsible=icon]:items-center">
-          <NavMenu items={menuData} />
+          <NavMenu items={menuItems || menuData} />
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter />

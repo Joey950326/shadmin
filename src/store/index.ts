@@ -1,11 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { FLUSH, PAUSE, PERSIST, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 import { appPersistedReducer } from './modules/app'
+import { tabsPersistedReducer } from './modules/tabs'
 import { userPersistedReducer } from './modules/user'
 
 const rootReducer = combineReducers({
   user: userPersistedReducer,
   app: appPersistedReducer,
+  tabs: tabsPersistedReducer,
 })
 
 export const store = configureStore({
