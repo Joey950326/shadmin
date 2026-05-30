@@ -231,14 +231,14 @@ export default function RouteTabsIndex() {
   return (
     showTabs && tabsData.length > 0 && (
       <RouteTabs
-        className="h-11 w-full border-b-foreground/10"
+        className=" h-11 w-full border-b-foreground/10"
         onChange={handleTabsChange}
         onFreshTab={handleFreshTab}
         onCloseCurrentTab={handleCloseCurrentTab}
         onCloseOtherTab={handleCloseOtherTab}
         onCloseAllTab={handleCloseAllTab}
       >
-        <RouteTabList className="h-full flex items-center pt-1 px-2 shadow-xl">
+        <RouteTabList className="h-full flex-1 flex items-center pt-1 px-2 shadow-xl">
           {tabsData.map(tab => (
             <RouteTabItem key={tab.path} tabItem={tab} />
           ))}

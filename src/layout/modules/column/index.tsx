@@ -198,7 +198,7 @@ export default function ColumnLayout() {
           {sidebarVisible && <Sider className="ml-16" menuItems={subMenuItems} showLogo={false} />}
 
           {/* 主要内容区 */}
-          <div className="flex-1 h-full bg-primary/10 flex flex-col size-full">
+          <div className="flex-1 h-full bg-primary/10 flex flex-col size-full overflow-hidden">
             <Header className="shrink-0" />
             <RouteTabs />
             <main className="flex-1 overflow-auto p-6">

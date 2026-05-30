@@ -23,7 +23,7 @@ export default function ClassicLayout() {
           <Sider />
 
           {/* 主要内容区 */}
-          <div className="flex-1 h-full flex-col">
+          <div className="flex-1 w-full h-full flex-col overflow-hidden">
             <RouteTabs />
             <main
               className="flex-1 h-full overflow-auto p-6 bg-primary/10"

@@ -27,7 +27,7 @@ export default function RouteTabAction({ className }: RouteTabActionProps) {
   }
 
   return (
-    <div className={cn('flex items-center px-2', className)}>
+    <div className={cn('flex items-center px-2 shrink-0', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="h-8 w-8">

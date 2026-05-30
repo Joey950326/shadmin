@@ -38,7 +38,7 @@ export default function RouteTabList({ children, className }: RouteTabListProps)
     }
   }, [])
   return (
-    <ScrollArea ref={scrollAreaRef} className={cn('h-full flex-1 min-w-0 max-w-[calc(100vw-4rem)] flex items-center', className)}>
+    <ScrollArea ref={scrollAreaRef} className={cn('size-full flex-1 min-w-0 max-w-[calc(100vw-4rem)] flex items-center', className)}>
       <div className="flex size-full items-center overflow-y-hidden min-w-max gap-2">
         {children}
       </div>
