@@ -19,7 +19,7 @@ export default function VerticalLayout() {
 
           {/* 主要内容区 */}
           <main
-            className="flex-1 overflow-auto p-6 bg-primary/10"
+            className="flex-1 size-full overflow-auto p-6 bg-primary/10"
 
           >
             <ChildrenRoute />

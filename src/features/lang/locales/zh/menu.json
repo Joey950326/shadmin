@@ -1,6 +1,15 @@
 {
   "home": "首页",
-  "dashboard": "仪表盘",
+  "dashboard": {
+    "title": "仪表盘",
+    "dataVisualization": "数据可视化",
+    "giteeVisitors": "gitee访问数",
+    "githubVisitors": "github访问数",
+    "todayVisitors": "今日访问数",
+    "yesterdayVisitors": "昨日访问数",
+    "visitorReport": "访问统计",
+    "visitorSourceDescription": "数据来源于{{source}}"
+  },
   "dataScreen": "数据大屏",
   "proTable": "超级表格",
   "rightManage": "权限管理",

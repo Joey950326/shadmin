@@ -1,12 +1,37 @@
 import type { MenuItem } from '@/layout/components/MenuItem'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
+
+function findActiveMenu(menuData: MenuItem[], pathname: string): MenuItem | null {
+  for (const menu of menuData) {
+    if (menu.path === pathname) {
+      return menu
+    }
+    if (menu.children) {
+      const found = findActiveMenu(menu.children, pathname)
+      if (found) {
+        return found
+      }
+    }
+  }
+  return null
+}
 
 export default function useMenu() {
   const { t } = useTranslation()
+  const location = useLocation()
   const menuData = useMemo<MenuItem[]>(() => [
     { name: 'home', path: '/home/index', meta: { icon: 'home', title: t('menu:home') } },
-    { name: 'dataScreen', path: '/dataScreen', meta: { icon: 'data-screen', title: t('menu:dataScreen') } },
+    {
+      name: 'dashboard',
+      path: '#',
+      meta: { icon: 'dashboard', title: t('menu:dashboard.title') },
+      children: [
+        { name: 'data-visualization', path: '/dashboard/dataVisualization', meta: { title: t('menu:dashboard.dataVisualization') } },
+      ],
+    },
+
     {
       name: 'proTable',
       path: '#',
@@ -32,14 +57,6 @@ export default function useMenu() {
       children: [
         { name: 'treeTable', path: '/commonComponent/fileUpload', meta: { title: t('menu:fileUpload') } },
         { name: 'filterTable', path: '/commonComponent/svgIcons', meta: { title: t('menu:svgIcons') } },
-      ],
-    },
-    {
-      name: 'dashboard',
-      path: '#',
-      meta: { icon: 'dashboard', title: t('menu:dashboard') },
-      children: [
-        { name: 'data-visualization', path: '/dashboard/dataVisualization', meta: { title: t('menu:dataVisualization') } },
       ],
     },
 
@@ -100,7 +117,13 @@ export default function useMenu() {
         { name: 'documentLink', path: '/extralLink/document', meta: { icon: 'extral-link', title: t('menu:documentLink') } },
       ],
     },
+    { name: 'dataScreen', path: '/dataScreen', meta: { icon: 'data-screen', title: t('menu:dataScreen') } },
+
   ], [t])
 
-  return { menuData }
+  const currentMenu = useMemo(() => {
+    return findActiveMenu(menuData, location.pathname)
+  }, [location.pathname, menuData])
+
+  return { menuData, currentMenu }
 }

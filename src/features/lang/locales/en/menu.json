@@ -1,15 +1,18 @@
 {
   "home": "Home",
-  "dashboard": "Dashboard",
+  "dashboard": {
+    "title": "Dashboard",
+    "dataVisualization": "Data Visualization"
+  },
   "dataScreen": "Data Screen",
   "proTable": "Super Table",
-  "rightManager": "Permission Management",
+  "rightManage": "Permission Management",
   "commonComponent": "Common Components",
-  "userManager": "User Management",
+  "userManage": "User Management",
   "commonForm": "Common Forms",
   "commonChart": "Common Charts",
   "menuCollapse": "Menu Collapse",
-  "systemManager": "System Management",
+  "systemManage": "System Management",
   "externalLink": "External Link",
   "about": "About Us"
 }

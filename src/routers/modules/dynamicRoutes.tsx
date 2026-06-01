@@ -46,6 +46,20 @@ const dynamicRoutes = [
           },
         ],
       },
+      {
+        path: 'dashboard',
+        handle: { title: '仪表盘' },
+        children: [
+          {
+            path: 'dataVisualization',
+            lazy: async () => {
+              const Component = (await import('@/pages/dashboard/dataVisualization/index.tsx')).default
+              return { Component }
+            },
+            handle: { title: '数据可视化' },
+          },
+        ],
+      },
 
       {
         path: '*',
