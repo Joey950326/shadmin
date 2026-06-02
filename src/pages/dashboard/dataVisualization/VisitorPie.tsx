@@ -1,6 +1,7 @@
 import type { ChartConfig } from '@/components/ui/chart'
 import * as React from 'react'
 
+import { useTranslation } from 'react-i18next'
 import { Label, Pie, PieChart } from 'recharts'
 import {
 
@@ -24,20 +25,16 @@ const chartConfig = {
   },
   gitee: {
     label: 'gitee访问数',
-    color: 'var(--chart-1)',
 
   },
   github: {
     label: 'github访问数',
-    color: 'var(--chart-2)',
   },
   today: {
     label: 'today访问数',
-    color: 'var(--chart-3)',
   },
   yesterday: {
     label: 'yesterday访问数',
-    color: 'var(--chart-4)',
   },
 
 } satisfies ChartConfig
@@ -56,6 +53,7 @@ export default function ChartPieDonutText({ chartData }: VisitorPieProps) {
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
   }, [chartData])
+  const { t } = useTranslation()
 
   return (
 
@@ -97,7 +95,7 @@ export default function ChartPieDonutText({ chartData }: VisitorPieProps) {
                       y={(viewBox.cy || 0) + 24}
                       className="fill-muted-foreground"
                     >
-                      访问数
+                      {t('menu:dashboard.visitors')}
                     </tspan>
                   </text>
                 )
