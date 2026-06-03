@@ -19,13 +19,13 @@ export default function FullScreenLoader({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[9999] flex items-center justify-center',
-        'bg-foreground/60 backdrop-blur-md', // 半透明黑色 + 毛玻璃效果
+        'fixed inset-0 z-9999 flex items-center justify-center',
+        'bg-foreground/10 backdrop-blur-md', // 半透明黑色 + 毛玻璃效果
         className,
       )}
     >
       <div className="flex flex-col items-center gap-4">
-        <Spinner className="h-10 w-10 text-primary" />
+        <Spinner className="h-16 w-16 text-primary" />
 
         {text && (
           <p className="text-primary text-sm font-medium tracking-wide">
