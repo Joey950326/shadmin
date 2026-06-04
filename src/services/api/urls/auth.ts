@@ -4,3 +4,7 @@ export const AUTH_URLS = {
   LOGIN: `${API_BASE_URL}/geeker/login`, // 登录接口
   LOGOUT: `${API_BASE_URL}/geeker/logout`, // 退出登录接口
 }
+
+export const USER_URLS = {
+  LIST: `${API_BASE_URL}/geeker/user/list`, // 获取用户列表接口
+}

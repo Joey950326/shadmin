@@ -1,6 +1,11 @@
+import type { Api } from '../types/api'
+
 export const QUERY_KEYS = {
   AUTH: {
     LOGIN: ['auth', 'login'] as const,
+  },
+  USER: {
+    LIST: (params: Api.User.ListParams) => ['user', 'list', params] as const,
   },
 }
 

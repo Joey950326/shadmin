@@ -1,6 +1,5 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
 import { App } from '@/App.tsx'
-import HomePage from '@/pages/home/index.tsx'
 import dynamicRoutes from './modules/dynamicRoutes.tsx'
 import staticRoutes from './modules/staticRoutes.tsx'
 
@@ -10,7 +9,7 @@ const router = createBrowserRouter([{
   children: [
     {
       index: true,
-      Component: HomePage,
+      element: <Navigate to="home/index" replace />,
     },
     ...staticRoutes,
     ...dynamicRoutes,

@@ -177,7 +177,7 @@ export default function DataVisualization() {
             <span className="text-xs text-muted-foreground">{t('menu:dashboard.visitorSourceDescription', { source: 'shadmin' })}</span>
           </CardFooter>
         </Card>
-        <VisitorBar className="col-span-1 md:col-span-2 size-full bg-linear-to-br from-card via-rose-500/10 to-rose-500/20" chartData={barData} />
+        <VisitorBar className="col-span-1 md:col-span-2 size-full bg-linear-to-br from-card via-green-400/10 to-green-500/20" chartData={barData} />
       </CardContent>
     </Card>
 

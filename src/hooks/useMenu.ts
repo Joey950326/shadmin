@@ -35,10 +35,11 @@ export default function useMenu() {
     {
       name: 'proTable',
       path: '#',
-      meta: { icon: 'table', title: t('menu:proTable') },
+      meta: { icon: 'table', title: t('menu:table.title') },
       children: [
-        { name: 'treeTable', path: '/proTable/treeFilter', meta: { title: t('menu:treeTable') } },
-        { name: 'filterTable', path: '/proTable/selectFilter', meta: { title: t('menu:filterTable') } },
+        { name: 'basicTable', path: '/proTable/basicTable', meta: { title: t('menu:table.basicTable') } },
+        { name: 'treeTable', path: '/proTable/treeFilter', meta: { title: t('menu:table.treeTable') } },
+        { name: 'filterTable', path: '/proTable/selectFilter', meta: { title: t('menu:table.filterTable') } },
       ],
     },
     {

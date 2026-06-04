@@ -35,6 +35,40 @@ declare namespace Api {
       }
     }> {}
   }
+
+  namespace User {
+    interface ListParams {
+      startTime?: string
+      endTime?: string
+      page: number
+      pageSize: number
+      type?: number
+    }
+
+    interface UserInfo {
+      address: string
+      avatar: string
+      createTime: string
+      email: string
+      gender: number
+      id: number
+      idCard: string
+      status: number
+      user: {
+        detail: {
+          age: number
+        }
+      }
+      username: string
+    }
+
+    interface ListResponse extends Base.ResponseData<{
+      pageNum: number
+      pageSize: number
+      total: number
+      list: Array<UserInfo>
+    }> {}
+  }
 }
 
 declare module 'axios' {
