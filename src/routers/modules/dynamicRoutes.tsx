@@ -1,5 +1,6 @@
 import type { AppRouteObject } from '../types'
 import { Navigate } from 'react-router'
+import { translate } from '@/features/lang/shared'
 import AuthGate from '@/features/router/AuthGate'
 import Expection404 from '@/pages/404/index.tsx'
 
@@ -27,6 +28,14 @@ const dynamicRoutes = [
           {
             index: true,
             element: <Navigate to="treeFilter" replace />,
+          },
+          {
+            path: 'basicTable',
+            lazy: async () => {
+              const Component = (await import('@/pages/proTable/basicTable/index.tsx')).default
+              return { Component }
+            },
+            handle: { title: translate('menu:table.basicTable') },
           },
           {
             path: 'treeFilter',

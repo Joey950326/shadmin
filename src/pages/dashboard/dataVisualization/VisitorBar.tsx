@@ -54,19 +54,19 @@ export default function VisitorBar({ chartData, className }: VisitorBarProps) {
     },
     gitee: {
       label: t('menu:dashboard.giteeVisitors'),
-      color: 'var(--chart-2)',
+      color: 'var(--chart-1)',
     },
     github: {
       label: t('menu:dashboard.githubVisitors'),
-      color: 'var(--chart-3)',
+      color: 'var(--chart-2)',
     },
     today: {
       label: t('menu:dashboard.todayVisitors'),
-      color: 'var(--chart-4)',
+      color: 'var(--chart-3)',
     },
     yesterday: {
       label: t('menu:dashboard.yesterdayVisitors'),
-      color: 'var(--chart-5)',
+      color: 'var(--chart-4)',
     },
   }) satisfies ChartConfig, [t])
 
@@ -94,10 +94,13 @@ export default function VisitorBar({ chartData, className }: VisitorBarProps) {
             const chart = key as keyof typeof chartConfig
             return (
               <Button
-                variant="outline"
+                variant="ghost"
                 key={chart}
                 data-active={activeChart === chart}
-                className="relative col-span-2 md:col-span-1 z-30 flex flex-col justify-center gap-1 py-6 md:px-4 data-[active=true]:bg-primary/10 data-[active=true]:text-primary [&:not(:first-child)]:-ml-1.5"
+                className={cn(
+                  'relative col-span-2 md:col-span-1 z-30 flex flex-col justify-center gap-1 py-6 md:px-4  not-first:-ml-1.5',
+                  'data-[active=true]:bg-foreground/20',
+                )}
                 onClick={() => setActiveChart(chart)}
               >
                 <span className="text-xs text-muted-foreground">
