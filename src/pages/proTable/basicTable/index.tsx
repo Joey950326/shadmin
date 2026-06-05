@@ -1,4 +1,4 @@
-import type { UseQueryResult } from '@tanstack/react-query'
+import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query'
 import type { ColumnDef, PaginationState } from '@tanstack/react-table'
 import type { Api } from '@/services/api/types/api'
 import {
@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,19 +23,21 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
-import { useUserList } from '@/services/api/hooks/useUser'
+import { useDeleteUser, useUserList } from '@/services/api/hooks/useUser'
 import { columns } from './columns'
 
 interface BasicTableProps<T> {
   columns: ColumnDef<T>[]
-  fetchTableData: (params: Api.User.ListParams) => UseQueryResult<Api.User.ListResponse>
+  fetchTableData: (params: Api.User.ListParams) => UseQueryResult<Api.User.ListResponse, unknown>
   className?: string
+  onRowDelete: UseMutationResult<Api.User.DeleteResponse, unknown, Api.User.DeleteParams>
 }
 
 function BasicTable({
   columns,
   fetchTableData,
   className,
+  onRowDelete,
 }: BasicTableProps<Api.User.UserInfo>) {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -50,11 +52,31 @@ function BasicTable({
     pageSize: pagination.pageSize,
   }), [pagination.pageIndex, pagination.pageSize])
 
-  const { data: res, isFetching } = fetchTableData(fetchParams)
+  const { data: res, isFetching, refetch } = fetchTableData(fetchParams)
 
-  const tableData = res?.data.list || []
-  const total = res?.data.total || 0
+  const tableData = res?.data?.list ?? []
+  const total = res?.data?.total ?? 0
   const pageCount = useMemo(() => Math.ceil(total / pagination.pageSize), [total, pagination.pageSize])
+
+  const handleDeleteConfirm = useCallback((rowId: string) => {
+    const deleteParams = { id: [rowId] }
+    onRowDelete.mutate(deleteParams, {
+      onSuccess: () => {
+        toast.success('删除成功', {
+          position: 'top-right',
+        })
+      },
+      onError: (error) => {
+        console.error('删除失败', error)
+        toast.error('删除失败', {
+          position: 'top-right',
+        })
+      },
+      onSettled: () => {
+        refetch()
+      },
+    })
+  }, [onRowDelete, refetch])
 
   const table = useReactTable({
     data: tableData,
@@ -66,6 +88,9 @@ function BasicTable({
       pagination,
     },
     onPaginationChange: setPagination,
+    meta: {
+      onRowDelete: handleDeleteConfirm,
+    },
   })
 
   const calcPageRange = useMemo(() => {
@@ -93,12 +118,13 @@ function BasicTable({
 
   return (
     <div className="relative h-full bg-background flex flex-col rounded-xl">
-      {/* 遮罩 */}
+      {/* 加载遮罩 */}
       {isFetching && (
         <div className="absolute z-30 inset-0 flex justify-center items-center bg-foreground/20">
           <Spinner className="size-8" />
         </div>
       )}
+
       {/* 表格组件 */}
       <div className={cn(
         'flex-1 rounded-md bg-card overflow-hidden',
@@ -132,39 +158,26 @@ function BasicTable({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length
-                ? (
-                    table.getRowModel().rows.map(row => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && 'selected'}
-                      >
-                        {row.getVisibleCells().map(cell => (
-                          <TableCell
-                            key={cell.id}
-                            className={cn(
-                              cell.column.id === 'actions' && 'sticky right-0 bg-background border-l',
-                            )}
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                  )
-                : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={table.getVisibleFlatColumns().length}
-                        className="h-24 text-center text-muted-foreground"
-                      >
-                        暂无数据
-                      </TableCell>
-                    </TableRow>
-                  )}
+              {table.getRowModel().rows.map(row => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell
+                      key={cell.id}
+                      className={cn(
+                        cell.column.id === 'actions' && 'sticky right-0 bg-background border-l',
+                      )}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
           <ScrollBar orientation="horizontal" />
@@ -238,16 +251,18 @@ function BasicTable({
           </PaginationContent>
         </Pagination>
       </div>
-
     </div>
 
   )
 }
 
 export default function Index() {
+  const tableColumns = useMemo(() => columns, [])
+  const deleteMutation = useDeleteUser()
+
   return (
     <div className="size-full">
-      <BasicTable className="rounded-lg" columns={columns} fetchTableData={useUserList} />
+      <BasicTable className="rounded-lg" onRowDelete={deleteMutation} columns={tableColumns} fetchTableData={useUserList} />
     </div>
   )
 }

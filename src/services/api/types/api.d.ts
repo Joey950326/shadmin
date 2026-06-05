@@ -18,7 +18,7 @@ declare namespace Api {
     interface ResponseData<T = any> {
       code?: number
       msg?: string
-      data: T
+      data?: T
     }
   }
 
@@ -45,13 +45,17 @@ declare namespace Api {
       type?: number
     }
 
+    interface DeleteParams {
+      id: Array<string>
+    }
+
     interface UserInfo {
       address: string
       avatar: string
       createTime: string
       email: string
       gender: number
-      id: number
+      id: string
       idCard: string
       status: number
       user: {
@@ -68,6 +72,8 @@ declare namespace Api {
       total: number
       list: Array<UserInfo>
     }> {}
+
+    interface DeleteResponse extends Base.ResponseData {}
   }
 }
 
