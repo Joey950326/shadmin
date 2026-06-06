@@ -90,6 +90,7 @@ function BasicTable({
     onPaginationChange: setPagination,
     meta: {
       onRowDelete: handleDeleteConfirm,
+      deleteLoading: onRowDelete?.isPending,
     },
   })
 

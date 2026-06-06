@@ -4,6 +4,7 @@ import type { Api } from '@/services/api/types/api'
 declare module '@tanstack/react-table' {
   export interface TableMeta<TData extends RowData> {
     onRowDelete?: (rowId: string) => void
+    deleteLoading?: boolean
     onRowView?: (rowData: Api.User.UserInfo) => void
   }
 }

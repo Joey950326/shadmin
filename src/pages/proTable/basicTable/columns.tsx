@@ -50,6 +50,7 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
         const onRowDelete = table.options.meta?.onRowDelete
         onRowDelete?.(rowId)
       }
+      const isDeleting = Boolean(table.options.meta?.deleteLoading)
 
       return (
         <div className="flex items-center justify-end gap-2">
@@ -68,7 +69,7 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
               查看
             </Button>
           </UserInfoDialog>
-          <DeleteActionCell rowData={row.original} onConfirm={handleDeleteConfirm} />
+          <DeleteActionCell rowData={row.original} onConfirm={handleDeleteConfirm} isLoading={isDeleting} />
         </div>
 
       )

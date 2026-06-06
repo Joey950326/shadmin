@@ -2,13 +2,15 @@ import type { Api } from '@/services/api/types/api'
 import { CircleAlertIcon } from 'lucide-react'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 
 interface DeleteActionCellPros {
   rowData: Api.User.UserInfo
   onConfirm: (id: string) => void
+  isLoading?: boolean
 }
 
-export default function DeleteActionCell({ rowData, onConfirm }: DeleteActionCellPros) {
+export default function DeleteActionCell({ rowData, onConfirm, isLoading }: DeleteActionCellPros) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -34,8 +36,17 @@ export default function DeleteActionCell({ rowData, onConfirm }: DeleteActionCel
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>取消</AlertDialogCancel>
-          <AlertDialogAction onClick={() => onConfirm(rowData.id)}>确定</AlertDialogAction>
+          <AlertDialogCancel disabled={isLoading}>取消</AlertDialogCancel>
+          <AlertDialogAction onClick={() => onConfirm(rowData.id)} disabled={isLoading}>
+            {isLoading
+              ? (
+                  <div className="flex items-center gap-2">
+                    <Spinner className="size-4" />
+                    <span>删除中</span>
+                  </div>
+                )
+              : '确定'}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
