@@ -70,7 +70,6 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {}}
             >
               编辑
             </Button>

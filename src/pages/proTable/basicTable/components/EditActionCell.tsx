@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { avatarRefDef } from './AvatarUpload'
 import type { Api } from '@/services/api/types/api'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { memo, useCallback, useRef, useState } from 'react'
+import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
@@ -52,6 +52,8 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
     resolver: zodResolver(formSchema),
     defaultValues: defaultForm,
   })
+
+  const isFormChange = useMemo(() => form.formState.isDirty, [form.formState.isDirty])
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     // 进行校验
@@ -250,7 +252,7 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                 <DialogClose asChild>
                   <Button type="button" variant="outline">取消</Button>
                 </DialogClose>
-                <Button type="submit" form="edit-user-form" disabled={avatarRef?.current?.isUploading}>确定</Button>
+                <Button type="submit" form="edit-user-form" disabled={avatarRef?.current?.isUploading || !isFormChange}>确定</Button>
               </DialogFooter>
             </DialogContent>
           )
