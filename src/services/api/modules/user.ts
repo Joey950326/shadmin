@@ -11,3 +11,15 @@ export function userListApi(data: Api.User.ListParams, options?: Api.Base.Reques
 export function userDeleteApi(params: Api.User.DeleteParams, options?: Api.Base.RequestOptions) {
   return request.post<Api.User.DeleteResponse>(USER_URLS.DELETE, params, options)
 }
+
+/** 编辑用户 */
+export function userEditApi(params: Api.User.EditParams, options?: Api.Base.RequestOptions) {
+  return request.post<Api.User.EditResponse>(USER_URLS.EDIT, params, options)
+}
+
+/** 编辑用户 */
+export function userAvatarUpload(params: Api.User.AvatarUploadParams, options?: Api.Base.RequestOptions) {
+  const formData = new FormData()
+  formData.append('file', params.file)
+  return request.post<Api.User.EditResponse>(USER_URLS.AVATAR_UPLOAD, formData, options)
+}

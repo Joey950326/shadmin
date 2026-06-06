@@ -2,7 +2,8 @@ import type { ColumnDef } from '@tanstack/react-table'
 import type { Api } from '@/services/api/types/api'
 import { Button } from '@/components/ui/button'
 import DeleteActionCell from './components/DeleteActionCell'
-import UserInfoDialog from './components/UserInfoDialog'
+import EditActionCell from './components/EditActionCell'
+import ViewActionCell from './components/ViewActionCell'
 
 export const columns: ColumnDef<Api.User.UserInfo>[] = [
   // {
@@ -46,30 +47,47 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
     id: 'actions',
     header: '操作',
     cell: ({ row, table }) => {
+      // 删除用户
       const handleDeleteConfirm = (rowId: string) => {
         const onRowDelete = table.options.meta?.onRowDelete
         onRowDelete?.(rowId)
       }
       const isDeleting = Boolean(table.options.meta?.deleteLoading)
 
+      // 修改用户
+      // const handleEdit = (data: Api.User.UserInfo) => {
+      //   const onRowEdit = table.options.meta?.onRowEdit
+      //   onRowEdit?.(data)
+      // }
+
+      const handleEdit = table.options.meta?.onRowEdit
+
+      const handleAvatarUpload = table.options.meta?.onAvatarUpload
+
       return (
         <div className="flex items-center justify-end gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {}}
-          >
-            编辑
-          </Button>
-          <UserInfoDialog userInfo={row.original}>
+          <EditActionCell userInfo={row.original} onEdit={handleEdit} onAvatarUpload={handleAvatarUpload}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {}}
+            >
+              编辑
+            </Button>
+          </EditActionCell>
+          <ViewActionCell userInfo={row.original}>
             <Button
               variant="outline"
               size="sm"
             >
               查看
             </Button>
-          </UserInfoDialog>
-          <DeleteActionCell rowData={row.original} onConfirm={handleDeleteConfirm} isLoading={isDeleting} />
+          </ViewActionCell>
+          <DeleteActionCell
+            rowData={row.original}
+            onConfirm={handleDeleteConfirm}
+            isLoading={isDeleting}
+          />
         </div>
 
       )

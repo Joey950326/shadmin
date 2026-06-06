@@ -10,7 +10,7 @@ const config = {
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: httpConfig.REQUEST_TIMEOUT,
   withCredentials: httpConfig.WITH_CREDENTIALS,
-  headers: { 'Content-Type': 'application/json' },
+  // headers: { 'Content-Type': 'application/json' },
 }
 
 class Request {

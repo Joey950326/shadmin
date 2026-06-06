@@ -7,7 +7,7 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
-interface UserInfoDialogPros {
+interface ViewActionCellPros {
   userInfo: Api.User.UserInfo | null
   children?: ReactNode
   className?: string
@@ -15,7 +15,7 @@ interface UserInfoDialogPros {
   onVisibleChange?: (visible: boolean) => void
 }
 
-function UserInfoDialog({ userInfo, children, className, visible, onVisibleChange }: UserInfoDialogPros) {
+function ViewActionCell({ userInfo, children, className, visible, onVisibleChange }: ViewActionCellPros) {
   return (
     <Dialog open={visible} onOpenChange={onVisibleChange}>
       {children && (
@@ -87,4 +87,4 @@ function UserInfoDialog({ userInfo, children, className, visible, onVisibleChang
   )
 }
 
-export default memo(UserInfoDialog)
+export default memo(ViewActionCell)

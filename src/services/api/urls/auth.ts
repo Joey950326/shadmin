@@ -8,4 +8,6 @@ export const AUTH_URLS = {
 export const USER_URLS = {
   LIST: `${API_BASE_URL}/geeker/user/list`, // 获取用户列表接口
   DELETE: `${API_BASE_URL}/geeker/user/delete`, // 删除用户
+  EDIT: `${API_BASE_URL}/geeker/user/edit`, // 编辑用户
+  AVATAR_UPLOAD: `${API_BASE_URL}/geeker/file/upload/img`, // 上传头像
 }

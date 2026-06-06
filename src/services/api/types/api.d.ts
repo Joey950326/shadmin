@@ -45,10 +45,6 @@ declare namespace Api {
       type?: number
     }
 
-    interface DeleteParams {
-      id: Array<string>
-    }
-
     interface UserInfo {
       address: string
       avatar: string
@@ -64,6 +60,25 @@ declare namespace Api {
         }
       }
       username: string
+      photo?: Array<{
+        name: string
+        percentage: number
+        raw: { uid: string }
+        size: number
+        status: string
+        uid: number
+        url: string
+      }>
+    }
+
+    interface DeleteParams {
+      id: Array<string>
+    }
+
+    interface EditParams extends UserInfo {}
+
+    interface AvatarUploadParams {
+      file: File
     }
 
     interface ListResponse extends Base.ResponseData<{
@@ -74,6 +89,13 @@ declare namespace Api {
     }> {}
 
     interface DeleteResponse extends Base.ResponseData {}
+
+    interface EditResponse extends Base.ResponseData {}
+
+    interface AvatarUploadResponse extends Base.ResponseData<{
+      fileUrl: string
+    }> {}
+
   }
 }
 

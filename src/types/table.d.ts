@@ -6,5 +6,7 @@ declare module '@tanstack/react-table' {
     onRowDelete?: (rowId: string) => void
     deleteLoading?: boolean
     onRowView?: (rowData: Api.User.UserInfo) => void
+    onRowEdit?: (data: Api.User.UserInfo) => void
+    onAvatarUpload?: (data: Api.User.AvatarUploadParams) => void
   }
 }

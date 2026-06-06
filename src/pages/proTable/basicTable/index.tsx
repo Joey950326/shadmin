@@ -23,7 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
-import { useDeleteUser, useUserList } from '@/services/api/hooks/useUser'
+import { useAvatarUpload, useDeleteUser, useEditUser, useUserList } from '@/services/api/hooks/useUser'
 import { columns } from './columns'
 
 interface BasicTableProps<T> {
@@ -31,6 +31,8 @@ interface BasicTableProps<T> {
   fetchTableData: (params: Api.User.ListParams) => UseQueryResult<Api.User.ListResponse, unknown>
   className?: string
   onRowDelete: UseMutationResult<Api.User.DeleteResponse, unknown, Api.User.DeleteParams>
+  onRowEdit: UseMutationResult<Api.User.EditResponse, unknown, Api.User.EditParams>
+  onAvatarUpload: UseMutationResult<Api.User.AvatarUploadResponse, unknown, Api.User.AvatarUploadParams>
 }
 
 function BasicTable({
@@ -38,6 +40,8 @@ function BasicTable({
   fetchTableData,
   className,
   onRowDelete,
+  onRowEdit,
+  onAvatarUpload,
 }: BasicTableProps<Api.User.UserInfo>) {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -78,6 +82,43 @@ function BasicTable({
     })
   }, [onRowDelete, refetch])
 
+  const handleEdit = useCallback((data: Api.User.UserInfo, cb?: () => void) => {
+    onRowEdit.mutate(data, {
+      onSuccess: () => {
+        toast.success('编辑成功', {
+          position: 'top-right',
+        })
+      },
+      onError: (error) => {
+        console.error('编辑失败', error)
+        toast.error('编辑失败', {
+          position: 'top-right',
+        })
+      },
+      onSettled: () => {
+        cb?.()
+        refetch()
+      },
+    })
+  }, [onRowEdit, refetch])
+
+  const handleAvatarUpload = useCallback((params: Api.User.AvatarUploadParams, successCb?: (data) => void, failCb?: (error) => void) => {
+    onAvatarUpload.mutate(params, {
+      onSuccess: (data) => {
+        toast.success('上传成功', {
+          position: 'top-right',
+        })
+        successCb?.(data)
+      },
+      onError: (error) => {
+        toast.error('上传失败', {
+          position: 'top-right',
+        })
+        failCb?.(error)
+      },
+    })
+  }, [onAvatarUpload])
+
   const table = useReactTable({
     data: tableData,
     columns,
@@ -91,6 +132,8 @@ function BasicTable({
     meta: {
       onRowDelete: handleDeleteConfirm,
       deleteLoading: onRowDelete?.isPending,
+      onRowEdit: handleEdit,
+      onAvatarUpload: handleAvatarUpload,
     },
   })
 
@@ -261,10 +304,19 @@ function BasicTable({
 export default function Index() {
   const tableColumns = useMemo(() => columns, [])
   const deleteMutation = useDeleteUser()
+  const editMutation = useEditUser()
+  const avatarUploadMutaiton = useAvatarUpload()
 
   return (
     <div className="size-full">
-      <BasicTable className="rounded-lg" onRowDelete={deleteMutation} columns={tableColumns} fetchTableData={useUserList} />
+      <BasicTable
+        className="rounded-lg"
+        onRowDelete={deleteMutation}
+        onRowEdit={editMutation}
+        columns={tableColumns}
+        fetchTableData={useUserList}
+        onAvatarUpload={avatarUploadMutaiton}
+      />
     </div>
   )
 }
