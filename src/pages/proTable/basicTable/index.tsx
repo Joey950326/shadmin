@@ -102,6 +102,7 @@ function BasicTable({
 
   const currentPage = useMemo(() => (pagination.pageIndex + 1).toString(), [pagination.pageIndex])
   const inputRef = useRef<HTMLInputElement>(null)
+
   const handleJump = () => {
     if (inputRef.current) {
       const value = Number(inputRef.current?.value)

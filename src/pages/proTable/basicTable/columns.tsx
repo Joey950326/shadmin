@@ -2,12 +2,13 @@ import type { ColumnDef } from '@tanstack/react-table'
 import type { Api } from '@/services/api/types/api'
 import { Button } from '@/components/ui/button'
 import DeleteActionCell from './components/DeleteActionCell'
+import UserInfoDialog from './components/UserInfoDialog'
 
 export const columns: ColumnDef<Api.User.UserInfo>[] = [
-  {
-    accessorKey: 'id',
-    header: 'ID',
-  },
+  // {
+  //   accessorKey: 'id',
+  //   header: 'ID',
+  // },
   {
     accessorKey: 'username',
     header: '用户名',
@@ -49,6 +50,7 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
         const onRowDelete = table.options.meta?.onRowDelete
         onRowDelete?.(rowId)
       }
+
       return (
         <div className="flex items-center justify-end gap-2">
           <Button
@@ -58,14 +60,14 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
           >
             编辑
           </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {}}
-          >
-            查看
-          </Button>
+          <UserInfoDialog userInfo={row.original}>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              查看
+            </Button>
+          </UserInfoDialog>
           <DeleteActionCell rowData={row.original} onConfirm={handleDeleteConfirm} />
         </div>
 
