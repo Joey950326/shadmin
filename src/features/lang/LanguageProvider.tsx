@@ -17,24 +17,24 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   // 当组件挂载时，检查当前语言设置，如果没有设置则使用 i18n 的当前语言，并确保 i18n 的语言与 Redux 中的语言保持同步
   useEffect(() => {
-    if (language) {
+    if (language && i18n.language !== language) {
       i18n.changeLanguage(language)
     }
   }, [language, setLanguage])
 
   // 监听 i18next 语言变化 → 同步到 Redux（防止外部修改）
-  useEffect(() => {
-    const handleLanguageChanged = (lng: string) => {
-      if (lng !== language) {
-        setLanguage(lng)
-      }
-    }
-    i18n.on('languageChanged', handleLanguageChanged)
+  // useEffect(() => {
+  //   const handleLanguageChanged = (lng: string) => {
+  //     if (lng !== language) {
+  //       setLanguage(lng)
+  //     }
+  //   }
+  //   i18n.on('languageChanged', handleLanguageChanged)
 
-    return () => {
-      i18n.off('languageChanged', handleLanguageChanged)
-    }
-  }, [language, setLanguage])
+  //   return () => {
+  //     i18n.off('languageChanged', handleLanguageChanged)
+  //   }
+  // }, [language, setLanguage])
 
   return <>{children}</>
 }

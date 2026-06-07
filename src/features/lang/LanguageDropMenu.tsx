@@ -1,5 +1,4 @@
 import { LanguagesIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,11 +22,16 @@ interface LanguageDropMenuProps {
 
 export default function LanguageDropMenu({ buttonClassName }: LanguageDropMenuProps) {
   const dispatch = useAppDispatch()
-  const [currentLanguage, setCurrentLanguage] = useState(useAppSelector(appSelectors.selectLanguage) || i18n.language || DEFAULT_LANGUAGE)
+  const currentLanguage = useAppSelector(appSelectors.selectLanguage) || i18n.language || DEFAULT_LANGUAGE
+
   const { t } = useTranslation()
-  useEffect(() => {
-    dispatch(appActions.setLanguage(currentLanguage))
-  }, [currentLanguage, dispatch])
+  const { setLanguage } = appActions
+  const handleValueChange = (val: string) => {
+    // 先让 i18n 切换语言，再把语言持久化到 Redux，避免本地存储被覆盖的竞态
+    i18n.changeLanguage(val).then(() => {
+      dispatch(setLanguage(val))
+    })
+  }
 
   return (
     <DropdownMenu>
@@ -36,12 +40,15 @@ export default function LanguageDropMenu({ buttonClassName }: LanguageDropMenuPr
           <LanguagesIcon />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-24 hover:shadow-2xl transition-shadow duration-300">
+      <DropdownMenuContent
+        onCloseAutoFocus={e => e.preventDefault()}
+        className="w-24 hover:shadow-2xl transition-shadow duration-300"
+      >
         <DropdownMenuGroup>
           <DropdownMenuLabel>{t('changeLanguage')}</DropdownMenuLabel>
           <DropdownMenuRadioGroup
             value={currentLanguage}
-            onValueChange={setCurrentLanguage}
+            onValueChange={handleValueChange}
           >
             {LANGUAGE_RECORDS.map(lang => (
               <DropdownMenuRadioItem key={lang.code} value={lang.code}>
