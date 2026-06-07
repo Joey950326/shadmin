@@ -229,10 +229,10 @@ function BasicTable({
         </ScrollArea>
       </div>
       {/* 分页组件 */}
-      <div className="max-h-16 w-full shrink-0 flex p-2">
+      <div className="max-h-16 w-full shrink-0 flex p-2 overflow-hidden">
         <Pagination className="cursor-pointer">
           <PaginationContent>
-            <PaginationItem>
+            <PaginationItem className="hidden sm:block">
               <div className="flex items-center">
                 <Button className=" rounded-r-none " variant="outline" size="sm" onClick={handleJump}>
                   跳转至
@@ -268,7 +268,7 @@ function BasicTable({
                 </PaginationItem>
               )
             }
-            <PaginationItem>
+            <PaginationItem className="hidden sm:block">
               {/* 每页条数 */}
               <Select
                 value={pagination.pageSize.toString()}
@@ -285,7 +285,7 @@ function BasicTable({
                 </SelectContent>
               </Select>
             </PaginationItem>
-            <PaginationItem>
+            <PaginationItem className="hidden sm:block">
               <span className="text-sm px-2">
                 共
                 {pageCount}
