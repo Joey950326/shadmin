@@ -30,29 +30,19 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     applyThemeMode(isDark)
   }, [isDark])
 
-  // 灰色模式
+  // 灰色 / 色弱 模式（合并设置，避免互相覆盖）
   useEffect(() => {
     const root = document.documentElement
-    if (isGray) {
-      root.style.filter = 'grayscale(100%)'
-      root.style.transition = 'filter 0.45s ease'
-    }
-    else {
-      root.style.filter = 'none'
-    }
-  }, [isGray])
+    const filters: string[] = []
 
-  // 色弱模式
-  useEffect(() => {
-    const root = document.documentElement
-    if (isColorWeak) {
-      root.style.filter = 'invert(80%)'
-      root.style.transition = 'filter 0.45s ease'
-    }
-    else {
-      root.style.filter = 'none'
-    }
-  }, [isColorWeak])
+    if (isGray)
+      filters.push('grayscale(100%)')
+    if (isColorWeak)
+      filters.push('invert(80%)')
+
+    root.style.filter = filters.length > 0 ? filters.join(' ') : 'none'
+    root.style.transition = 'filter 0.45s ease'
+  }, [isGray, isColorWeak])
 
   return (children)
 }
