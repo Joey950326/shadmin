@@ -18,7 +18,8 @@
     "title": "表格示例",
     "basicTable": "基础表格",
     "treeTable": "树形表格",
-    "filterTable": "筛选表格"
+    "filterTable": "筛选表格",
+    "complexTable": "复杂表格"
   },
   "dataScreen": "数据大屏",
   "proTable": "超级表格",

@@ -1,5 +1,6 @@
 import type { RouteHandle } from '@/routers/types'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation, useMatches } from 'react-router'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
@@ -12,6 +13,7 @@ interface BreadcrumbItemType {
 export default function MyBreadcrumb() {
   const matches = useMatches()
   const location = useLocation()
+  const { t } = useTranslation()
 
   const breadcrumbs: Array<BreadcrumbItemType> = useMemo(() => {
     return matches.filter((match) => {
@@ -21,6 +23,7 @@ export default function MyBreadcrumb() {
       const handle = match.handle as RouteHandle
       return {
         path: match.pathname,
+        // 保留原始标题 key 或文本，实际翻译在渲染时完成
         title: handle.title,
         isCurrent: match.pathname === location.pathname,
       }
@@ -43,11 +46,11 @@ export default function MyBreadcrumb() {
               <BreadcrumbItem>
                 {item.isCurrent
                   ? (
-                      <BreadcrumbPage>{item.title}</BreadcrumbPage>
+                      <BreadcrumbPage>{t(String(item.title))}</BreadcrumbPage>
                     )
                   : (
                       <BreadcrumbLink asChild>
-                        <NavLink to={item.path}>{item.title}</NavLink>
+                        <NavLink to={item.path}>{t(String(item.title))}</NavLink>
                       </BreadcrumbLink>
                     )}
               </BreadcrumbItem>

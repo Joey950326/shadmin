@@ -7,6 +7,8 @@ export default antfu({
   gitIgnore: true,
   ignores: [
     './src/components/ui/**/*',
+    './src/components/diceui/**/*',
+
   ],
   stylistic: {
     indent: 2, // 4, or 'tab'

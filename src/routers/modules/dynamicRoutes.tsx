@@ -1,6 +1,6 @@
 import type { AppRouteObject } from '../types'
 import { Navigate } from 'react-router'
-import { translate } from '@/features/lang/shared'
+// route titles use translation keys where needed; translate at render time
 import AuthGate from '@/features/router/AuthGate'
 import Expection404 from '@/pages/404/index.tsx'
 
@@ -35,7 +35,15 @@ const dynamicRoutes = [
               const Component = (await import('@/pages/proTable/basicTable/index.tsx')).default
               return { Component }
             },
-            handle: { title: translate('menu:table.basicTable') },
+            handle: { title: 'menu:table.basicTable' },
+          },
+          {
+            path: 'complexTable',
+            lazy: async () => {
+              const Component = (await import('@/pages/proTable/complexTable/index.tsx')).default
+              return { Component }
+            },
+            handle: { title: 'menu:table.complexTable' },
           },
           {
             path: 'treeFilter',

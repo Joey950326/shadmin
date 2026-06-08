@@ -6,8 +6,9 @@ module.exports = {
 
   // 样式文件
   '*.{css,scss,less}': [
-    'stylelint --fix',
-    'prettier --write',
+    'eslint --fix',
+    // 'stylelint --fix',
+    // 'prettier --write',
   ],
 
   // JSON文件

@@ -5,3 +5,5 @@ export function hashPassword(password: string): string {
 }
 
 export const delay = (t: number) => new Promise(resolve => setTimeout(resolve, t))
+
+export const getDateNow = () => new Date()

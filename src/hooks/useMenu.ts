@@ -38,6 +38,7 @@ export default function useMenu() {
       meta: { icon: 'table', title: t('menu:table.title') },
       children: [
         { name: 'basicTable', path: '/proTable/basicTable', meta: { title: t('menu:table.basicTable') } },
+        { name: 'complexTable', path: '/proTable/complexTable', meta: { title: t('menu:table.complexTable') } },
         { name: 'treeTable', path: '/proTable/treeFilter', meta: { title: t('menu:table.treeTable') } },
         { name: 'filterTable', path: '/proTable/selectFilter', meta: { title: t('menu:table.filterTable') } },
       ],
