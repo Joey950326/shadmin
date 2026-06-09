@@ -17,6 +17,9 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
   {
     accessorKey: 'gender',
     header: '性别',
+    cell: ({ row }) => {
+      return row.getValue('gender') === 1 ? '男' : '女'
+    },
   },
   {
     // accessorKey: 'age',

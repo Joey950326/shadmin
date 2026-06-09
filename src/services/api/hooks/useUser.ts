@@ -1,7 +1,7 @@
 import type { Api } from '../types/api'
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../keys'
-import { userAvatarUpload, userDeleteApi, userEditApi, userListApi } from '../modules/user'
+import { userAddApi, userAvatarUpload, userDeleteApi, userEditApi, userListApi } from '../modules/user'
 
 /** 获取用户列表，用于渲染表格 */
 export function useUserList(params: Api.User.ListParams) {
@@ -26,7 +26,14 @@ export function useEditUser() {
   })
 }
 
-/** 编辑用户 */
+/** 新增用户 */
+export function useAddtUser() {
+  return useMutation({
+    mutationFn: (params: Api.User.AddParams): Promise<Api.User.AddResponse> => userAddApi(params),
+  })
+}
+
+/** 上传用户头像 */
 export function useAvatarUpload() {
   return useMutation({
     mutationFn: (params: Api.User.AvatarUploadParams): Promise<Api.User.AvatarUploadResponse> => userAvatarUpload(params),

@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ArrowRightIcon, BadgePlusIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, ImportIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
+import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, ImportIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { DatetimeSelect } from '@/components/datetimeSelect'
@@ -33,6 +33,7 @@ import { cn } from '@/lib/utils'
 import { useAvatarUpload, useDeleteUser, useEditUser, useUserList } from '@/services/api/hooks/useUser'
 import { getDateNow } from '@/utils'
 import { columns } from './columns'
+import AddUserButton from './components/AddUserButton'
 
 interface ComplexTableProps<T> {
   columns: ColumnDef<T>[]
@@ -210,10 +211,11 @@ function ComplexTable({
                 </ButtonGroup>
               </Field>
               <Field className="col-span-3">
-                <Button size="sm" variant="outline">
+                {/* <Button size="sm" variant="outline">
                   新增用户
                   <BadgePlusIcon />
-                </Button>
+                </Button> */}
+                <AddUserButton onSuccessCb={refetch} />
 
               </Field>
               <Field className="col-span-3">
@@ -439,22 +441,6 @@ function ComplexTable({
         </Pagination>
       </div>
 
-      {/* 表格右侧抽屉 */}
-      {/* <Drawer>
-        <DrawerTrigger>Open</DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer> */}
     </div>
 
   )

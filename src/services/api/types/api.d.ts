@@ -77,6 +77,9 @@ declare namespace Api {
 
     interface EditParams extends UserInfo {}
 
+    // interface AddParams extends Omit<UserInfo, 'status | user | createTime | id'> {}
+    type AddParams = Omit<UserInfo, 'status' | 'user' | 'createTime' | 'id'>
+
     interface AvatarUploadParams {
       file: File
     }
@@ -91,6 +94,8 @@ declare namespace Api {
     interface DeleteResponse extends Base.ResponseData {}
 
     interface EditResponse extends Base.ResponseData {}
+
+    interface AddResponse extends Base.ResponseData {}
 
     interface AvatarUploadResponse extends Base.ResponseData<{
       fileUrl: string

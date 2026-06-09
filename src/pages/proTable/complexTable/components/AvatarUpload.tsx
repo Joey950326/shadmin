@@ -1,35 +1,30 @@
-import type { ChangeEvent, Ref } from 'react'
-import type { Api } from '@/services/api/types/api'
+import type { ChangeEvent } from 'react'
 import { EditIcon } from 'lucide-react'
-import { memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
-
-export interface avatarRefDef {
-  isUploading: boolean
-//   getIsUploading: () => boolean
-}
+import { useAvatarUpload } from '@/services/api/hooks/useUser'
 
 interface AvatarUploadPros {
   value: string
   onValueChange: (value: string) => void
-  onAvatarUpload?: (data: Api.User.AvatarUploadParams, successCb?: (data: Api.User.AvatarUploadResponse) => void, failCb?: (error: Error) => void) => void
-  ref?: Ref<avatarRefDef>
+  disabled?: boolean
+  onUploadingChange?: (isUploading: boolean) => void
 }
 
-function AvatarUpload({ value, onValueChange, onAvatarUpload, ref }: AvatarUploadPros) {
+function AvatarUpload({ value, onValueChange, disabled, onUploadingChange }: AvatarUploadPros) {
   const [avatarUrl, setAvatarUrl] = useState<string>(value)
-  const [isUploading, setIsUploading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { mutate, isPending } = useAvatarUpload()
 
-  useImperativeHandle(ref, () => {
-    return {
-      isUploading,
-    }
-  }, [isUploading])
+  useEffect(() => {
+    setAvatarUrl(value)
+  }, [value])
 
-  const handleUploadChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => onUploadingChange?.(isPending), [isPending, onUploadingChange])
+
+  const handleUploadChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file)
       return
@@ -48,14 +43,21 @@ function AvatarUpload({ value, onValueChange, onAvatarUpload, ref }: AvatarUploa
     // 本地即时预览
     const objectUrl = URL.createObjectURL(file)
     setAvatarUrl(objectUrl)
-    setIsUploading(true)
-    // 进行网络上传
-    onAvatarUpload?.({ file }, (data) => {
-      setIsUploading(false)
-      onValueChange(data?.data?.fileUrl ?? value)
-    }, () => {
-      setIsUploading(false)
-      setAvatarUrl(value)
+    mutate({ file }, {
+      onSuccess: (data) => {
+        onValueChange(data?.data?.fileUrl || value)
+        toast.success('上传成功', {
+          position: 'top-right',
+        })
+      },
+      onError: (error) => {
+        toast.error('上传失败', {
+          position: 'top-right',
+        })
+        setAvatarUrl(value)
+        console.error(error)
+      },
+
     })
   }
   /** 协助ObjectUrl，避免内存占用 */
@@ -67,9 +69,10 @@ function AvatarUpload({ value, onValueChange, onAvatarUpload, ref }: AvatarUploa
 
   return (
     <Avatar className="relative h-20 p-2 flex justify-center overflow-hidden">
-
       <AvatarImage className="w-full z-1" src={avatarUrl} loading="lazy" />
-      <AvatarFallback>头像</AvatarFallback>
+      <AvatarFallback>
+        头像
+      </AvatarFallback>
       {/* 上传组件 */}
       <Input
         ref={inputRef}
@@ -77,7 +80,7 @@ function AvatarUpload({ value, onValueChange, onAvatarUpload, ref }: AvatarUploa
         type="file"
         accept="image/*"
         onChange={handleUploadChange}
-        disabled={isUploading}
+        disabled={isPending || disabled}
       >
       </Input>
       {/* 遮罩 */}

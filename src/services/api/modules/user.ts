@@ -17,6 +17,11 @@ export function userEditApi(params: Api.User.EditParams, options?: Api.Base.Requ
   return request.post<Api.User.EditResponse>(USER_URLS.EDIT, params, options)
 }
 
+/** 新增用户 */
+export function userAddApi(params: Api.User.AddParams, options?: Api.Base.RequestOptions) {
+  return request.post<Api.User.AddResponse>(USER_URLS.ADD, params, options)
+}
+
 /** 编辑用户 */
 export function userAvatarUpload(params: Api.User.AvatarUploadParams, options?: Api.Base.RequestOptions) {
   const formData = new FormData()
