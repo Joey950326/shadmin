@@ -4,6 +4,8 @@ import type { Api } from '@/services/api/types/api'
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, ImportIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
@@ -70,7 +72,7 @@ function ComplexTable({
     endTime: '2022-12-12 11:35:00',
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
-  }), [pagination.pageIndex, pagination.pageSize])
+  }), [pagination])
 
   const { data: res, isFetching, refetch } = fetchTableData(fetchParams)
 
@@ -139,12 +141,14 @@ function ComplexTable({
     data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
+    onPaginationChange: setPagination,
     pageCount,
     state: {
       pagination,
     },
-    onPaginationChange: setPagination,
     meta: {
       onRowDelete: handleDeleteConfirm,
       deleteLoading: onRowDelete?.isPending,
