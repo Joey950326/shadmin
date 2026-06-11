@@ -10,6 +10,6 @@ export const USER_URLS = {
   DELETE: `${API_BASE_URL}/geeker/user/delete`, // 删除用户
   EDIT: `${API_BASE_URL}/geeker/user/edit`, // 编辑用户
   ADD: `${API_BASE_URL}/geeker/user/add`, // 编辑用户
-
   AVATAR_UPLOAD: `${API_BASE_URL}/geeker/file/upload/img`, // 上传头像
+  IMPORT: `${API_BASE_URL}/geeker/user/import`, // 批量上传用户
 }

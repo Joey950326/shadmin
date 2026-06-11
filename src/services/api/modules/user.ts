@@ -22,9 +22,16 @@ export function userAddApi(params: Api.User.AddParams, options?: Api.Base.Reques
   return request.post<Api.User.AddResponse>(USER_URLS.ADD, params, options)
 }
 
-/** 编辑用户 */
+/** 上传用户头像 */
 export function userAvatarUpload(params: Api.User.AvatarUploadParams, options?: Api.Base.RequestOptions) {
   const formData = new FormData()
   formData.append('file', params.file)
-  return request.post<Api.User.EditResponse>(USER_URLS.AVATAR_UPLOAD, formData, options)
+  return request.post<Api.User.AvatarUploadResponse>(USER_URLS.AVATAR_UPLOAD, formData, options)
+}
+
+/** 通过导入，批量添加用户 */
+export function userImportApi(params: Api.User.ImportUserParams, options?: Api.Base.RequestOptions) {
+  const formData = new FormData()
+  formData.append('file', params.file)
+  return request.post<Api.User.ImportResponse>(USER_URLS.IMPORT, formData, options)
 }

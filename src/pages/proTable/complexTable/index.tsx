@@ -36,6 +36,7 @@ import { useAvatarUpload, useDeleteUser, useEditUser, useUserList } from '@/serv
 import { getDateNow } from '@/utils'
 import { columns } from './columns'
 import AddUserButton from './components/AddUserButton'
+import UploaderDialog from './components/UploaderDialog'
 
 interface ComplexTableProps<T> {
   columns: ColumnDef<T>[]
@@ -223,10 +224,12 @@ function ComplexTable({
 
               </Field>
               <Field className="col-span-3">
-                <Button size="sm">
-                  批量导入
-                  <ImportIcon />
-                </Button>
+                <UploaderDialog>
+                  <Button size="sm">
+                    批量导入
+                    <ImportIcon />
+                  </Button>
+                </UploaderDialog>
               </Field>
             </FieldGroup>
 

@@ -39,3 +39,10 @@ export function useAvatarUpload() {
     mutationFn: (params: Api.User.AvatarUploadParams): Promise<Api.User.AvatarUploadResponse> => userAvatarUpload(params),
   })
 }
+
+/** 通过上传批量添加用户 */
+export function useImportUser() {
+  return useMutation({
+    mutationFn: (params: Api.User.ImportUserParams): Promise<Api.User.ImportResponse> => userAvatarUpload(params),
+  })
+}
