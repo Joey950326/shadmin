@@ -57,7 +57,7 @@ export default function AddUserButton({ onSuccessCb }: AddUserButtonProps) {
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
           新增用户
-          <BadgePlusIcon />
+          <BadgePlusIcon className="hidden lg:block" />
         </Button>
       </DialogTrigger>
 

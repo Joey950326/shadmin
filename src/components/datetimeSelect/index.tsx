@@ -2,7 +2,7 @@ import type { DateRange } from 'react-day-picker'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { enUS, zhCN } from 'react-day-picker/locale'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -40,13 +40,13 @@ export function DatetimeSelect({ value, onChange, className }: DatetimeSelectPro
   }, [currentLanguage])
 
   // 同步外部 value
-  //   useEffect(() => {
-  //     if (value) {
-  //       setDate({ from: value.from, to: value.to })
-  //       setStartTime(value.from ? format(value.from, 'HH:mm:ss') : '00:00:00')
-  //       setEndTime(value.to ? format(value.to, 'HH:mm:ss') : '23:59:59')
-  //     }
-  //   }, [value])
+  useEffect(() => {
+    if (value) {
+      setDate({ from: value.from, to: value.to })
+      setStartTime(value.from ? format(value.from, 'HH:mm:ss') : '00:00:00')
+      setEndTime(value.to ? format(value.to, 'HH:mm:ss') : '23:59:59')
+    }
+  }, [value])
 
   const updateRange = useCallback((newDate: DateRange | undefined) => {
     let from = newDate?.from

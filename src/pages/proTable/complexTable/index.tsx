@@ -1,5 +1,5 @@
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query'
-import type { ColumnDef, PaginationState } from '@tanstack/react-table'
+import type { ColumnDef, PaginationState, VisibilityState } from '@tanstack/react-table'
 import type { Api } from '@/services/api/types/api'
 import {
   flexRender,
@@ -8,21 +8,23 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, ImportIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
+import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, DeleteIcon, ImportIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { DatetimeSelect } from '@/components/datetimeSelect'
 
+import { DatetimeSelect } from '@/components/datetimeSelect'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { Switch } from '@/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -36,6 +38,7 @@ import { useAvatarUpload, useDeleteUser, useEditUser, useUserList } from '@/serv
 import { getDateNow } from '@/utils'
 import { columns } from './columns'
 import AddUserButton from './components/AddUserButton'
+import DeleteUserButton from './components/DeleteUserButton'
 import UploaderDialog from './components/UploaderDialog'
 
 interface ComplexTableProps<T> {
@@ -50,6 +53,17 @@ interface ComplexTableProps<T> {
 interface SelectDateTimeDef {
   from?: Date
   to?: Date
+}
+
+interface SearchValue {
+  username?: string
+  idCard?: string
+  minAge?: string
+  maxAge?: string
+  status?: number
+  gender?: number
+  startTime?: string
+  endTime?: string
 }
 
 const now = getDateNow()
@@ -67,13 +81,68 @@ function ComplexTable({
     pageSize: 10,
   })
 
+  const [selectDatetime, setSelectDatetime] = useState<SelectDateTimeDef>({
+    from: now,
+    to: now,
+  })
+
+  // 全局筛选相关
+
+  const [searchValue, setSearchValue] = useState<SearchValue>({
+  })
+  const [genderSelected, setGenderSelected] = useState<string>()
+  const [statusSelected, setStatusSelected] = useState<string>()
+  // 使用非受控组件处理全局搜索，提高性能
+  const usernameInputRef = useRef<HTMLInputElement>(null)
+  const idCardInputRef = useRef<HTMLInputElement>(null)
+  // const genderSelectRef = useRef<string | null>(null)
+  // const stautsSelectRef = useRef<string | null>(null)
+  const minAgeInputRef = useRef<HTMLInputElement>(null)
+  const maxAgeInputRef = useRef<HTMLInputElement>(null)
+
+  const handleSearch = () => {
+    const searchValue = Object.fromEntries(Object.entries({
+      username: usernameInputRef.current?.value,
+      idCard: idCardInputRef.current?.value,
+      gender: genderSelected && Number(genderSelected),
+      status: statusSelected !== null && Number(statusSelected),
+      minAge: minAgeInputRef.current?.value,
+      maxAge: maxAgeInputRef.current?.value,
+      startTime: selectDatetime.from !== selectDatetime.to && selectDatetime.from,
+      endTime: selectDatetime.to,
+
+    }).filter(([, value]) => value !== '' && value !== undefined && value !== null))
+    setSearchValue(searchValue)
+  }
+
+  const handleResetSearch = () => {
+    if (usernameInputRef.current) {
+      usernameInputRef.current.value = ''
+    }
+    if (idCardInputRef.current) {
+      idCardInputRef.current.value = ''
+    }
+    if (minAgeInputRef.current) {
+      minAgeInputRef.current.value = '16'
+    }
+    if (maxAgeInputRef.current) {
+      maxAgeInputRef.current.value = '60'
+    }
+    setStatusSelected('')
+    setGenderSelected('')
+    setSelectDatetime({ from: now, to: now })
+    handleSearch()
+  }
+
   const fetchParams = useMemo(() => ({
     type: 1,
     startTime: '2022-11-12 11:35:00',
     endTime: '2022-12-12 11:35:00',
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
-  }), [pagination])
+    ...searchValue,
+
+  }), [pagination, searchValue])
 
   const { data: res, isFetching, refetch } = fetchTableData(fetchParams)
 
@@ -81,9 +150,9 @@ function ComplexTable({
   const total = res?.data?.total ?? 0
   const pageCount = useMemo(() => Math.ceil(total / pagination.pageSize), [total, pagination.pageSize])
 
-  const handleDeleteConfirm = useCallback((rowId: string) => {
-    const deleteParams = { id: [rowId] }
-    onRowDelete.mutate(deleteParams, {
+  const handleDeleteConfirm = useCallback((rowId: string | Array<string>, cb?: () => void) => {
+    const deleteParams = Array.isArray(rowId) ? { id: rowId } : { id: [rowId] }
+    return onRowDelete.mutate(deleteParams, {
       onSuccess: () => {
         toast.success('删除成功', {
           position: 'top-right',
@@ -97,6 +166,7 @@ function ComplexTable({
       },
       onSettled: () => {
         refetch()
+        cb?.()
       },
     })
   }, [onRowDelete, refetch])
@@ -138,6 +208,8 @@ function ComplexTable({
     })
   }, [onAvatarUpload])
 
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
   const table = useReactTable({
     data: tableData,
     columns,
@@ -145,9 +217,12 @@ function ComplexTable({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
+    // manualFiltering: true,
     onPaginationChange: setPagination,
+    onColumnVisibilityChange: setColumnVisibility,
     pageCount,
     state: {
+      columnVisibility,
       pagination,
     },
     meta: {
@@ -184,10 +259,14 @@ function ComplexTable({
 
   const [toolExpand, setToolExpand] = useState<boolean>(false)
 
-  const [selectDatetime, setSelectDatetime] = useState<SelectDateTimeDef>({
-    from: now,
-    to: now,
-  })
+  const handleBatchDelete = useCallback(() => {
+    const id = table.getFilteredSelectedRowModel().rows.map(r => r.original.id)
+    handleDeleteConfirm(id, () => table.resetRowSelection())
+  }, [handleDeleteConfirm, table])
+
+  const handleResetVisible = () => {
+    table.setColumnVisibility({})
+  }
 
   return (
     <div className="relative h-full bg-background flex flex-col rounded-xl">
@@ -206,30 +285,44 @@ function ComplexTable({
       >
         <FieldGroup className="w-full">
           <FieldGroup className="flex flex-row">
-            <FieldGroup className="flex-1 grid grid-cols-6 md:grid-cols-12 lg:grid-cols-18 items-center">
+            <FieldGroup className="flex-1 grid grid-cols-6 lg:grid-cols-12 items-center">
               <Field className="col-span-6">
                 <ButtonGroup>
-                  <Input placeholder="搜索用户名" />
-                  <Button variant="outline" aria-label="Search">
-                    <SearchIcon />
-                  </Button>
+                  <Input ref={usernameInputRef} placeholder="搜索用户名" />
+                  {
+                    !toolExpand && (
+                      <Button className={toolExpand ? 'hidden' : 'block'} variant="outline" aria-label="Search" onClick={handleSearch}>
+                        <SearchIcon />
+                      </Button>
+                    )
+                  }
+
                 </ButtonGroup>
               </Field>
-              <Field className="col-span-3">
-                {/* <Button size="sm" variant="outline">
-                  新增用户
-                  <BadgePlusIcon />
-                </Button> */}
+              <Field className="col-span-2">
                 <AddUserButton onSuccessCb={refetch} />
-
               </Field>
-              <Field className="col-span-3">
+              <Field className="col-span-2">
                 <UploaderDialog>
                   <Button size="sm">
                     批量导入
-                    <ImportIcon />
+                    <ImportIcon className="hidden lg:block" />
                   </Button>
                 </UploaderDialog>
+              </Field>
+              <Field className="col-span-2">
+                <DeleteUserButton
+                  onConfirm={handleBatchDelete}
+                >
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={table.getFilteredSelectedRowModel().rows.length === 0}
+                  >
+                    批量删除
+                    <DeleteIcon className="hidden lg:block" />
+                  </Button>
+                </DeleteUserButton>
               </Field>
             </FieldGroup>
 
@@ -244,10 +337,75 @@ function ComplexTable({
                   <DrawerTitle>表格设置</DrawerTitle>
                   <DrawerDescription>设置表格的列可见</DrawerDescription>
                 </DrawerHeader>
+                <div className="flex flex-col px-4 gap-4">
+                  <Field orientation="horizontal">
+                    <Label htmlFor="username-visible" className="min-w-20">用户名：</Label>
+                    <Switch id="username-visible" checked={true} disabled />
+                  </Field>
+                  <Field orientation="horizontal">
+                    <Label htmlFor="status-visible" className="min-w-20">状态：</Label>
+                    <Switch
+                      id="status-visible"
+                      checked={table.getColumn('status')?.getIsVisible()}
+                      onCheckedChange={visible => table.getColumn('status')?.toggleVisibility(!!visible)}
+                    />
+                  </Field>
+                  <Field orientation="horizontal">
+                    <Label htmlFor="age-visible" className="min-w-20">年龄：</Label>
+                    <Switch
+                      id="age-visible"
+                      checked={table.getColumn('age')?.getIsVisible()}
+                      onCheckedChange={visible => table.getColumn('age')?.toggleVisibility(!!visible)}
+                    />
+                  </Field>
+                  <Field orientation="horizontal">
+                    <Label htmlFor="idcard-visible" className="min-w-20">身份证号：</Label>
+                    <Switch
+                      id="idcard-visible"
+                      checked={table.getColumn('idCard')?.getIsVisible()}
+                      onCheckedChange={visible => table.getColumn('idCard')?.toggleVisibility(!!visible)}
+                    />
+                  </Field>
+                  <Field orientation="horizontal">
+                    <Label htmlFor="gender-visible" className="min-w-20">性别：</Label>
+                    <Switch
+                      id="gender-visible"
+                      checked={table.getColumn('gender')?.getIsVisible()}
+                      onCheckedChange={visible => table.getColumn('gender')?.toggleVisibility(!!visible)}
+                    />
+                  </Field>
+                  <Field orientation="horizontal">
+                    <Label htmlFor="email-visible" className="min-w-20">邮箱：</Label>
+                    <Switch
+                      id="email-visible"
+                      checked={table.getColumn('email')?.getIsVisible()}
+                      onCheckedChange={visible => table.getColumn('email')?.toggleVisibility(!!visible)}
+                    />
+                  </Field>
+
+                  <Field orientation="horizontal">
+                    <Label htmlFor="address-visible" className="min-w-20">地址：</Label>
+                    <Switch
+                      id="address-visible"
+                      checked={table.getColumn('address')?.getIsVisible()}
+                      onCheckedChange={visible => table.getColumn('address')?.toggleVisibility(!!visible)}
+                    />
+                  </Field>
+
+                  <Field orientation="horizontal">
+                    <Label htmlFor="createTime-visible" className="min-w-20">创建时间：</Label>
+                    <Switch
+                      id="createTime-visible"
+                      checked={table.getColumn('createTime')?.getIsVisible()}
+                      onCheckedChange={visible => table.getColumn('createTime')?.toggleVisibility(!!visible)}
+                    />
+                  </Field>
+
+                </div>
                 <DrawerFooter>
-                  <Button>Submit</Button>
-                  <DrawerClose>
-                    <Button variant="outline">Cancel</Button>
+                  <Button variant="outline" onClick={handleResetVisible}>重置</Button>
+                  <DrawerClose asChild>
+                    <Button>关闭</Button>
                   </DrawerClose>
                 </DrawerFooter>
               </DrawerContent>
@@ -261,9 +419,10 @@ function ComplexTable({
                 <FieldLabel>时间范围</FieldLabel>
                 <DatetimeSelect value={selectDatetime} onChange={setSelectDatetime}></DatetimeSelect>
               </Field>
+              {/* 性别 */}
               <Field className="col-span-6 md:col-span-3">
                 <FieldLabel className="pl-2">性别</FieldLabel>
-                <Select>
+                <Select value={genderSelected} onValueChange={setGenderSelected}>
                   <SelectTrigger>
                     <SelectValue placeholder="请选择性别" />
                   </SelectTrigger>
@@ -274,11 +433,11 @@ function ComplexTable({
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-
               </Field>
+              {/* 用户状态 */}
               <Field className="col-span-6 md:col-span-3">
                 <FieldLabel className="pl-2">用户状态</FieldLabel>
-                <Select>
+                <Select value={statusSelected} onValueChange={setStatusSelected}>
                   <SelectTrigger id="radius-x">
                     <SelectValue placeholder="请选择用户状态" />
                   </SelectTrigger>
@@ -291,25 +450,27 @@ function ComplexTable({
                 </Select>
 
               </Field>
-
+              {/* 身份证号 */}
               <Field className="col-span-6 md:col-span-4">
                 <FieldLabel>
                   身份证号
                 </FieldLabel>
-                <Input placeholder="请输入身份证号码"></Input>
+                <Input ref={idCardInputRef} placeholder="请输入身份证号码"></Input>
               </Field>
-
+              {/* 年龄范围 */}
               <Field className="col-span-6 md:col-span-3">
-
                 <FieldLabel className="pl-2">用户年龄</FieldLabel>
                 <ButtonGroup>
-                  <Input placeholder="请输入最小年龄" type="number" defaultValue={18} className="text-center" />
-                  <ArrowRightIcon className="h-full bg-primary/5" size={14} />
-                  <Input placeholder="请输入最大年龄" type="number" defaultValue={60} className="text-center" />
+                  <Input ref={minAgeInputRef} placeholder="请输入最小年龄" type="number" defaultValue={18} className="text-center" />
+                  <ArrowRightIcon className="h-full p-2 bg-primary/5" size={14} />
+                  <Input ref={maxAgeInputRef} placeholder="请输入最大年龄" type="number" defaultValue={60} className="text-center" />
                 </ButtonGroup>
               </Field>
-
             </FieldGroup>
+            <div className="w-full flex justify-end gap-2 pt-4 md:pt-0">
+              <Button variant="outline" onClick={handleResetSearch}>重置</Button>
+              <Button onClick={handleSearch}>搜索</Button>
+            </div>
 
           </CollapsibleContent>
         </FieldGroup>

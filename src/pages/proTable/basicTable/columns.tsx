@@ -6,40 +6,49 @@ import EditActionCell from './components/EditActionCell'
 import ViewActionCell from './components/ViewActionCell'
 
 export const columns: ColumnDef<Api.User.UserInfo>[] = [
-  // {
-  //   accessorKey: 'id',
-  //   header: 'ID',
-  // },
   {
+    accessorKey: 'id',
+    header: 'ID',
+    enableHiding: true,
+  },
+  {
+    id: 'username',
     accessorKey: 'username',
     header: '用户名',
   },
   {
+    id: 'gender',
     accessorKey: 'gender',
     header: '性别',
   },
   {
+    id: 'age',
     // accessorKey: 'age',
     accessorFn: row => row.user.detail.age,
     header: '年龄',
   },
   {
+    id: 'idCard',
     accessorKey: 'idCard',
     header: '身份证号',
   },
   {
+    id: 'email',
     accessorKey: 'email',
     header: '邮箱',
   },
   {
+    id: 'address',
     accessorKey: 'address',
     header: '地址',
   },
   {
+    id: 'status',
     accessorKey: 'status',
     header: '状态',
   },
   {
+    id: 'createTime',
     accessorKey: 'createTime',
     header: '创建时间',
   },
