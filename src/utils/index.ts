@@ -23,3 +23,15 @@ export function transformFileSize(size: number) {
   }
   return `${Math.round(calcSize)} ${suffix[idx]}`
 }
+
+// 获取当前时间，返回格式为'YYYYMMDDHHmmSS'
+export function getDateNowText(): string {
+  const d = getDateNow()
+  const Y = String(d.getFullYear())
+  const M = String(d.getMonth() + 1).padStart(2, '0')
+  const D = String(d.getDate()).padStart(2, '0')
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  const ss = String(d.getSeconds()).padStart(2, '0')
+  return `${Y}${M}${D}${hh}${mm}${ss}`
+}

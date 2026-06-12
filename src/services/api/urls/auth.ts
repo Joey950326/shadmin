@@ -12,4 +12,5 @@ export const USER_URLS = {
   ADD: `${API_BASE_URL}/geeker/user/add`, // 编辑用户
   AVATAR_UPLOAD: `${API_BASE_URL}/geeker/file/upload/img`, // 上传头像
   IMPORT: `${API_BASE_URL}/geeker/user/import`, // 批量上传用户
+  DOWNLOAD: `${API_BASE_URL}/geeker/user/export`, // 下载用户导入模板
 }

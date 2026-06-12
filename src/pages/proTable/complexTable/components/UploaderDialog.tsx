@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
 import type { FileWithPreview } from '@/components/uploader/types'
-import { DownloadIcon, FolderUpIcon } from 'lucide-react'
+import { DownloadIcon, FolderUpIcon, LoaderIcon } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
+import { FileDownloader, FileDownloaderTrigger } from '@/components/fileDownloader'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
@@ -18,6 +19,7 @@ export default function UploaderDialog({ children }: UploaderDialogProps) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [selectedFiles, setSelectedFiles] = useState<Array<FileWithPreview>>([])
   const { mutate, isPending } = useImportUser()
+  const [isDownloading, setIsDownloading] = useState<boolean>(false)
   const handleConfirm = useCallback(() => {
     if (selectedFiles.length > 0) {
       mutate({ file: selectedFiles[0] }, {
@@ -56,10 +58,15 @@ export default function UploaderDialog({ children }: UploaderDialogProps) {
         <div className="flex flex-col gap-4">
           <div className="flex flex:col sm:flex-row sm:items-center gap-2">
             <Label>模板下载</Label>
-            <Button size="sm" variant="outline">
-              <DownloadIcon />
-              点击下载
-            </Button>
+            <FileDownloader fileName="用户模板" onDownloadingChange={setIsDownloading}>
+              <FileDownloaderTrigger>
+                <Button size="sm" variant="outline" disabled={isDownloading}>
+                  {isDownloading ? <LoaderIcon /> : <DownloadIcon />}
+                  {isDownloading ? '下载中 ' : '点击下载'}
+
+                </Button>
+              </FileDownloaderTrigger>
+            </FileDownloader>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
             <Label>文件上传</Label>

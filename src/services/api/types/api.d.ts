@@ -88,6 +88,8 @@ declare namespace Api {
       file: File
     }
 
+    interface DownloadParams {}
+
     interface ListResponse extends Base.ResponseData<{
       pageNum: number
       pageSize: number
@@ -102,6 +104,8 @@ declare namespace Api {
     interface AddResponse extends Base.ResponseData {}
 
     interface ImportResponse extends Base.ResponseData {}
+
+    interface DownloadResponse extends Base.ResponseData {}
 
     interface AvatarUploadResponse extends Base.ResponseData<{
       fileUrl: string

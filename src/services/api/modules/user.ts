@@ -35,3 +35,8 @@ export function userImportApi(params: Api.User.ImportUserParams, options?: Api.B
   formData.append('file', params.file)
   return request.post<Api.User.ImportResponse>(USER_URLS.IMPORT, formData, options)
 }
+
+/** 下载用户导入模板 */
+export function userDownload(data: Api.User.DownloadParams, options?: Api.Base.RequestOptions) {
+  return request.post<Api.User.DownloadResponse>(USER_URLS.DOWNLOAD, data, options)
+}

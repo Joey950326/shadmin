@@ -1,7 +1,7 @@
 import type { Api } from '../types/api'
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../keys'
-import { userAddApi, userAvatarUpload, userDeleteApi, userEditApi, userListApi } from '../modules/user'
+import { userAddApi, userAvatarUpload, userDeleteApi, userDownload, userEditApi, userListApi } from '../modules/user'
 
 /** 获取用户列表，用于渲染表格 */
 export function useUserList(params: Api.User.ListParams) {
@@ -44,5 +44,15 @@ export function useAvatarUpload() {
 export function useImportUser() {
   return useMutation({
     mutationFn: (params: Api.User.ImportUserParams): Promise<Api.User.ImportResponse> => userAvatarUpload(params),
+  })
+}
+
+/** 获取用户导入模板 */
+export function useUserImportDownload(params: Api.User.DownloadParams) {
+  return useQuery<Api.User.ListResponse>({
+    queryKey: QUERY_KEYS.USER.DOWNLOAD(params),
+    queryFn: (): Promise<Api.User.DownloadResponse> => userDownload(params),
+    enabled: false,
+    // placeholderData: keepPreviousData,
   })
 }
