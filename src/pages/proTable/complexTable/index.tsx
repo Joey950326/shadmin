@@ -8,16 +8,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, DeleteIcon, ImportIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
+import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, DeleteIcon, DownloadIcon, ImportIcon, LoaderIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { DatetimeSelect } from '@/components/datetimeSelect'
+import { FileDownloader, FileDownloaderTrigger } from '@/components/fileDownloader'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Field, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
@@ -285,6 +286,8 @@ function ComplexTable({
     table.setColumnVisibility({})
   }
 
+  const [isExportting, setIsExportting] = useState<boolean>(false)
+
   return (
     <div className="relative h-full bg-background flex flex-col rounded-xl">
       {/* 加载遮罩 */}
@@ -316,10 +319,10 @@ function ComplexTable({
 
                 </ButtonGroup>
               </Field>
-              <Field className="col-span-2">
+              <Field className="col-span-3">
                 <AddUserButton onSuccessCb={refetch} />
               </Field>
-              <Field className="col-span-2">
+              {/* <Field className="col-span-2">
                 <UploaderDialog>
                   <Button size="sm">
                     批量导入
@@ -328,6 +331,17 @@ function ComplexTable({
                 </UploaderDialog>
               </Field>
               <Field className="col-span-2">
+                <FileDownloader fileName="用户数据" onDownloadingChange={setIsExportting}>
+                  <FileDownloaderTrigger>
+                    <Button size="sm" variant="outline" disabled={isExportting}>
+                      {isExportting ? <LoaderIcon /> : <DownloadIcon />}
+                      {isExportting ? '导入数据中' : '导出数据'}
+
+                    </Button>
+                  </FileDownloaderTrigger>
+                </FileDownloader>
+              </Field> */}
+              <Field className="col-span-3">
                 <DeleteUserButton
                   onConfirm={handleBatchDelete}
                 >
@@ -352,72 +366,98 @@ function ComplexTable({
               <DrawerContent>
                 <DrawerHeader>
                   <DrawerTitle>表格设置</DrawerTitle>
-                  <DrawerDescription>设置表格的列可见</DrawerDescription>
+                  <DrawerDescription>表格操作，设置表格的列可见</DrawerDescription>
                 </DrawerHeader>
                 <div className="flex flex-col px-4 gap-4">
-                  <Field orientation="horizontal">
-                    <Label htmlFor="username-visible" className="min-w-20">用户名：</Label>
-                    <Switch id="username-visible" checked={true} disabled />
-                  </Field>
-                  <Field orientation="horizontal">
-                    <Label htmlFor="status-visible" className="min-w-20">状态：</Label>
-                    <Switch
-                      id="status-visible"
-                      checked={table.getColumn('status')?.getIsVisible()}
-                      onCheckedChange={visible => table.getColumn('status')?.toggleVisibility(!!visible)}
-                    />
-                  </Field>
-                  <Field orientation="horizontal">
-                    <Label htmlFor="age-visible" className="min-w-20">年龄：</Label>
-                    <Switch
-                      id="age-visible"
-                      checked={table.getColumn('age')?.getIsVisible()}
-                      onCheckedChange={visible => table.getColumn('age')?.toggleVisibility(!!visible)}
-                    />
-                  </Field>
-                  <Field orientation="horizontal">
-                    <Label htmlFor="idcard-visible" className="min-w-20">身份证号：</Label>
-                    <Switch
-                      id="idcard-visible"
-                      checked={table.getColumn('idCard')?.getIsVisible()}
-                      onCheckedChange={visible => table.getColumn('idCard')?.toggleVisibility(!!visible)}
-                    />
-                  </Field>
-                  <Field orientation="horizontal">
-                    <Label htmlFor="gender-visible" className="min-w-20">性别：</Label>
-                    <Switch
-                      id="gender-visible"
-                      checked={table.getColumn('gender')?.getIsVisible()}
-                      onCheckedChange={visible => table.getColumn('gender')?.toggleVisibility(!!visible)}
-                    />
-                  </Field>
-                  <Field orientation="horizontal">
-                    <Label htmlFor="email-visible" className="min-w-20">邮箱：</Label>
-                    <Switch
-                      id="email-visible"
-                      checked={table.getColumn('email')?.getIsVisible()}
-                      onCheckedChange={visible => table.getColumn('email')?.toggleVisibility(!!visible)}
-                    />
-                  </Field>
+                  <FieldGroup className="gap-4">
+                    <Field orientation="horizontal">
+                      <Label htmlFor="username-visible" className="min-w-20">用户名：</Label>
+                      <Switch id="username-visible" checked={true} disabled />
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Label htmlFor="status-visible" className="min-w-20">状态：</Label>
+                      <Switch
+                        id="status-visible"
+                        checked={table.getColumn('status')?.getIsVisible()}
+                        onCheckedChange={visible => table.getColumn('status')?.toggleVisibility(!!visible)}
+                      />
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Label htmlFor="age-visible" className="min-w-20">年龄：</Label>
+                      <Switch
+                        id="age-visible"
+                        checked={table.getColumn('age')?.getIsVisible()}
+                        onCheckedChange={visible => table.getColumn('age')?.toggleVisibility(!!visible)}
+                      />
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Label htmlFor="idcard-visible" className="min-w-20">身份证号：</Label>
+                      <Switch
+                        id="idcard-visible"
+                        checked={table.getColumn('idCard')?.getIsVisible()}
+                        onCheckedChange={visible => table.getColumn('idCard')?.toggleVisibility(!!visible)}
+                      />
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Label htmlFor="gender-visible" className="min-w-20">性别：</Label>
+                      <Switch
+                        id="gender-visible"
+                        checked={table.getColumn('gender')?.getIsVisible()}
+                        onCheckedChange={visible => table.getColumn('gender')?.toggleVisibility(!!visible)}
+                      />
+                    </Field>
 
-                  <Field orientation="horizontal">
-                    <Label htmlFor="address-visible" className="min-w-20">地址：</Label>
-                    <Switch
-                      id="address-visible"
-                      checked={table.getColumn('address')?.getIsVisible()}
-                      onCheckedChange={visible => table.getColumn('address')?.toggleVisibility(!!visible)}
-                    />
-                  </Field>
+                    <Field orientation="horizontal">
+                      <Label htmlFor="email-visible" className="min-w-20">邮箱：</Label>
+                      <Switch
+                        id="email-visible"
+                        checked={table.getColumn('email')?.getIsVisible()}
+                        onCheckedChange={visible => table.getColumn('email')?.toggleVisibility(!!visible)}
+                      />
+                    </Field>
 
-                  <Field orientation="horizontal">
-                    <Label htmlFor="createTime-visible" className="min-w-20">创建时间：</Label>
-                    <Switch
-                      id="createTime-visible"
-                      checked={table.getColumn('createTime')?.getIsVisible()}
-                      onCheckedChange={visible => table.getColumn('createTime')?.toggleVisibility(!!visible)}
-                    />
-                  </Field>
+                    <Field orientation="horizontal">
+                      <Label htmlFor="address-visible" className="min-w-20">地址：</Label>
+                      <Switch
+                        id="address-visible"
+                        checked={table.getColumn('address')?.getIsVisible()}
+                        onCheckedChange={visible => table.getColumn('address')?.toggleVisibility(!!visible)}
+                      />
+                    </Field>
 
+                    <Field orientation="horizontal">
+                      <Label htmlFor="createTime-visible" className="min-w-20">创建时间：</Label>
+                      <Switch
+                        id="createTime-visible"
+                        checked={table.getColumn('createTime')?.getIsVisible()}
+                        onCheckedChange={visible => table.getColumn('createTime')?.toggleVisibility(!!visible)}
+                      />
+                    </Field>
+                  </FieldGroup>
+                  <FieldSeparator />
+                  <FieldGroup className="gap-4">
+                    <Field orientation="horizontal">
+                      <Label>用户数据导入:</Label>
+                      <UploaderDialog>
+                        <Button size="sm" variant="outline">
+                          批量导入
+                          <ImportIcon className="hidden lg:block" />
+                        </Button>
+                      </UploaderDialog>
+                    </Field>
+                    <Field orientation="horizontal">
+                      <Label>用户数据导出:</Label>
+                      <FileDownloader fileName="用户数据" onDownloadingChange={setIsExportting}>
+                        <FileDownloaderTrigger>
+                          <Button size="sm" variant="outline" disabled={isExportting}>
+                            {isExportting ? '导入数据中' : '导出数据'}
+                            {isExportting ? <LoaderIcon /> : <DownloadIcon />}
+
+                          </Button>
+                        </FileDownloaderTrigger>
+                      </FileDownloader>
+                    </Field>
+                  </FieldGroup>
                 </div>
                 <DrawerFooter>
                   <Button variant="outline" onClick={handleResetVisible}>重置</Button>
