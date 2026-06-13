@@ -29,6 +29,11 @@ export function userAvatarUpload(params: Api.User.AvatarUploadParams, options?: 
   return request.post<Api.User.AvatarUploadResponse>(USER_URLS.AVATAR_UPLOAD, formData, options)
 }
 
+/** 修改用户状态 */
+export function userStatusChange(params: Api.User.StatusChangeParams, options?: Api.Base.RequestOptions) {
+  return request.post<Api.User.StatusChangeResponse>(USER_URLS.CHANGE, params, options)
+}
+
 /** 通过导入，批量添加用户 */
 export function userImportApi(params: Api.User.ImportUserParams, options?: Api.Base.RequestOptions) {
   const formData = new FormData()

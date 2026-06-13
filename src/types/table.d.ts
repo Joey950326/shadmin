@@ -8,5 +8,6 @@ declare module '@tanstack/react-table' {
     onRowView?: (rowData: Api.User.UserInfo) => void
     onRowEdit?: (data: Api.User.UserInfo) => void
     onAvatarUpload?: (data: Api.User.AvatarUploadParams) => void
+    onStatusChange?: (data: Api.User.StatusChangeParams) => void
   }
 }

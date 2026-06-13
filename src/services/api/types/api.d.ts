@@ -84,6 +84,11 @@ declare namespace Api {
       file: File
     }
 
+    interface StatusChangeParams {
+      id: string
+      status: number
+    }
+
     interface ImportUserParams {
       file: File
     }
@@ -106,6 +111,8 @@ declare namespace Api {
     interface ImportResponse extends Base.ResponseData {}
 
     interface DownloadResponse extends Base.ResponseData {}
+
+    interface StatusChangeResponse extends Base.ResponseData {}
 
     interface AvatarUploadResponse extends Base.ResponseData<{
       fileUrl: string

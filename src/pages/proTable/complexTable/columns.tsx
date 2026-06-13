@@ -2,6 +2,7 @@ import type { ColumnDef, Row } from '@tanstack/react-table'
 import type { SortType as SortValueType } from './components/SortFilterHeader'
 import type { Api } from '@/services/api/types/api'
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -360,16 +361,43 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
 
       )
     },
-    cell: ({ row }) => {
-      const handleCheckedChange = () => {
-        // console.info('checked:', val)
+    cell: ({ row, table }) => {
+      const handleCheckedChange = (newVal: boolean) => {
+        const onStatusChange = table.options.meta?.onStatusChange
+        if (typeof onStatusChange === 'function') {
+          const params = {
+            id: row.original.id,
+            status: newVal ? 0 : 1,
+          }
+          onStatusChange(params)
+        }
       }
-      const value = row.getValue('status') as number
+      const value = row.getValue('status') as number === 1
       return (
-        <div className="flex items-center space-x-2">
-          <Switch value={value} defaultChecked={value === 1} size="sm" onCheckedChange={handleCheckedChange} />
-          <Label htmlFor="airplane-mode">启用</Label>
-        </div>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <div className="flex items-center space-x-2">
+              <Switch checked={value} size="sm" />
+              <Label htmlFor="airplane-mode">启用</Label>
+            </div>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>温馨提示</AlertDialogTitle>
+              <AlertDialogDescription>
+                确定
+                {value ? '禁用' : '启用'}
+                {row.original.username}
+                的状态
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogAction variant="destructive" onClick={() => handleCheckedChange(!value)}>确认</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )
     },
     filterFn: 'includesString',
@@ -400,7 +428,7 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
       const handleAvatarUpload = table.options.meta?.onAvatarUpload
 
       return (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-center gap-2">
           <EditActionCell userInfo={row.original} onEdit={handleEdit} onAvatarUpload={handleAvatarUpload}>
             <Button
               variant="outline"

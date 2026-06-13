@@ -34,7 +34,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
-import { useAvatarUpload, useDeleteUser, useEditUser, useUserList } from '@/services/api/hooks/useUser'
+import { useAvatarUpload, useDeleteUser, useEditUser, useStatusChange, useUserList } from '@/services/api/hooks/useUser'
 import { getDateNow } from '@/utils'
 import { columns } from './columns'
 import AddUserButton from './components/AddUserButton'
@@ -48,6 +48,7 @@ interface ComplexTableProps<T> {
   onRowDelete: UseMutationResult<Api.User.DeleteResponse, unknown, Api.User.DeleteParams>
   onRowEdit: UseMutationResult<Api.User.EditResponse, unknown, Api.User.EditParams>
   onAvatarUpload: UseMutationResult<Api.User.AvatarUploadResponse, unknown, Api.User.AvatarUploadParams>
+  onStatusChange: UseMutationResult<Api.User.StatusChangeResponse, unknown, Api.User.StatusChangeParams>
 }
 
 interface SelectDateTimeDef {
@@ -75,6 +76,7 @@ function ComplexTable({
   onRowDelete,
   onRowEdit,
   onAvatarUpload,
+  onStatusChange,
 }: ComplexTableProps<Api.User.UserInfo>) {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -208,6 +210,26 @@ function ComplexTable({
     })
   }, [onAvatarUpload])
 
+  const handleStatusChange = useCallback((params: Api.User.StatusChangeParams, successCb?: (data: Api.User.StatusChangeResponse) => void, failCb?: (error: Error) => void) => {
+    onStatusChange.mutate(params, {
+      onSuccess: (data) => {
+        toast.success('修改成功', {
+          position: 'top-right',
+        })
+        successCb?.(data)
+      },
+      onError: (error) => {
+        toast.error('修改失败', {
+          position: 'top-right',
+        })
+        failCb?.(error as Error)
+      },
+      onSettled: () => {
+        refetch()
+      },
+    })
+  }, [onStatusChange, refetch])
+
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   const table = useReactTable({
@@ -230,6 +252,7 @@ function ComplexTable({
       deleteLoading: onRowDelete?.isPending,
       onRowEdit: handleEdit,
       onAvatarUpload: handleAvatarUpload,
+      onStatusChange: handleStatusChange,
     },
   })
 
@@ -619,6 +642,7 @@ export default function Index() {
   const deleteMutation = useDeleteUser()
   const editMutation = useEditUser()
   const avatarUploadMutaiton = useAvatarUpload()
+  const statusChangeMutation = useStatusChange()
 
   return (
     <div className="size-full">
@@ -629,6 +653,7 @@ export default function Index() {
         columns={tableColumns}
         fetchTableData={useUserList}
         onAvatarUpload={avatarUploadMutaiton}
+        onStatusChange={statusChangeMutation}
       />
     </div>
   )
