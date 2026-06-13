@@ -1,4 +1,5 @@
 import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
+import type { TreeItemValue } from '@/components/treeSelector'
 
 declare namespace Api {
   namespace Base {
@@ -118,6 +119,13 @@ declare namespace Api {
       fileUrl: string
     }> {}
 
+  }
+
+  namespace Department {
+    interface ListParams {}
+    interface ListResponse extends Base.ResponseData {
+      data: Array<TreeItemValue>
+    }
   }
 }
 

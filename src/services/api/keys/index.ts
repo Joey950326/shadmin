@@ -9,6 +9,9 @@ export const QUERY_KEYS = {
     DELETE: (params: Api.User.DeleteParams) => ['user', 'delete', params] as const,
     DOWNLOAD: (params: Api.User.DownloadParams) => ['user', 'download', params] as const,
   },
+  DEPARTMENT: {
+    LIST: () => ['department', 'list'] as const,
+  },
 }
 
 export const MUTATION_KEYS = {

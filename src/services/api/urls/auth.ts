@@ -14,5 +14,8 @@ export const USER_URLS = {
   IMPORT: `${API_BASE_URL}/geeker/user/import`, // 批量上传用户
   DOWNLOAD: `${API_BASE_URL}/geeker/user/export`, // 下载用户导入模板
   CHANGE: `${API_BASE_URL}/geeker/user/change`, // 修改用户状态
+}
 
+export const DEPARTMENT_URLS = {
+  LIST: `${API_BASE_URL}/geeker/user/department`, // 获取部门列表接口
 }

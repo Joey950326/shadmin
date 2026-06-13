@@ -62,8 +62,8 @@ function BasicTable({
   const total = res?.data?.total ?? 0
   const pageCount = useMemo(() => Math.ceil(total / pagination.pageSize), [total, pagination.pageSize])
 
-  const handleDeleteConfirm = useCallback((rowId: string) => {
-    const deleteParams = { id: [rowId] }
+  const handleDeleteConfirm = useCallback((rowId: string | Array<string>) => {
+    const deleteParams = { id: Array.isArray(rowId) ? rowId : [rowId] }
     onRowDelete.mutate(deleteParams, {
       onSuccess: () => {
         toast.success('删除成功', {
@@ -102,7 +102,7 @@ function BasicTable({
     })
   }, [onRowEdit, refetch])
 
-  const handleAvatarUpload = useCallback((params: Api.User.AvatarUploadParams, successCb?: (data) => void, failCb?: (error) => void) => {
+  const handleAvatarUpload = useCallback((params: Api.User.AvatarUploadParams, successCb?: (data: Api.User.AvatarUploadResponse) => void, failCb?: (error: Error) => void) => {
     onAvatarUpload.mutate(params, {
       onSuccess: (data) => {
         toast.success('上传成功', {
@@ -114,7 +114,7 @@ function BasicTable({
         toast.error('上传失败', {
           position: 'top-right',
         })
-        failCb?.(error)
+        failCb?.(error as Error)
       },
     })
   }, [onAvatarUpload])
