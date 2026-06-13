@@ -97,8 +97,6 @@ function ComplexTable({
   // 使用非受控组件处理全局搜索，提高性能
   const usernameInputRef = useRef<HTMLInputElement>(null)
   const idCardInputRef = useRef<HTMLInputElement>(null)
-  // const genderSelectRef = useRef<string | null>(null)
-  // const stautsSelectRef = useRef<string | null>(null)
   const minAgeInputRef = useRef<HTMLInputElement>(null)
   const maxAgeInputRef = useRef<HTMLInputElement>(null)
 
@@ -107,12 +105,11 @@ function ComplexTable({
       username: usernameInputRef.current?.value,
       idCard: idCardInputRef.current?.value,
       gender: genderSelected && Number(genderSelected),
-      status: statusSelected !== null && Number(statusSelected),
+      status: Number(statusSelected) !== 0 ? Number(statusSelected) : null,
       minAge: minAgeInputRef.current?.value,
       maxAge: maxAgeInputRef.current?.value,
-      startTime: selectDatetime.from !== selectDatetime.to && selectDatetime.from,
+      startTime: selectDatetime.from !== selectDatetime.to ? selectDatetime.from : '',
       endTime: selectDatetime.to,
-
     }).filter(([, value]) => value !== '' && value !== undefined && value !== null))
     setSearchValue(searchValue)
   }
@@ -133,13 +130,10 @@ function ComplexTable({
     setStatusSelected('')
     setGenderSelected('')
     setSelectDatetime({ from: now, to: now })
-    handleSearch()
   }
 
   const fetchParams = useMemo(() => ({
     type: 1,
-    startTime: '2022-11-12 11:35:00',
-    endTime: '2022-12-12 11:35:00',
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     ...searchValue,
