@@ -1,7 +1,7 @@
 import type { ColumnDef, Row } from '@tanstack/react-table'
 import type { SortType as SortValueType } from './components/SortFilterHeader'
 import type { Api } from '@/services/api/types/api'
-import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react'
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -49,6 +49,34 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
   //   header: 'ID',
   // },
   // 用户名
+  {
+    id: 'expander',
+    header: () => null,
+    cell: ({ row }) => {
+      const canExpand = row.getCanExpand()
+      return canExpand
+        ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={row.getToggleExpandedHandler()}
+              aria-label={row.getIsExpanded() ? '收起' : '展开'}
+            >
+              {row.getIsExpanded()
+                ? (
+                    <ChevronDownIcon className="h-4 w-4 transition-transform" />
+                  )
+                : (
+                    <ChevronRightIcon className="h-4 w-4 transition-transform" />
+                  )}
+            </Button>
+          )
+        : null
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     id: 'select',
     header: ({ table }) => (

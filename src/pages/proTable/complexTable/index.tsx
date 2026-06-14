@@ -4,12 +4,13 @@ import type { Api } from '@/services/api/types/api'
 import {
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, DeleteIcon, DownloadIcon, ImportIcon, LoaderIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { DatetimeSelect } from '@/components/datetimeSelect'
@@ -233,6 +234,8 @@ function ComplexTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    getRowCanExpand: row => !!row.original.user,
     manualPagination: true,
     // manualFiltering: true,
     onPaginationChange: setPagination,
@@ -572,24 +575,44 @@ function ComplexTable({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows.map(row => (
-                <TableRow
+                <Fragment
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+
                 >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        cell.column.id === 'actions' && 'sticky right-0 bg-background border-l',
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                  <TableRow
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map(cell => (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          cell.column.id === 'actions' && 'sticky right-0 bg-background border-l',
+                        )}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {/* 展开的子内容行 */}
+                  {row.getIsExpanded() && (
+                    <TableRow>
+                      <TableCell colSpan={row.getAllCells().length} className="p-0 bg-muted/30">
+                        <ScrollArea className="w-full max-w-[100vw] lg:max-w-[calc(100vw-16rem)]">
+                          <div className=" flex justify-center p-6 w-full bg-primary/5">
+                            更多信息：
+                            {
+                              row.original ? <div>{JSON.stringify(row.original)}</div> : ''
+                            }
+                          </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </Fragment>
               ))}
             </TableBody>
           </Table>

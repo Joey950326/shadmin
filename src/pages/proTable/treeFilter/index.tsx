@@ -390,7 +390,7 @@ export default function Index() {
   const [departmentId, setDepartmentId] = useState<Array<string>>([])
 
   return (
-    <div className="size-full flex flex-row gap-1">
+    <div className="size-full flex flex-row gap-x-1">
       <div className="w-1/4 min-w-48">
         <DepartmentTree onSelectedChange={setDepartmentId} />
       </div>
