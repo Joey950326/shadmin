@@ -1,5 +1,5 @@
 import type { Ref } from 'react'
-import { memo, useCallback, useImperativeHandle, useState } from 'react'
+import { memo, useCallback, useEffect, useImperativeHandle, useState } from 'react'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -34,19 +34,28 @@ const DEFAULT_FORM_VALUE = {
 
 }
 
-function BasicFormCmp({ ref, value }: BasicFormProps) {
+function BasicFormCmp({ ref, value, onValueChange }: BasicFormProps) {
   const [innerFormData, setInnerFormData] = useState<BasicFormType>(() => ({ ...DEFAULT_FORM_VALUE, ...value }))
 
   const handleFormChange = useCallback((val: Partial<BasicFormType>) => {
-    setInnerFormData(prev => ({ ...prev, ...val }))
-  }, [])
+    setInnerFormData((prev) => {
+      const next = { ...prev, ...val }
+      onValueChange?.(next)
+      return next
+    })
+  }, [onValueChange])
 
   useImperativeHandle(ref, () => ({
     getFormData: () => innerFormData,
     reset: () => {
       setInnerFormData(DEFAULT_FORM_VALUE)
     },
-  }))
+  }), [innerFormData])
+
+  useEffect(() => {
+    if (value)
+      setInnerFormData(prev => ({ ...prev, ...value }))
+  }, [value])
 
   return (
     <FieldGroup className="gap-4">
@@ -75,6 +84,8 @@ function BasicFormCmp({ ref, value }: BasicFormProps) {
         <FieldLabel htmlFor="form-age">年龄</FieldLabel>
         <Input
           placeholder="请输入年龄"
+          max={120}
+          min={0}
           value={innerFormData.age}
           onChange={e => handleFormChange({ age: Number(e.target.value) })}
           id="form-age"
@@ -92,8 +103,8 @@ function BasicFormCmp({ ref, value }: BasicFormProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="male">male</SelectItem>
-              <SelectItem value="female">female</SelectItem>
+              <SelectItem value="male">男性</SelectItem>
+              <SelectItem value="female">女性</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

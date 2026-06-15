@@ -52,7 +52,8 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
       },
       reset: () => form.reset(),
     }
-  ))
+  ), [form])
+
   return (
     <form id={id} className="size-full pb-2">
       <FieldGroup>

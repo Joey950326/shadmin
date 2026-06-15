@@ -25,12 +25,10 @@ function ComplexForm() {
               {
                 Object.entries(formData).map(([key, value]) => {
                   return (
-                    <p key={key}>
-                      {key}
-                      :
-                      {' '}
-                      {typeof value === 'object' ? JSON.stringify(value) : value.toString()}
-                    </p>
+                    <div key={key} className="flex items-center gap-1">
+                      <p>{`${key}: `}</p>
+                      <p className="font-bold">{typeof value === 'object' ? JSON.stringify(value) : value.toString()}</p>
+                    </div>
                   )
                 })
               }
