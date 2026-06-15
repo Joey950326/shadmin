@@ -48,6 +48,7 @@ export default function useMenu() {
       meta: { icon: 'form', title: t('menu:commonForm') },
       children: [
         { name: 'basic-form', path: '/form/basicForm', meta: { title: t('menu:form.basicForm') } },
+        { name: 'complex-form', path: '/form/complexForm', meta: { title: t('menu:form.complexForm') } },
       ],
     },
     {

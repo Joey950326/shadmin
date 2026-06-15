@@ -1,71 +1,59 @@
 import type { BasicFormRefDef } from './BasicForm'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Field } from '@/components/ui/field'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import BasicFormCmp from './BasicForm'
 
 function BasicForm() {
   const ref = useRef<BasicFormRefDef>(null)
-  const handleReset = () => {
-    if (ref.current) {
-      ref.current.reset()
-    }
-  }
-  const handleConfirm = async () => {
-    if (ref.current) {
-      const formData = await ref.current.getFormData()
-      if (formData) {
-        toast(
+  const handleReset = useCallback(() => {
+    ref.current?.reset()
+  }, [])
+  const handleConfirm = useCallback(() => {
+    const formData = ref.current?.getFormData()
+    if (formData) {
+      toast(
+        <div>
+          <span>提交的数据：</span>
           <div>
-            <span>提交的数据：</span>
-            <div>
-              {
-                Object.entries(formData).map(([key, value]) => {
-                  return (
-                    <p key={key}>
-                      {key}
-                      :
-                      {' '}
-                      {typeof value === 'object' ? JSON.stringify(value) : value.toString()}
-                    </p>
-                  )
-                })
-              }
-            </div>
-          </div>,
-          {
-            position: 'top-right',
-          },
-        )
-      }
+            {
+              Object.entries(formData).map(([key, value]) => {
+                return (
+                  <p key={key}>
+                    {key}
+                    :
+                    {' '}
+                    {typeof value === 'object' ? JSON.stringify(value) : value.toString()}
+                  </p>
+                )
+              })
+            }
+          </div>
+        </div>,
+        {
+          position: 'top-right',
+        },
+      )
+      // 进行后续操作，如网络提交。。。
     }
-  }
+  }, [])
   return (
-    <Card className="size-full flex flex-col">
-      <CardHeader className="min-h-12">
-        <CardTitle>活动申请</CardTitle>
-        <CardDescription>
-          创建，申请活动
-        </CardDescription>
+    <Card className="size-full">
+      <CardHeader>
+        <CardTitle>基础表单</CardTitle>
       </CardHeader>
-      <ScrollArea className="max-h-[calc(100%-8rem)]">
-
-        <CardContent className="flex-1">
-          <BasicFormCmp id="basicForm" ref={ref} />
+      <ScrollArea className="overflow-y-auto">
+        <CardContent>
+          <BasicFormCmp ref={ref}></BasicFormCmp>
         </CardContent>
       </ScrollArea>
-      <CardFooter className="min-h-8">
-        <Field orientation="horizontal" className="flex items-center justify-end">
-          <Button type="button" variant="outline" onClick={handleReset}>
-            重置
-          </Button>
-          <Button type="submit" form="form-rhf-demo" onClick={handleConfirm}>
-            提交
-          </Button>
-        </Field>
+      <CardFooter className="space-x-4">
+        <Button type="reset" variant="outline" onClick={handleReset}>
+          重置
+        </Button>
+        <Button onClick={handleConfirm}>提交</Button>
       </CardFooter>
     </Card>
   )

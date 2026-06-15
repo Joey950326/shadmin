@@ -69,6 +69,16 @@ const dynamicRoutes = [
               title: 'menu:form.basicForm',
             },
           },
+          {
+            path: 'complexForm',
+            lazy: async () => {
+              const Component = (await import('@/pages/proForm/complexForm/index.tsx')).default
+              return { Component }
+            },
+            handle: {
+              title: 'menu:form.complexForm',
+            },
+          },
         ],
       },
       {

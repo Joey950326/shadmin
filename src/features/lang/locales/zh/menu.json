@@ -23,9 +23,9 @@
   },
   "form": {
     "title": "常用表单",
-    "basicForm": "基础表格",
-    "complexTable": "复杂表格",
-    "validateTable": "筛选表格"
+    "basicForm": "基础表单",
+    "complexForm": "复杂表单",
+    "validateForm": "检验表单"
   },
   "dataScreen": "数据大屏",
   "proTable": "超级表格",
