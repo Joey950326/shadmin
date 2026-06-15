@@ -21,6 +21,12 @@
     "filterTable": "筛选表格",
     "complexTable": "复杂表格"
   },
+  "form": {
+    "title": "常用表单",
+    "basicForm": "基础表格",
+    "complexTable": "复杂表格",
+    "validateTable": "筛选表格"
+  },
   "dataScreen": "数据大屏",
   "proTable": "超级表格",
   "rightManage": "权限管理",

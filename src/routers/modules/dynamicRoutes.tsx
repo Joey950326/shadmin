@@ -19,7 +19,6 @@ const dynamicRoutes = [
           return { Component }
         },
         handle: { title: '首页' },
-
       },
       {
         path: 'proTable',
@@ -51,15 +50,24 @@ const dynamicRoutes = [
               const Component = (await import('@/pages/proTable/treeFilter/index.tsx')).default
               return { Component }
             },
-            handle: { title: '树形筛选' },
+            handle: { title: 'menu:table.treeTable' },
           },
+
+        ],
+      },
+      {
+        path: 'form',
+        handle: { title: 'menu:form.title' },
+        children: [
           {
-            path: 'selectFilter',
+            path: 'basicForm',
             lazy: async () => {
-              const Component = (await import('@/pages/proTable/selectFilter/index.tsx')).default
+              const Component = (await import('@/pages/proForm/basicForm/index.tsx')).default
               return { Component }
             },
-            handle: { title: '选择筛选' },
+            handle: {
+              title: 'menu:form.basicForm',
+            },
           },
         ],
       },

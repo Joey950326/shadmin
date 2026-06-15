@@ -40,7 +40,14 @@ export default function useMenu() {
         { name: 'basicTable', path: '/proTable/basicTable', meta: { title: t('menu:table.basicTable') } },
         { name: 'complexTable', path: '/proTable/complexTable', meta: { title: t('menu:table.complexTable') } },
         { name: 'treeTable', path: '/proTable/treeFilter', meta: { title: t('menu:table.treeTable') } },
-        { name: 'filterTable', path: '/proTable/selectFilter', meta: { title: t('menu:table.filterTable') } },
+      ],
+    },
+    {
+      name: 'form',
+      path: '#',
+      meta: { icon: 'form', title: t('menu:commonForm') },
+      children: [
+        { name: 'basic-form', path: '/form/basicForm', meta: { title: t('menu:form.basicForm') } },
       ],
     },
     {
@@ -59,15 +66,6 @@ export default function useMenu() {
       children: [
         { name: 'treeTable', path: '/commonComponent/fileUpload', meta: { title: t('menu:fileUpload') } },
         { name: 'filterTable', path: '/commonComponent/svgIcons', meta: { title: t('menu:svgIcons') } },
-      ],
-    },
-
-    {
-      name: 'form',
-      path: '#',
-      meta: { icon: 'form', title: t('menu:commonForm') },
-      children: [
-        { name: 'basic-form', path: '/form/basicForm', meta: { title: t('menu:basicForm') } },
       ],
     },
 

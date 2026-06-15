@@ -25,8 +25,8 @@ export function transformFileSize(size: number) {
 }
 
 // 获取当前时间，返回格式为'YYYYMMDDHHmmSS'
-export function getDateNowText(): string {
-  const d = getDateNow()
+export function getDateNowText(t?: Date): string {
+  const d = t ?? getDateNow()
   const Y = String(d.getFullYear())
   const M = String(d.getMonth() + 1).padStart(2, '0')
   const D = String(d.getDate()).padStart(2, '0')
@@ -34,4 +34,8 @@ export function getDateNowText(): string {
   const mm = String(d.getMinutes()).padStart(2, '0')
   const ss = String(d.getSeconds()).padStart(2, '0')
   return `${Y}${M}${D}${hh}${mm}${ss}`
+}
+
+export function getNow(isTimeStamp = false) {
+  return isTimeStamp ? Date.now() : new Date()
 }
