@@ -49,6 +49,7 @@ export default function useMenu() {
       children: [
         { name: 'basic-form', path: '/form/basicForm', meta: { title: t('menu:form.basicForm') } },
         { name: 'complex-form', path: '/form/complexForm', meta: { title: t('menu:form.complexForm') } },
+        { name: 'dynamic-form', path: '/form/dynamicForm', meta: { title: t('menu:form.dynamicForm') } },
       ],
     },
     {
