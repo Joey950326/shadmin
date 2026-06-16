@@ -20,6 +20,7 @@ const dynamicRoutes = [
         },
         handle: { title: '首页' },
       },
+      // 表格
       {
         path: 'proTable',
         handle: { title: '超级表格' },
@@ -55,6 +56,7 @@ const dynamicRoutes = [
 
         ],
       },
+      // 表单
       {
         path: 'form',
         handle: { title: 'menu:form.title' },
@@ -87,6 +89,73 @@ const dynamicRoutes = [
             },
             handle: {
               title: 'menu:form.dynamicForm',
+            },
+          },
+        ],
+      },
+      // 图表
+      {
+        path: 'chart',
+        handle: { title: 'menu:chart.title' },
+        children: [
+          {
+            path: 'barChart',
+            lazy: async () => {
+              const Component = (await import('@/pages/chart/barChart/index.tsx')).default
+              return { Component }
+            },
+            handle: {
+              title: 'menu:chart.barChart',
+            },
+          },
+          {
+            path: 'lineChart',
+            lazy: async () => {
+              const Component = (await import('@/pages/chart/lineChart/index.tsx')).default
+              return { Component }
+            },
+            handle: {
+              title: 'menu:chart.lineChart',
+            },
+          },
+          {
+            path: 'areaChart',
+            lazy: async () => {
+              const Component = (await import('@/pages/chart/areaChart/index.tsx')).default
+              return { Component }
+            },
+            handle: {
+              title: 'menu:chart.areaChart',
+            },
+          },
+          {
+            path: 'pieChart',
+            lazy: async () => {
+              const Component = (await import('@/pages/chart/pieChart/index.tsx')).default
+              return { Component }
+            },
+            handle: {
+              title: 'menu:chart.pieChart',
+            },
+          },
+          {
+            path: 'radarChart',
+            lazy: async () => {
+              const Component = (await import('@/pages/chart/radarChart/index.tsx')).default
+              return { Component }
+            },
+            handle: {
+              title: 'menu:chart.radarChart',
+            },
+          },
+          {
+            path: 'radialChart',
+            lazy: async () => {
+              const Component = (await import('@/pages/chart/radialChart/index.tsx')).default
+              return { Component }
+            },
+            handle: {
+              title: 'menu:chart.radialChart',
             },
           },
         ],

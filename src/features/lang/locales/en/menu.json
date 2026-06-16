@@ -14,5 +14,12 @@
   "menuCollapse": "Menu Collapse",
   "systemManage": "System Management",
   "externalLink": "External Link",
-  "about": "About Us"
+  "about": "About Us",
+  "chart": {
+    "lineChart": "line chart",
+    "areaChart": "area chart",
+    "pieChart": "pie chart",
+    "radarChart": "radar chart",
+    "radialChart": "radial chart"
+  }
 }

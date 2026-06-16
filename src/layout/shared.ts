@@ -1,4 +1,4 @@
-import { ChartPieIcon, ComponentIcon, FormIcon, GaugeIcon, HomeIcon, InfoIcon, KeyIcon, LinkIcon, ListCollapseIcon, MapIcon, SettingsIcon, Table2Icon, TelescopeIcon } from 'lucide-react'
+import { ChartAreaIcon, ChartColumnBigIcon, ChartLineIcon, ChartPieIcon, ComponentIcon, FormIcon, GaugeIcon, HomeIcon, InfoIcon, KeyIcon, LinkIcon, ListCollapseIcon, MapIcon, RadarIcon, RadiationIcon, SettingsIcon, Table2Icon, TelescopeIcon } from 'lucide-react'
 import { createElement } from 'react'
 
 const IconMap: Record<string, React.ComponentType> = {
@@ -16,6 +16,12 @@ const IconMap: Record<string, React.ComponentType> = {
   'about': InfoIcon,
   'map': MapIcon,
   'other': MapIcon,
+  'barChart': ChartColumnBigIcon,
+  'lineChart': ChartLineIcon,
+  'areaChart': ChartAreaIcon,
+  'pieChart': ChartPieIcon,
+  'radarChart': RadarIcon,
+  'radialChart': RadiationIcon,
 
 }
 

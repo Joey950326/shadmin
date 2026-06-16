@@ -38,5 +38,14 @@
   "menuCollapse": "菜单嵌套",
   "systemManage": "系统管理",
   "externalLink": "外部链接",
-  "about": "关于我们"
+  "about": "关于我们",
+  "chart": {
+    "title": "常用图表",
+    "barChart": "柱状图",
+    "lineChart": "折线图",
+    "areaChart": "面积图",
+    "pieChart": "饼状图",
+    "radarChart": "雷达图",
+    "radialChart": "径向图"
+  }
 }

@@ -53,6 +53,19 @@ export default function useMenu() {
       ],
     },
     {
+      name: 'chart',
+      path: '#',
+      meta: { icon: 'chart', title: t('menu:commonChart') },
+      children: [
+        { name: 'bar-chart', path: '/chart/barChart', meta: { icon: 'barChart', title: t('menu:chart.barChart') } },
+        { name: 'line-chart', path: '/chart/lineChart', meta: { icon: 'lineChart', title: t('menu:chart.lineChart') } },
+        { name: 'area-chart', path: '/chart/areaChart', meta: { icon: 'areaChart', title: t('menu:chart.areaChart') } },
+        { name: 'pie-chart', path: '/chart/pieChart', meta: { icon: 'pieChart', title: t('menu:chart.pieChart') } },
+        { name: 'radar-chart', path: '/chart/radarChart', meta: { icon: 'radarChart', title: t('menu:chart.radarChart') } },
+        { name: 'radial-chart', path: '/chart/radialChart', meta: { icon: 'radialChart', title: t('menu:chart.radialChart') } },
+      ],
+    },
+    {
       name: 'rightManage',
       path: '#',
       meta: { icon: 'right-manage', title: t('menu:rightManage') },
@@ -68,15 +81,6 @@ export default function useMenu() {
       children: [
         { name: 'treeTable', path: '/commonComponent/fileUpload', meta: { title: t('menu:fileUpload') } },
         { name: 'filterTable', path: '/commonComponent/svgIcons', meta: { title: t('menu:svgIcons') } },
-      ],
-    },
-
-    {
-      name: 'chart',
-      path: '#',
-      meta: { icon: 'chart', title: t('menu:commonChart') },
-      children: [
-        { name: 'basic-chart', path: '/chart/basicChart', meta: { title: t('menu:basicChart') } },
       ],
     },
 
