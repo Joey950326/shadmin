@@ -1,7 +1,7 @@
 import type { LegendPayload } from 'recharts'
 import type { ChartData, HoverOpacity, MonthData, SeriesKey } from './types'
 import type { ChartConfig } from '@/components/ui/chart'
-import { TrendingUp } from 'lucide-react'
+import { TrendingUpIcon } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, XAxis } from 'recharts'
 import {
@@ -18,7 +18,6 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 
-export const description = 'A stacked bar chart with a legend'
 const PHONE_MODEL = ['iphone15', 'iphone16', 'iphone17'] as const
 const PHONE_TYPE = ['base', 'plus', 'max'] as const
 const DEMO_DATA = [
@@ -184,7 +183,7 @@ export default function BarChartCmp() {
         <div className="flex gap-2 leading-none font-medium">
           店铺手机型号销售数据
           {' '}
-          <TrendingUp className="h-4 w-4" />
+          <TrendingUpIcon className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           店铺近半年手机各型号销量统计
