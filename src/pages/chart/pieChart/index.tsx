@@ -65,15 +65,15 @@ const DEMO_DATA = [
 const chartConfig = {
   'iphone15-base': {
     label: 'iPhone 15',
-    color: 'red', // Tailwind blue-500
+    color: 'violet',
   },
   'iphone15-plus': {
     label: 'iPhone 15 Plus',
-    color: 'green',
+    color: 'lime',
   },
   'iphone15-max': {
     label: 'iPhone 15 Pro Max',
-    color: 'blue',
+    color: 'teal',
   },
 
   'iphone16-base': {
@@ -196,9 +196,9 @@ function PieChartCmp() {
 
             {/* hover提示 */}
             <ChartTooltip
+
               content={(
                 <ChartTooltipContent
-                  indicator="line"
                   formatter={(val, name) => `${activeChart}${name}: ${val}`}
                 />
               )}
@@ -223,8 +223,7 @@ function PieChartCmp() {
               onMouseLeave={() => setCurrentIndex(-1)}
               innerRadius={60}
               strokeWidth={5}
-              className="transition-all duration-300 ease-in"
-              style={{ transitionProperty: 'all', transitionDuration: '300ms', transitionTimingFunction: 'cubic-bezier(0.4, 0, 1, 1)', cursor: 'pointer' }}
+              className="transition-all duration-500 ease-in cursor-pointer "
               shape={({
                 index,
                 outerRadius = 0,
@@ -232,7 +231,7 @@ function PieChartCmp() {
               }: PieSectorShapeProps) =>
                 index === currentIndex
                   ? (
-                      <Sector {...props} outerRadius={outerRadius + 15} />
+                      <Sector {...props} outerRadius={outerRadius + 10} />
                     )
                   : (
                       <Sector {...props} outerRadius={outerRadius} />
