@@ -15,7 +15,8 @@ interface RouteTabItemProps {
 
 function RouteTabItem({ tabItem, onClick, onClose }: RouteTabItemProps) {
   const navigation = useNavigate()
-  const { onChange } = useRouteTabListContext()
+
+  const { onChange, activeTabRef } = useRouteTabListContext()
 
   const { title, path, active } = tabItem
 
@@ -40,6 +41,7 @@ function RouteTabItem({ tabItem, onClick, onClose }: RouteTabItemProps) {
         'hover:bg-card-foreground/10',
         { 'bg-card-foreground/20 border-0': active },
       )}
+      ref={tabItem.active ? activeTabRef : null}
       onClick={handleTabClick}
     >
       <span className={cn('p-2 flex items-center text-xs')}>{title}</span>

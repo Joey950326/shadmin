@@ -45,6 +45,10 @@ export default function RouteTabsIndex() {
 
   const [tabsData, setTabsData] = useState<RouteTab[]>(initialTabsData)
 
+  const activeTabRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
+
   const activeTabItem = useMemo(() => {
     return tabsData.find(tab => tab.active)
   }, [tabsData])
@@ -135,6 +139,9 @@ export default function RouteTabsIndex() {
     showTabs && tabsData.length > 0 && (
       <RouteTabs
         className=" h-11 w-full border-b-foreground/10 bg-background"
+        activeTabItem={activeTabItem}
+        activeTabRef={activeTabRef}
+        scrollContainerRef={scrollContainerRef}
         onChange={handleTabsChange}
         onFreshTab={handleFreshTab}
         onCloseCurrentTab={handleCloseCurrentTab}
