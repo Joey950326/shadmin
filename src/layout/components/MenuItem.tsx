@@ -38,7 +38,7 @@ export default function NavMenuItem({ item, level = 0 }: NavMenuItemProps) {
     return (
       <SidebarMenuItem>
         <SidebarMenuButton asChild isActive={isActive}>
-          <NavLink to={item.path || '#'}>
+          <NavLink to={item.path || '#'} className={isActive ? 'bg-primary/20! hover:bg-primary/20!' : ''}>
             <span className="flex size-4 shrink-0 items-center justify-center">
               {getMenuIcon(item?.meta?.icon || '')}
             </span>

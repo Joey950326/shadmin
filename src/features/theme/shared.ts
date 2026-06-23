@@ -65,3 +65,12 @@ export function getSystemReduce(): boolean {
 export function isClassNameDark(): boolean {
   return document.documentElement.classList.contains('dark')
 }
+
+// 切换主题色
+export function changeColorClass(color: string) {
+  const root = document.documentElement
+  root.classList.remove('theme-blue', 'theme-orange', 'theme-green', 'theme-rose')
+  if (color) {
+    root.classList.add(`theme-${color}`)
+  }
+}

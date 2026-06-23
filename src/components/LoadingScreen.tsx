@@ -25,10 +25,10 @@ export default function FullScreenLoader({
       )}
     >
       <div className="flex flex-col items-center gap-4">
-        <Spinner className="h-16 w-16 text-primary" />
+        <Spinner className="h-16 w-16 text-ring" />
 
         {text && (
-          <p className="text-primary text-sm font-medium tracking-wide">
+          <p className="text-ring text-sm font-medium tracking-wide">
             {text}
           </p>
         )}

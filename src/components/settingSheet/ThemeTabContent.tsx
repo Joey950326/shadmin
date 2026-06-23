@@ -2,6 +2,7 @@ import ThemeButtonGroups from '@/features/theme/ThemeToggleGroups'
 import { cn } from '@/lib/utils'
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '../ui/field'
 import GraySwitcher from './GraySwitcher'
+import PresetColorToggle from './presetColorToggle'
 import WeakSwitcher from './WeakSwitcher'
 
 interface ThemeTabContentProps {
@@ -21,6 +22,18 @@ export default function ThemeTabContent({ className }: ThemeTabContentProps) {
           </FieldContent>
           {/* <Switch id="switch-share" /> */}
           <ThemeButtonGroups />
+        </Field>
+      </FieldLabel>
+
+      <FieldLabel htmlFor="toggle-theme">
+        <Field>
+          <FieldContent>
+            <FieldTitle>主题颜色</FieldTitle>
+            <FieldDescription>
+              控制网页的主题颜色，请选择您喜欢的皮肤。
+            </FieldDescription>
+          </FieldContent>
+          <PresetColorToggle id="toggle-theme" />
         </Field>
       </FieldLabel>
       <FieldLabel htmlFor="switch-gray-mode">
@@ -46,6 +59,7 @@ export default function ThemeTabContent({ className }: ThemeTabContentProps) {
           <WeakSwitcher id="switch-notifications" />
         </Field>
       </FieldLabel>
+
     </FieldGroup>
   )
 }

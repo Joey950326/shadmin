@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { selectIsDark, selectThemeMode, setIsDark } from '@/store/modules/app'
-import { applyThemeMode, getSystemThemeMode } from './shared'
+import { selectIsDark, selectPrimaryColor, selectThemeMode, setIsDark } from '@/store/modules/app'
+import { applyThemeMode, changeColorClass, getSystemThemeMode } from './shared'
 
 interface ThemeProviderProps {
   children: React.ReactNode
@@ -13,6 +13,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const themeMode = useAppSelector(selectThemeMode)
   const isGray = useAppSelector(state => state.app.isGray)
   const isColorWeak = useAppSelector(state => state.app.isColorWeak)
+  const primaryColor = useAppSelector(selectPrimaryColor)
 
   useEffect(() => {
     let isDark: boolean
@@ -43,6 +44,11 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     root.style.filter = filters.length > 0 ? filters.join(' ') : 'none'
     root.style.transition = 'filter 0.45s ease'
   }, [isGray, isColorWeak])
+
+  // 主题色
+  useEffect(() => {
+    changeColorClass(primaryColor)
+  }, [primaryColor])
 
   return (children)
 }

@@ -36,7 +36,7 @@ const initialState: AppState = {
   language: null,
   maximize: false,
   themeMode: 'light',
-  primaryColor: '#1890ff',
+  primaryColor: 'rose',
   isDark: false,
   isGray: false,
   isColorWeak: false,

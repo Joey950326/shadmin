@@ -38,8 +38,8 @@ function RouteTabItem({ tabItem, onClick, onClose }: RouteTabItemProps) {
     <div
       className={cn(
         'box-border h-full flex flex-row justify-center items-center  border border-foreground/20 rounded-lg cursor-pointer',
-        'hover:bg-card-foreground/10',
-        { 'bg-card-foreground/20 border-0': active },
+        'hover:bg-primary/10',
+        { 'bg-primary/30 border-0': active },
       )}
       ref={tabItem.active ? activeTabRef : null}
       onClick={handleTabClick}
