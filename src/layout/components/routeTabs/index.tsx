@@ -1,6 +1,6 @@
 import type { MenuItem } from '../MenuItem'
 import type { ChangeEvent, RouteTab } from './types'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import useMenu from '@/hooks/useMenu'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -43,33 +43,42 @@ export default function RouteTabsIndex() {
 
   const initialTabsData: RouteTab[] = useAppSelector(selectTabsData)
 
-  const [tabsData, setTabsData] = useState<RouteTab[]>(initialTabsData)
-
   const activeTabRef = useRef<HTMLDivElement | null>(null)
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
+  const syncTabsData = useCallback((tabsData: RouteTab[]) => {
+    dispatch(updateTabsData(tabsData))
+  }, [dispatch])
+
   const activeTabItem = useMemo(() => {
-    return tabsData.find(tab => tab.active)
-  }, [tabsData])
+    return initialTabsData.find(tab => tab.active)
+  }, [initialTabsData])
 
   const handleTabsChange = useCallback((e: ChangeEvent) => {
     if (e.type === 'select') {
-      setTabsData(prev => prev.map(tabItem => ({
+      const newTabsData = initialTabsData.map(tabItem => ({
         ...tabItem,
         active: tabItem.path === e.tabItem.path,
-      })))
+      }))
+
+      syncTabsData(newTabsData)
     }
     else if (e.type === 'remove') {
       let nextPath = ''
-      setTabsData((prev) => {
-        if (e.tabItem.active) {
-          const currentIndex = prev.findIndex(tab => tab.path === e.tabItem.path)
-          const nextTab = prev[currentIndex + 1] || prev[currentIndex - 1]
-          nextPath = nextTab?.path || '/home/index'
-        }
-        return prev.filter(tab => tab.path !== e.tabItem.path).map(tab => ({ ...tab, active: tab.path === nextPath }))
-      })
+      let newTabsData: RouteTab[] = []
+      if (e.tabItem.active) {
+        const currentIndex = initialTabsData.findIndex(tab => tab.path === e.tabItem.path)
+        const nextTab = initialTabsData[currentIndex + 1] || initialTabsData[currentIndex - 1]
+        nextPath = nextTab?.path || '/home/index'
+        newTabsData = initialTabsData.filter(tab => tab.path !== e.tabItem.path).map(tab => ({ ...tab, active: tab.path === nextPath }))
+      }
+      else {
+        newTabsData = initialTabsData.filter(tab => tab.path !== e.tabItem.path)
+      }
+
+      syncTabsData(newTabsData)
+
       if (nextPath) {
         timersRef.current.push(
           setTimeout(() => {
@@ -78,30 +87,25 @@ export default function RouteTabsIndex() {
         )
       }
     }
-  }, [navigate])
+  }, [initialTabsData, navigate, syncTabsData])
 
   useEffect(() => {
     // 设置标签页数据，保持与路由同步
-    setTabsData((prev) => {
-      const inTabsData = prev.some(tabItem => tabItem.path === location.pathname)
-      const newTabsData = prev.map(tabItem => ({
-        ...tabItem,
-        active: tabItem.path === location.pathname,
-      }))
-      if (!inTabsData) {
-        return [...newTabsData, { title: getActiveMenuItem(location.pathname, menuData)?.meta?.title || '未知页面', path: location.pathname, active: true }]
-      }
-      return newTabsData
-    })
+    const inTabsData = initialTabsData.some(tabItem => tabItem.path === location.pathname)
+    let newTabsData = initialTabsData.map(tabItem => ({
+      ...tabItem,
+      active: tabItem.path === location.pathname,
+    }))
+    if (!inTabsData) {
+      newTabsData = [...newTabsData, { title: getActiveMenuItem(location.pathname, menuData)?.meta?.title || '未知页面', path: location.pathname, active: true }]
+    }
+    syncTabsData(newTabsData)
+
     return () => {
     // 清理定时器，防止内存泄漏
       cleanUptimers()
     }
-  }, [location.pathname, menuData])
-
-  useEffect(() => {
-    dispatch(updateTabsData(tabsData))
-  }, [tabsData, dispatch])
+  }, [cleanUptimers, location.pathname, menuData, syncTabsData])
 
   /** 刷新标签 */
   const handleFreshTab = useCallback(() => {
@@ -121,22 +125,24 @@ export default function RouteTabsIndex() {
   /** 关闭其他 */
   const handleCloseOtherTab = useCallback(() => {
     if (activeTabItem) {
-      setTabsData(prev => prev.filter(tab => tab.path === activeTabItem.path || tab.path === '/home/index'))
+      const newTabDatas = initialTabsData.filter(tab => tab.path === activeTabItem.path || tab.path === '/home/index')
+      syncTabsData(newTabDatas)
     }
-  }, [activeTabItem])
+  }, [activeTabItem, initialTabsData, syncTabsData])
 
   /** 关闭全部 */
   const handleCloseAllTab = useCallback(() => {
-    setTabsData(prev => prev.filter(tab => tab.path === '/home/index'))
+    const newTabsData = initialTabsData.filter(tab => tab.path === '/home/index')
+    syncTabsData(newTabsData)
     timersRef.current.push(
       setTimeout(() => {
         navigate('/home/index')
       }, 200),
     )
-  }, [navigate])
+  }, [initialTabsData, navigate, syncTabsData])
 
   return (
-    showTabs && tabsData.length > 0 && (
+    showTabs && initialTabsData.length > 0 && (
       <RouteTabs
         className=" h-11 w-full border-b-foreground/10 bg-background"
         activeTabItem={activeTabItem}
@@ -149,7 +155,7 @@ export default function RouteTabsIndex() {
         onCloseAllTab={handleCloseAllTab}
       >
         <RouteTabList className="h-full flex-1 flex items-center pt-1 px-2 shadow-xl">
-          {tabsData.map(tab => (
+          {initialTabsData.map(tab => (
             <RouteTabItem key={tab.path} tabItem={tab} />
           ))}
         </RouteTabList>
