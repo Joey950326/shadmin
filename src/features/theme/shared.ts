@@ -69,7 +69,8 @@ export function isClassNameDark(): boolean {
 // 切换主题色
 export function changeColorClass(color: string) {
   const root = document.documentElement
-  root.classList.remove('theme-blue', 'theme-orange', 'theme-green', 'theme-rose')
+  const theme_arr = ['theme-blue', 'theme-orange', 'theme-green', 'theme-rose', 'theme-doom', 'theme-pink', 'theme-mocha', 'theme-nature', 'theme-neo']
+  root.classList.remove(...theme_arr)
   if (color) {
     root.classList.add(`theme-${color}`)
   }

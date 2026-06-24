@@ -63,6 +63,57 @@ function PresetColorToggle({ id }: PresetColorToggleProps) {
         )}
         />
       </ToggleGroupItem>
+      {/* <ToggleGroupItem
+        value="doom"
+        aria-label="Toggle doom"
+        className="bg-[oklch(0.6083_0.2090_27.0276)]! hover:bg-[oklch(0.6083_0.2090_27.0276/0.8)]! p-0"
+      >
+        <CheckIcon className={cn(
+          primaryColor === 'doom' ? 'opacity-100' : 'opacity-0',
+        )}
+        />
+      </ToggleGroupItem> */}
+      <ToggleGroupItem
+        value="pink"
+        aria-label="Toggle pink"
+        className="bg-[oklch(0.8027_0.1355_349.2347)]! hover:bg-[oklch(0.8027_0.1355_349.2347/0.8)]! p-0"
+      >
+        <CheckIcon className={cn(
+          primaryColor === 'pink' ? 'opacity-100' : 'opacity-0',
+        )}
+        />
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="mocha"
+        aria-label="Toggle mocha"
+        className="bg-[oklch(0.6083_0.0623_44.3588)]! hover:bg-[oklch(0.6083_0.0623_44.3588/0.8)]! p-0"
+      >
+        <CheckIcon className={cn(
+          primaryColor === 'mocha' ? 'opacity-100' : 'opacity-0',
+        )}
+        />
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="nature"
+        aria-label="Toggle nature"
+        className="bg-[oklch(0.67_0.16_144.21)]! hover:bg-[oklch(0.67_0.16_144.21/0.8)]! p-0"
+      >
+        <CheckIcon className={cn(
+          primaryColor === 'nature' ? 'opacity-100' : 'opacity-0',
+        )}
+        />
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="neo"
+        aria-label="Toggle neo"
+        className="bg-[oklch(0.65_0.24_26.97)]! hover:bg-[oklch(0.65_0.24_26.97/0.8)]! p-0"
+      >
+        <CheckIcon className={cn(
+          primaryColor === 'neo' ? 'opacity-100' : 'opacity-0',
+        )}
+        />
+      </ToggleGroupItem>
+
     </ToggleGroup>
   )
 }

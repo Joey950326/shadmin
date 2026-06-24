@@ -74,14 +74,6 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
 
       return (
         <div className="flex items-center justify-end gap-2">
-          <EditActionCell userInfo={row.original} onEdit={handleEdit} onAvatarUpload={handleAvatarUpload}>
-            <Button
-              variant="outline"
-              size="sm"
-            >
-              编辑
-            </Button>
-          </EditActionCell>
           <ViewActionCell userInfo={row.original}>
             <Button
               variant="outline"
@@ -90,6 +82,15 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
               查看
             </Button>
           </ViewActionCell>
+          <EditActionCell userInfo={row.original} onEdit={handleEdit} onAvatarUpload={handleAvatarUpload}>
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              编辑
+            </Button>
+          </EditActionCell>
+
           <DeleteActionCell
             rowData={row.original}
             onConfirm={handleDeleteConfirm}
