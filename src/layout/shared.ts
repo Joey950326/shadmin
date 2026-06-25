@@ -1,14 +1,21 @@
-import { ChartAreaIcon, ChartColumnBigIcon, ChartLineIcon, ChartPieIcon, ComponentIcon, FormIcon, GaugeIcon, HomeIcon, InfoIcon, KeyIcon, LinkIcon, ListCollapseIcon, MapIcon, RadarIcon, RadiationIcon, SettingsIcon, Table2Icon, TelescopeIcon } from 'lucide-react'
+import { CaptionsIcon, ChartAreaIcon, ChartColumnBigIcon, ChartLineIcon, ChartPieIcon, ComponentIcon, FormIcon, GaugeIcon, Grid2x2Icon, Grid3X3Icon, HomeIcon, InfoIcon, KeyIcon, LinkIcon, ListCollapseIcon, ListPlusIcon, ListTreeIcon, MapIcon, RadarIcon, RadiationIcon, SettingsIcon, Table2Icon, TableCellsMergeIcon, TelescopeIcon, WallpaperIcon } from 'lucide-react'
 import { createElement } from 'react'
 
 const IconMap: Record<string, React.ComponentType> = {
   'home': HomeIcon,
   'data-screen': TelescopeIcon,
   'table': Table2Icon,
+  'basicTable': Grid2x2Icon,
+  'complexTable': Grid3X3Icon,
+  'treeTable': ListTreeIcon,
   'right-manage': KeyIcon,
   'common-component': ComponentIcon,
   'dashboard': GaugeIcon,
+  'dataVisualization': WallpaperIcon,
   'form': FormIcon,
+  'basicForm': CaptionsIcon,
+  'complexForm': TableCellsMergeIcon,
+  'dynamicForm': ListPlusIcon,
   'chart': ChartPieIcon,
   'menu-collapse': ListCollapseIcon,
   'system-manage': SettingsIcon,

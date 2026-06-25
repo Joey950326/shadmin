@@ -26,7 +26,7 @@ export default function ClassicLayout() {
           <div className="flex-1 w-full h-full flex-col overflow-hidden">
             <RouteTabs />
             <main
-              className="flex-1 h-full overflow-auto p-6 bg-primary/10"
+              className="flex-1 h-full overflow-auto p-2 bg-primary/10"
             >
               <ChildrenRoute />
             </main>

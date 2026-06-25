@@ -1,6 +1,5 @@
 import type { MenuItem } from '@/layout/components/MenuItem'
-import { MapIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { SidebarProvider } from '@/components/ui/sidebar'
@@ -10,6 +9,7 @@ import Header from '@/layout/components/Header'
 import Logo from '@/layout/components/Logo'
 import RouteTabs from '@/layout/components/routeTabs'
 import Sider from '@/layout/components/Sider'
+import { getMenuIcon } from '@/layout/shared'
 
 interface FirstMenuItemProps extends MenuItem {
   onClick: (name: string) => void
@@ -29,11 +29,12 @@ function FirstMenuItem(props: FirstMenuItemProps) {
   }
   return (
     <div
-      className={`box-border w-full flex flex-col items-center p-2 cursor-pointer hover:bg-primary/10 rounded-xl ${props.active ? 'bg-primary/10' : ''}`}
+      className={`box-border w-full flex flex-col items-center p-2 gap-1 cursor-pointer hover:bg-primary/10 rounded-xl ${props.active ? 'bg-primary/10' : ''}`}
       onClick={handleClick}
     >
-      <MapIcon />
-      <span className="text-xs text-center">{props.meta?.title}</span>
+      {/* <MapIcon /> */}
+      {getMenuIcon(props?.meta?.icon || '')}
+      <span className="text-xs text-center text-nowrap">{props.meta?.title}</span>
     </div>
   )
 }
@@ -59,30 +60,25 @@ export default function ColumnLayout() {
 
   const { menuData } = useMenu()
   const [activeName, setActiveName] = useState<string>(() => findActiveFirstMenuItem(location.pathname, menuData)?.name || '')
-  const [subMenuItems, setSubMenuItems] = useState<MenuItem[]>(() => getSubMenuItems(activeName, menuData))
-  const [sidebarVisible, setSidebarVisible] = useState<boolean>(activeName !== '' && subMenuItems.length > 0)
-
+  const subMenuItems = useMemo(() => getSubMenuItems(activeName, menuData), [activeName, menuData])
+  const sidebarVisible = useMemo(() => subMenuItems.length > 0, [subMenuItems.length])
   const handleFirstMenuClick = (item: MenuItem) => {
-    const subMenuItems = getSubMenuItems(item.name, menuData)
-
-    setSubMenuItems(subMenuItems)
     setActiveName(item.name)
-    setSidebarVisible(subMenuItems.length > 0)
     navigate(item.path)
-    // console.log('点击了一级菜单项:', item.name, '对应的二级菜单项:', subMenuItems)
   }
+
+  // console.log('subMenuITems:', subMenuItems)
 
   return (
     <SidebarProvider>
 
       <div className="w-full h-screen overflow-hidden bg-background flex flex-row">
         {/* 一级菜单项 */}
-        <div className="w-16 min-w-16 h-full shrink-0 flex flex-col items-center  border-r">
+        <div className="w-16 min-w-16 h-full shrink-0 flex flex-col items-center border-r">
           <div className="w-full h-16 flex items-center justify-center">
             <Logo showTitle={false} className="size-8 box-border" />
-
           </div>
-          <ScrollArea className="w-full py-2 max-h-[calc(100vh-4rem)]">
+          <ScrollArea className="size-full py-2 overflow-y-auto">
             {menuData.map(item => (
               <FirstMenuItem
                 active={activeName === item.name}
@@ -92,7 +88,6 @@ export default function ColumnLayout() {
               />
             ))}
           </ScrollArea>
-
         </div>
         {/* 主体内容 */}
         <div className="flex-1 h-full overflow-hidden flex flex-row">
@@ -104,7 +99,7 @@ export default function ColumnLayout() {
           <div className="flex-1 h-full bg-primary/10 flex flex-col size-full overflow-hidden">
             <Header className="shrink-0" />
             <RouteTabs />
-            <main className="flex-1 overflow-auto p-6">
+            <main className="flex-1 overflow-auto p-2">
               <ChildrenRoute />
             </main>
           </div>

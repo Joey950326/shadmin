@@ -8,7 +8,7 @@ export default function HorizontalLayout() {
       <Header />
       <RouteTabs />
 
-      <main className="flex-1 p-6 overflow-auto bg-primary/10">
+      <main className="flex-1 p-2 overflow-auto bg-primary/10">
         <ChildrenRoute />
       </main>
     </div>

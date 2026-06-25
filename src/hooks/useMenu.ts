@@ -28,30 +28,32 @@ export default function useMenu() {
       path: '#',
       meta: { icon: 'dashboard', title: t('menu:dashboard.title') },
       children: [
-        { name: 'data-visualization', path: '/dashboard/dataVisualization', meta: { title: t('menu:dashboard.dataVisualization') } },
+        { name: 'dataVisualization', path: '/dashboard/dataVisualization', meta: { title: t('menu:dashboard.dataVisualization'), icon: 'dataVisualization' } },
       ],
     },
-
+    // 表格
     {
       name: 'proTable',
       path: '#',
       meta: { icon: 'table', title: t('menu:table.title') },
       children: [
-        { name: 'basicTable', path: '/proTable/basicTable', meta: { title: t('menu:table.basicTable') } },
-        { name: 'complexTable', path: '/proTable/complexTable', meta: { title: t('menu:table.complexTable') } },
-        { name: 'treeTable', path: '/proTable/treeFilter', meta: { title: t('menu:table.treeTable') } },
+        { name: 'basicTable', path: '/proTable/basicTable', meta: { title: t('menu:table.basicTable'), icon: 'basicTable' } },
+        { name: 'complexTable', path: '/proTable/complexTable', meta: { title: t('menu:table.complexTable'), icon: 'complexTable' } },
+        { name: 'treeTable', path: '/proTable/treeFilter', meta: { title: t('menu:table.treeTable'), icon: 'treeTable' } },
       ],
     },
+    // 表单
     {
       name: 'form',
       path: '#',
       meta: { icon: 'form', title: t('menu:commonForm') },
       children: [
-        { name: 'basic-form', path: '/form/basicForm', meta: { title: t('menu:form.basicForm') } },
-        { name: 'complex-form', path: '/form/complexForm', meta: { title: t('menu:form.complexForm') } },
-        { name: 'dynamic-form', path: '/form/dynamicForm', meta: { title: t('menu:form.dynamicForm') } },
+        { name: 'basic-form', path: '/form/basicForm', meta: { title: t('menu:form.basicForm'), icon: 'basicForm' } },
+        { name: 'complex-form', path: '/form/complexForm', meta: { title: t('menu:form.complexForm'), icon: 'complexForm' } },
+        { name: 'dynamic-form', path: '/form/dynamicForm', meta: { title: t('menu:form.dynamicForm'), icon: 'dynamicForm' } },
       ],
     },
+    // 图表
     {
       name: 'chart',
       path: '#',
@@ -65,6 +67,7 @@ export default function useMenu() {
         { name: 'radial-chart', path: '/chart/radialChart', meta: { icon: 'radialChart', title: t('menu:chart.radialChart') } },
       ],
     },
+    // 权限管理
     {
       name: 'rightManage',
       path: '#',
@@ -74,6 +77,7 @@ export default function useMenu() {
         { name: 'filterTable', path: '/proTable/selectFilter', meta: { title: t('menu:filterTable') } },
       ],
     },
+    // 常用组件
     {
       name: 'commonComponent',
       path: '#',
@@ -83,7 +87,7 @@ export default function useMenu() {
         { name: 'filterTable', path: '/commonComponent/svgIcons', meta: { title: t('menu:svgIcons') } },
       ],
     },
-
+    // 嵌套菜单
     {
       name: 'menuCollapse',
       path: '#',
@@ -98,7 +102,7 @@ export default function useMenu() {
 
       ],
     },
-
+    // 系统管理
     {
       name: 'systemManage',
       path: '#',
