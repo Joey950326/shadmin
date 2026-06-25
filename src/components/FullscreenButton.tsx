@@ -4,7 +4,7 @@ import { ExpandIcon, ShrinkIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from './ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 
 export default function FullscreenButton() {
   const { t } = useTranslation()
@@ -34,28 +34,26 @@ export default function FullscreenButton() {
   }, [handleFullscreenChange])
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsFullscreen(pre => !pre)}
-            className="hover:bg-accent"
-          >
-            {!isFullscreen
-              ? (
-                  <ExpandIcon />
-                )
-              : (
-                  <ShrinkIcon />
-                )}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{isFullscreen ? t('header:shrinkFullscreen') : t('header:expandFullscreen')}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsFullscreen(pre => !pre)}
+          className="hover:bg-accent"
+        >
+          {!isFullscreen
+            ? (
+                <ExpandIcon />
+              )
+            : (
+                <ShrinkIcon />
+              )}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{isFullscreen ? t('header:shrinkFullscreen') : t('header:expandFullscreen')}</p>
+      </TooltipContent>
+    </Tooltip>
   )
 }

@@ -39,7 +39,7 @@ function RouteTabItem({ tabItem, onClick, onClose }: RouteTabItemProps) {
       className={cn(
         'box-border h-full flex flex-row justify-center items-center  border border-foreground/20 rounded-lg cursor-pointer',
         'hover:bg-primary/10',
-        { 'bg-primary/30 border-0': active },
+        { 'bg-primary/20! text-primary! font-bold! border-0!': active },
       )}
       ref={tabItem.active ? activeTabRef : null}
       onClick={handleTabClick}

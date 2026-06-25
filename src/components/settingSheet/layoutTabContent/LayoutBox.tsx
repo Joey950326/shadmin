@@ -22,21 +22,21 @@ export function ClassicLayoutBox({ className, checked = false, onSelected }: Box
     <Tooltip>
       <TooltipTrigger asChild>
         <div
-          className={cn('box-border relative flex flex-col gap-1 size-full', `${checked ? 'border-2' : ''}`, className)}
+          className={cn('box-border relative flex flex-col gap-1 size-full', `${checked ? 'border-2! border-dashed! border-primary/50' : ''}`, className)}
           onClick={(e) => {
             e.stopPropagation() // 阻止事件冒泡，避免触发外层的 onClick
             onSelected()
           }}
         >
-          <div className="box-header w-full h-[20%] bg-foreground/30"></div>
+          <div className="box-header w-full h-[20%] bg-primary/50"></div>
           <div className="flex-1 flex flex-row gap-1 w-full">
-            <div className="box-sidebar bg-foreground/20 w-[20%] h-full"></div>
-            <div className="box-main flex-1 h-full bg-foreground/10 p-1">
+            <div className="box-sidebar bg-primary/40 w-[20%] h-full"></div>
+            <div className="box-main flex-1 h-full bg-primary/30 p-1">
             </div>
           </div>
           {checked && (
-            <div className="absolute inset-0 flex size-full justify-center items-center shadow-xl bg-accent/50">
-              <CheckIcon />
+            <div className={cn('absolute inset-0 flex size-full justify-center items-center shadow-xl', { 'bg-primary/20!': checked })}>
+              <CheckIcon className="text-primary" />
             </div>
           )}
         </div>
@@ -54,21 +54,21 @@ export function VerticalLayoutBox({ className, checked = false, onSelected }: Bo
     <Tooltip>
       <TooltipTrigger asChild>
         <div
-          className={cn('box-border relative flex flex-row gap-1 size-full', `${checked ? 'border-2' : ''}`, className)}
+          className={cn('box-border relative flex flex-row gap-1 size-full', `${checked ? 'border-2 border-dashed border-primary/50' : ''}`, className)}
           onClick={(e) => {
             e.stopPropagation() // 阻止事件冒泡，避免触发外层的 onClick
             onSelected()
           }}
         >
-          <div className="box-header w-[20%] h-full bg-foreground/30"></div>
+          <div className="box-header w-[20%] h-full bg-primary/50"></div>
           <div className="flex-1 flex flex-col gap-1 w-full">
-            <div className="box-sidebar bg-foreground/20 h-[20%] w-full"></div>
-            <div className="box-main flex-1 h-full bg-foreground/10 p-1">
+            <div className="box-sidebar bg-primary/40 h-[20%] w-full"></div>
+            <div className="box-main flex-1 h-full bg-primary/30 p-1">
             </div>
           </div>
           {checked && (
-            <div className="absolute inset-0 flex size-full justify-center items-center shadow-xl bg-accent/50">
-              <CheckIcon />
+            <div className={cn('absolute inset-0 flex size-full justify-center items-center shadow-xl', { 'bg-primary/20!': checked })}>
+              <CheckIcon className="text-primary" />
             </div>
           )}
 
@@ -88,18 +88,18 @@ export function HorizontalLayoutBox({ className, checked = false, onSelected }: 
     <Tooltip>
       <TooltipTrigger asChild>
         <div
-          className={cn('box-border relative flex flex-col gap-1 size-full', `${checked ? 'border-2' : ''}`, className)}
+          className={cn('box-border relative flex flex-col gap-1 size-full', `${checked ? 'border-2 border-dashed border-primary/50' : ''}`, className)}
           onClick={(e) => {
             e.stopPropagation() // 阻止事件冒泡，避免触发外层的 onClick
             onSelected()
           }}
         >
-          <div className="box-header w-full h-[20%] bg-foreground/30"></div>
-          <div className="box-main flex-1 h-full bg-foreground/20 p-1">
+          <div className="box-header w-full h-[20%] bg-primary/50"></div>
+          <div className="box-main flex-1 h-full bg-primary/40 p-1">
           </div>
           {checked && (
-            <div className="absolute inset-0 flex size-full justify-center items-center shadow-xl bg-accent/50">
-              <CheckIcon />
+            <div className={cn('absolute inset-0 flex size-full justify-center items-center shadow-xl', { 'bg-primary/20!': checked })}>
+              <CheckIcon className="text-primary" />
             </div>
           )}
         </div>
@@ -117,20 +117,20 @@ export function ColumnLayoutBox({ className, checked = false, onSelected }: BoxI
     <Tooltip>
       <TooltipTrigger asChild>
         <div
-          className={cn('box-border relative flex flex-row gap-1 size-full', `${checked ? 'border-2' : ''}`, className)}
+          className={cn('box-border relative flex flex-row gap-1 size-full', `${checked ? 'border-2 border-dashed border-primary/50' : ''}`, className)}
           onClick={(e) => {
             e.stopPropagation() // 阻止事件冒泡，避免触发外层的 onClick
             onSelected()
           }}
         >
-          <div className="box-sidebar w-[20%] h-full bg-foreground/30"></div>
+          <div className="box-sidebar w-[20%] h-full bg-primary/50"></div>
           <div className="flex-1 flex flex-row gap-1 w-full">
-            <div className="box-submenu bg-foreground/20 w-[20%] h-full"></div>
-            <div className="box-main flex-1 h-full bg-foreground/10">
+            <div className="box-submenu bg-primary/40 w-[20%] h-full"></div>
+            <div className="box-main flex-1 h-full bg-primary/30">
             </div>
           </div>
           {checked && (
-            <div className="absolute inset-0 flex size-full justify-center items-center shadow-xl bg-accent/50">
+            <div className={cn('absolute inset-0 flex size-full justify-center items-center shadow-xl', { 'bg-primary/20!': checked })}>
               <CheckIcon />
             </div>
           )}

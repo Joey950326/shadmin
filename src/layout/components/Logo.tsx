@@ -9,7 +9,7 @@ interface LogoProps {
   open?: boolean
 }
 
-export default function Logo({ className, showTitle = true, showLogo = true, open }: LogoProps) {
+export default function Logo({ className, showTitle = true, showLogo = true, open = true }: LogoProps) {
   const { t } = useTranslation()
   return (
     <div className={cn('hidden md:block h-full md:flex items-center gap-2 overflow-hidden', className)}>

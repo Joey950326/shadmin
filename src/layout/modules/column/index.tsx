@@ -29,7 +29,7 @@ function FirstMenuItem(props: FirstMenuItemProps) {
   }
   return (
     <div
-      className={`box-border w-full flex flex-col items-center p-2 gap-1 cursor-pointer hover:bg-primary/10 rounded-xl ${props.active ? 'bg-primary/10' : ''}`}
+      className={`box-border w-full flex flex-col items-center p-2 gap-1 cursor-pointer hover:bg-primary/10 rounded-xl ${props.active ? 'bg-primary/20 text-primary font-bold' : ''}`}
       onClick={handleClick}
     >
       {/* <MapIcon /> */}

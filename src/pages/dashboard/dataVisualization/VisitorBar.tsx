@@ -99,11 +99,13 @@ export default function VisitorBar({ chartData, className }: VisitorBarProps) {
                 data-active={activeChart === chart}
                 className={cn(
                   'relative col-span-2 md:col-span-1 z-30 flex flex-col justify-center gap-1 py-6 md:px-4  not-first:-ml-1.5',
-                  'data-[active=true]:bg-foreground/20',
+                  'hover:bg-primary/10!',
+                  'data-[active=true]:bg-primary/20',
+
                 )}
                 onClick={() => setActiveChart(chart)}
               >
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs">
                   {chartConfig[chart].label}
                 </span>
                 <span className="text-lg leading-none font-bold">
