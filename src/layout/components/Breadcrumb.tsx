@@ -30,13 +30,13 @@ export default function MyBreadcrumb() {
     })
   }, [matches, location.pathname])
 
-  //   console.log('Breadcrumb items:', breadcrumbs) // Debug log for breadcrumb items
+  // console.log('Breadcrumb items:', breadcrumbs) // Debug log for breadcrumb items
   return (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <NavLink to="/home/index">首页</NavLink>
+            <NavLink to="/home/index">{t('menu:home')}</NavLink>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {

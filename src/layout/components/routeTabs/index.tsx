@@ -92,13 +92,23 @@ export default function RouteTabsIndex() {
   useEffect(() => {
     // 设置标签页数据，保持与路由同步
     const inTabsData = initialTabsData.some(tabItem => tabItem.path === location.pathname)
+
     let newTabsData = initialTabsData.map(tabItem => ({
       ...tabItem,
       active: tabItem.path === location.pathname,
     }))
     if (!inTabsData) {
-      newTabsData = [...newTabsData, { title: getActiveMenuItem(location.pathname, menuData)?.meta?.title || '未知页面', path: location.pathname, active: true }]
+      const newTitle = getActiveMenuItem(location.pathname, menuData)?.meta?.title
+
+      if (!newTitle) {
+        // 跳转到未知路由，包括带有子路由的父路由
+        // tabs不做响应
+      }
+      else {
+        newTabsData = [...newTabsData, { title: newTitle, path: location.pathname, active: true }]
+      }
     }
+
     syncTabsData(newTabsData)
 
     return () => {

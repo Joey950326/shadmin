@@ -27,7 +27,7 @@ const dynamicRoutes = [
         children: [
           {
             index: true,
-            element: <Navigate to="treeFilter" replace />,
+            element: <Navigate to="basicTable" replace />,
           },
           {
             path: 'basicTable',
@@ -61,6 +61,10 @@ const dynamicRoutes = [
         path: 'form',
         handle: { title: 'menu:form.title' },
         children: [
+          {
+            index: true,
+            element: <Navigate to="basicForm" replace />,
+          },
           {
             path: 'basicForm',
             lazy: async () => {
@@ -98,6 +102,10 @@ const dynamicRoutes = [
         path: 'chart',
         handle: { title: 'menu:chart.title' },
         children: [
+          {
+            index: true,
+            element: <Navigate to="barChart" replace />,
+          },
           {
             path: 'barChart',
             lazy: async () => {
@@ -160,10 +168,15 @@ const dynamicRoutes = [
           },
         ],
       },
+      // 仪表盘
       {
         path: 'dashboard',
         handle: { title: '仪表盘' },
         children: [
+          {
+            index: true,
+            element: <Navigate to="dataVisualization" replace />,
+          },
           {
             path: 'dataVisualization',
             lazy: async () => {
@@ -174,7 +187,6 @@ const dynamicRoutes = [
           },
         ],
       },
-
       {
         path: '*',
         Component: Expection404,
