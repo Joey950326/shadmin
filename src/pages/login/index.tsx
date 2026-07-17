@@ -89,7 +89,12 @@ export default function LoginPage() {
       onError: (error: unknown) => {
         console.error('登录失败:', error)
         if (error instanceof AxiosError && error.status) {
-          if (error.status >= 500 && error.status < 600) {
+          if (error.status >= 400 && error.status < 500) {
+            toast.error(t('auth:login.networkErrorMessage'), {
+              position: 'top-center',
+            })
+          }
+          else if (error.status >= 500 && error.status < 600) {
             toast.error(t('auth:login.serverErrorMessage'), {
               position: 'top-center',
             })
