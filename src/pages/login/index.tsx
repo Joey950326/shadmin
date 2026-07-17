@@ -1,16 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 import { toast } from 'sonner'
+
 import * as z from 'zod'
 
 import welcomeSvg from '@/assets/local-svg/welcome.svg'
 
 import { Button } from '@/components/ui/button'
-
 import {
   Card,
   CardAction,
@@ -26,8 +27,8 @@ import {
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
 
+import { Input } from '@/components/ui/input'
 import { useLogin } from '@/services/api/hooks/auth'
 import { useAppDispatch } from '@/store/hooks'
 import { setManualLogin, setToken, setUserInfo } from '@/store/modules/user'
@@ -79,12 +80,22 @@ export default function LoginPage() {
         //   position: 'top-center',
         //   id: 'login-success-toast',
         // })
-        dispatch(setToken(res.data.access_token)) // 模拟设置token
-        dispatch(setUserInfo(res.data.userInfo || { username: postData.username })) // 模拟设置用户信息
-        dispatch(setManualLogin(true)) // 设置手动登录状态，防止自动重定向到登录页
+        if (res.data) {
+          dispatch(setToken(res.data.access_token)) // 模拟设置token
+          dispatch(setUserInfo(res.data.userInfo || { username: postData.username })) // 模拟设置用户信息
+          dispatch(setManualLogin(true)) // 设置手动登录状态，防止自动重定向到登录页
+        }
       },
       onError: (error: unknown) => {
         console.error('登录失败:', error)
+        if (error instanceof AxiosError && error.status) {
+          if (error.status >= 500 && error.status < 600) {
+            toast.error(t('auth:login.serverErrorMessage'), {
+              position: 'top-center',
+            })
+          }
+          return
+        }
         toast.error(t('auth:login.loginFailedMessage'), {
           position: 'top-center',
         })
