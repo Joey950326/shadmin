@@ -179,7 +179,7 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
           onSelect={handleSelect}
           selectMap={genderRadioMap}
         >
-          <span>状态</span>
+          <span>性别</span>
 
         </RadioHeader>
       )
@@ -197,9 +197,9 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
   },
   // 年龄
   {
-    // accessorKey: 'age',
     id: 'age',
-    accessorFn: row => row.user.detail.age,
+    // accessorFn: row => row.user.detail.age,
+    accessorKey: 'age',
     header: ({ column }) => {
       const currentSort = column.getIsSorted()
       const handleClick = () => {

@@ -6,11 +6,11 @@ import EditActionCell from './components/EditActionCell'
 import ViewActionCell from './components/ViewActionCell'
 
 export const columns: ColumnDef<Api.User.UserInfo>[] = [
-  {
-    accessorKey: 'id',
-    header: 'ID',
-    enableHiding: true,
-  },
+  // {
+  //   accessorKey: 'id',
+  //   header: 'ID',
+  //   enableHiding: true,
+  // },
   {
     id: 'username',
     accessorKey: 'username',
@@ -20,11 +20,20 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
     id: 'gender',
     accessorKey: 'gender',
     header: '性别',
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center">
+          {
+            row.getValue('gender') === 1 ? '男' : '女'
+          }
+        </div>
+      )
+    },
   },
   {
     id: 'age',
-    // accessorKey: 'age',
-    accessorFn: row => row.user.detail.age,
+    accessorKey: 'age',
+    // accessorFn: row => row.user.detail.age,
     header: '年龄',
   },
   {
@@ -46,6 +55,16 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
     id: 'status',
     accessorKey: 'status',
     header: '状态',
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center">
+          {
+            row.getValue('status') === 1 ? '启用' : '禁用'
+          }
+        </div>
+      )
+    },
+
   },
   {
     id: 'createTime',
