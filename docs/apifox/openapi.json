@@ -1,0 +1,2740 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SHAdmin API",
+    "version": "1.0.0",
+    "description": "根据前端 src/services/api 调用链与结果消费逻辑整理，可直接导入 Apifox。所有接口使用业务响应码：code=200 表示成功，code=401 表示登录失效。"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5173/api",
+      "description": "本地 Vite 代理（/api 会被代理并移除前缀）"
+    }
+  ],
+  "tags": [
+    { "name": "认证", "description": "登录与退出" },
+    { "name": "用户", "description": "用户查询、维护与文件操作" },
+    { "name": "部门", "description": "部门树查询" }
+  ],
+  "security": [{ "AccessToken": [] }],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": ["认证"],
+        "summary": "账号密码登录",
+        "operationId": "login",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" },
+              "example": {
+                "username": "admin",
+                "password": "e10adc3949ba59abbe56e057f20f883e"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登录结果；前端读取 data.access_token 和 data.userInfo",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" },
+                "example": {
+                  "code": 200,
+                  "msg": "登录成功",
+                  "data": {
+                    "access_token": "mock-access-token-2026",
+                    "userInfo": { "username": "admin", "role": "administrator" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": ["认证"],
+        "summary": "退出登录",
+        "operationId": "logout",
+        "responses": {
+          "200": { "$ref": "#/components/responses/MutationSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/list": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "分页查询用户列表",
+        "description": "响应示例包含 100 条用户数据。OpenAPI 示例本身是静态的；如需 Mock 根据 page/pageSize 动态分页，请在 Apifox 的 Mock 脚本中启用 docs/apifox/user-list.mock.js。",
+        "operationId": "listUsers",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserListRequest" },
+              "example": {
+                "page": 1,
+                "pageSize": 10,
+                "type": 1,
+                "username": "张",
+                "gender": 1,
+                "status": 1,
+                "startTime": "2026-01-01 00:00:00",
+                "endTime": "2026-12-31 23:59:59",
+                "departmentId": ["dept-tech"],
+                "userRole": ["admin"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "分页用户数据；表格读取 data.list 与 data.total",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserListResponse" },
+                "examples": {
+                  "page1": {
+                    "summary": "第 1 页（每页 10 条）",
+                    "value": {
+                      "code": 200,
+                      "msg": "查询成功",
+                      "data": {
+                        "pageNum": 1,
+                        "pageSize": 10,
+                        "total": 100,
+                        "list": [
+                          {
+                            "id": "user-1001",
+                            "username": "张明",
+                            "avatar": "https://example.com/avatar/user-1001.png",
+                            "address": "上海市浦东新区",
+                            "email": "zhangming@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001011234",
+                            "status": 1,
+                            "createTime": "2026-01-10 09:30:00",
+                            "user": { "detail": { "age": 36 } }
+                          },
+                          {
+                            "id": "user-1002",
+                            "username": "李晓",
+                            "avatar": "https://example.com/avatar/user-1002.png",
+                            "address": "上海市徐汇区",
+                            "email": "lixiao@example.com",
+                            "gender": 2,
+                            "idCard": "310101199502021234",
+                            "status": 0,
+                            "createTime": "2026-01-12 10:15:00",
+                            "user": { "detail": { "age": 31 } }
+                          },
+                          {
+                            "id": "user-1003",
+                            "username": "王强",
+                            "avatar": "https://example.com/avatar/user-1003.png",
+                            "address": "北京市朝阳区",
+                            "email": "wangqiang@example.com",
+                            "gender": 1,
+                            "idCard": "110101198805051234",
+                            "status": 1,
+                            "createTime": "2026-01-18 14:20:00",
+                            "user": { "detail": { "age": 38 } }
+                          },
+                          {
+                            "id": "user-1004",
+                            "username": "陈静",
+                            "avatar": "https://example.com/avatar/user-1004.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "chenjing@example.com",
+                            "gender": 2,
+                            "idCard": "440301199306061234",
+                            "status": 1,
+                            "createTime": "2026-01-20 08:45:00",
+                            "user": { "detail": { "age": 33 } }
+                          },
+                          {
+                            "id": "user-1005",
+                            "username": "赵磊",
+                            "avatar": "https://example.com/avatar/user-1005.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "zhaolei@example.com",
+                            "gender": 1,
+                            "idCard": "330101199207071234",
+                            "status": 0,
+                            "createTime": "2026-01-25 11:00:00",
+                            "user": { "detail": { "age": 34 } }
+                          },
+                          {
+                            "id": "user-1006",
+                            "username": "刘敏",
+                            "avatar": "https://example.com/avatar/user-1006.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "liumin@example.com",
+                            "gender": 2,
+                            "idCard": "320101199609091234",
+                            "status": 1,
+                            "createTime": "2026-02-01 13:30:00",
+                            "user": { "detail": { "age": 30 } }
+                          },
+                          {
+                            "id": "user-1007",
+                            "username": "周浩",
+                            "avatar": "https://example.com/avatar/user-1007.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "zhouhao@example.com",
+                            "gender": 1,
+                            "idCard": "420101199110101234",
+                            "status": 1,
+                            "createTime": "2026-02-05 16:40:00",
+                            "user": { "detail": { "age": 35 } }
+                          },
+                          {
+                            "id": "user-1008",
+                            "username": "孙悦",
+                            "avatar": "https://example.com/avatar/user-1008.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "sunyue@example.com",
+                            "gender": 2,
+                            "idCard": "510101199711111234",
+                            "status": 1,
+                            "createTime": "2026-02-10 09:05:00",
+                            "user": { "detail": { "age": 29 } }
+                          },
+                          {
+                            "id": "user-1009",
+                            "username": "吴昊",
+                            "avatar": "https://example.com/avatar/user-1009.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "wuhao@example.com",
+                            "gender": 1,
+                            "idCard": "370201199412121234",
+                            "status": 0,
+                            "createTime": "2026-02-15 12:10:00",
+                            "user": { "detail": { "age": 32 } }
+                          },
+                          {
+                            "id": "user-1010",
+                            "username": "郑雪",
+                            "avatar": "https://example.com/avatar/user-1010.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "zhengxue@example.com",
+                            "gender": 2,
+                            "idCard": "350201199812131234",
+                            "status": 1,
+                            "createTime": "2026-02-18 15:25:00",
+                            "user": { "detail": { "age": 28 } }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "page2": {
+                    "summary": "第 2 页（每页 10 条）",
+                    "value": {
+                      "code": 200,
+                      "msg": "查询成功",
+                      "data": {
+                        "pageNum": 2,
+                        "pageSize": 10,
+                        "total": 100,
+                        "list": [
+                          {
+                            "id": "user-1011",
+                            "username": "马超",
+                            "avatar": "https://example.com/avatar/user-1011.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "machao@example.com",
+                            "gender": 1,
+                            "idCard": "610101198901141234",
+                            "status": 1,
+                            "createTime": "2026-02-22 10:30:00",
+                            "user": { "detail": { "age": 37 } }
+                          },
+                          {
+                            "id": "user-1012",
+                            "username": "何佳",
+                            "avatar": "https://example.com/avatar/user-1012.png",
+                            "address": "湖南省长沙市岳麓区",
+                            "email": "hejia@example.com",
+                            "gender": 2,
+                            "idCard": "430101199503151234",
+                            "status": 1,
+                            "createTime": "2026-02-28 14:00:00",
+                            "user": { "detail": { "age": 31 } }
+                          },
+                          {
+                            "id": "user-1013",
+                            "username": "高峰",
+                            "avatar": "https://example.com/avatar/user-1013.png",
+                            "address": "河南省郑州市金水区",
+                            "email": "gaofeng@example.com",
+                            "gender": 1,
+                            "idCard": "410101199004161234",
+                            "status": 0,
+                            "createTime": "2026-03-03 08:20:00",
+                            "user": { "detail": { "age": 36 } }
+                          },
+                          {
+                            "id": "user-1014",
+                            "username": "林芳",
+                            "avatar": "https://example.com/avatar/user-1014.png",
+                            "address": "广西南宁市青秀区",
+                            "email": "linfang@example.com",
+                            "gender": 2,
+                            "idCard": "450101199605171234",
+                            "status": 1,
+                            "createTime": "2026-03-08 09:45:00",
+                            "user": { "detail": { "age": 30 } }
+                          },
+                          {
+                            "id": "user-1015",
+                            "username": "黄杰",
+                            "avatar": "https://example.com/avatar/user-1015.png",
+                            "address": "重庆市渝中区",
+                            "email": "huangjie@example.com",
+                            "gender": 1,
+                            "idCard": "500101199206181234",
+                            "status": 1,
+                            "createTime": "2026-03-12 11:35:00",
+                            "user": { "detail": { "age": 34 } }
+                          },
+                          {
+                            "id": "user-1016",
+                            "username": "罗婷",
+                            "avatar": "https://example.com/avatar/user-1016.png",
+                            "address": "云南省昆明市盘龙区",
+                            "email": "luoting@example.com",
+                            "gender": 2,
+                            "idCard": "530101199707191234",
+                            "status": 0,
+                            "createTime": "2026-03-16 13:50:00",
+                            "user": { "detail": { "age": 29 } }
+                          },
+                          {
+                            "id": "user-1017",
+                            "username": "宋涛",
+                            "avatar": "https://example.com/avatar/user-1017.png",
+                            "address": "辽宁省大连市中山区",
+                            "email": "songtao@example.com",
+                            "gender": 1,
+                            "idCard": "210201199108201234",
+                            "status": 1,
+                            "createTime": "2026-03-20 17:10:00",
+                            "user": { "detail": { "age": 35 } }
+                          },
+                          {
+                            "id": "user-1018",
+                            "username": "谢娜",
+                            "avatar": "https://example.com/avatar/user-1018.png",
+                            "address": "河北省石家庄市长安区",
+                            "email": "xiena@example.com",
+                            "gender": 2,
+                            "idCard": "130101199409211234",
+                            "status": 1,
+                            "createTime": "2026-03-25 08:55:00",
+                            "user": { "detail": { "age": 32 } }
+                          },
+                          {
+                            "id": "user-1019",
+                            "username": "邓宇",
+                            "avatar": "https://example.com/avatar/user-1019.png",
+                            "address": "安徽省合肥市蜀山区",
+                            "email": "dengyu@example.com",
+                            "gender": 1,
+                            "idCard": "340101199310221234",
+                            "status": 0,
+                            "createTime": "2026-03-28 12:40:00",
+                            "user": { "detail": { "age": 33 } }
+                          },
+                          {
+                            "id": "user-1020",
+                            "username": "潘虹",
+                            "avatar": "https://example.com/avatar/user-1020.png",
+                            "address": "江西省南昌市东湖区",
+                            "email": "panhong@example.com",
+                            "gender": 2,
+                            "idCard": "360101199811231234",
+                            "status": 1,
+                            "createTime": "2026-04-01 16:20:00",
+                            "user": { "detail": { "age": 28 } }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "fullDataset": {
+                    "summary": "完整 100 条用户数据（page=1，pageSize=100）",
+                    "value": {
+                      "code": 200,
+                      "msg": "查询成功",
+                      "data": {
+                        "pageNum": 1,
+                        "pageSize": 100,
+                        "total": 100,
+                        "list": [
+                          {
+                            "id": "user-1001",
+                            "username": "张明",
+                            "avatar": "https://example.com/avatar/user-1001.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0001@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010001",
+                            "status": 0,
+                            "createTime": "2026-01-01 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 20
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1002",
+                            "username": "李晓",
+                            "avatar": "https://example.com/avatar/user-1002.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0002@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010002",
+                            "status": 1,
+                            "createTime": "2026-02-02 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 21
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1003",
+                            "username": "王强",
+                            "avatar": "https://example.com/avatar/user-1003.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0003@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010003",
+                            "status": 1,
+                            "createTime": "2026-03-03 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 22
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1004",
+                            "username": "陈静",
+                            "avatar": "https://example.com/avatar/user-1004.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0004@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010004",
+                            "status": 0,
+                            "createTime": "2026-04-04 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 23
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1005",
+                            "username": "赵磊",
+                            "avatar": "https://example.com/avatar/user-1005.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0005@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010005",
+                            "status": 1,
+                            "createTime": "2026-05-05 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 24
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1006",
+                            "username": "刘敏",
+                            "avatar": "https://example.com/avatar/user-1006.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0006@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010006",
+                            "status": 1,
+                            "createTime": "2026-06-06 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 25
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1007",
+                            "username": "周浩",
+                            "avatar": "https://example.com/avatar/user-1007.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0007@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010007",
+                            "status": 0,
+                            "createTime": "2026-07-07 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 26
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1008",
+                            "username": "孙悦",
+                            "avatar": "https://example.com/avatar/user-1008.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0008@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010008",
+                            "status": 1,
+                            "createTime": "2026-08-08 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 27
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1009",
+                            "username": "吴昊",
+                            "avatar": "https://example.com/avatar/user-1009.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0009@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010009",
+                            "status": 1,
+                            "createTime": "2026-09-09 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 28
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1010",
+                            "username": "郑雪",
+                            "avatar": "https://example.com/avatar/user-1010.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0010@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010010",
+                            "status": 0,
+                            "createTime": "2026-10-10 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 29
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1011",
+                            "username": "马超",
+                            "avatar": "https://example.com/avatar/user-1011.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0011@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010011",
+                            "status": 1,
+                            "createTime": "2026-11-11 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 30
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1012",
+                            "username": "何佳",
+                            "avatar": "https://example.com/avatar/user-1012.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0012@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010012",
+                            "status": 1,
+                            "createTime": "2026-12-12 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 31
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1013",
+                            "username": "高峰",
+                            "avatar": "https://example.com/avatar/user-1013.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0013@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010013",
+                            "status": 0,
+                            "createTime": "2026-01-13 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 32
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1014",
+                            "username": "林芳",
+                            "avatar": "https://example.com/avatar/user-1014.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0014@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010014",
+                            "status": 1,
+                            "createTime": "2026-02-14 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 33
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1015",
+                            "username": "黄杰",
+                            "avatar": "https://example.com/avatar/user-1015.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0015@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010015",
+                            "status": 1,
+                            "createTime": "2026-03-15 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 34
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1016",
+                            "username": "罗婷",
+                            "avatar": "https://example.com/avatar/user-1016.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0016@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010016",
+                            "status": 0,
+                            "createTime": "2026-04-16 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 35
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1017",
+                            "username": "宋涛",
+                            "avatar": "https://example.com/avatar/user-1017.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0017@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010017",
+                            "status": 1,
+                            "createTime": "2026-05-17 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 36
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1018",
+                            "username": "谢娜",
+                            "avatar": "https://example.com/avatar/user-1018.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0018@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010018",
+                            "status": 1,
+                            "createTime": "2026-06-18 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 37
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1019",
+                            "username": "邓宇",
+                            "avatar": "https://example.com/avatar/user-1019.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0019@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010019",
+                            "status": 0,
+                            "createTime": "2026-07-19 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 38
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1020",
+                            "username": "潘虹",
+                            "avatar": "https://example.com/avatar/user-1020.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0020@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010020",
+                            "status": 1,
+                            "createTime": "2026-08-20 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 39
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1021",
+                            "username": "许晨",
+                            "avatar": "https://example.com/avatar/user-1021.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0021@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010021",
+                            "status": 1,
+                            "createTime": "2026-09-21 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 40
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1022",
+                            "username": "沈月",
+                            "avatar": "https://example.com/avatar/user-1022.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0022@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010022",
+                            "status": 0,
+                            "createTime": "2026-10-22 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 41
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1023",
+                            "username": "韩梅",
+                            "avatar": "https://example.com/avatar/user-1023.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0023@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010023",
+                            "status": 1,
+                            "createTime": "2026-11-23 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 42
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1024",
+                            "username": "杨帆",
+                            "avatar": "https://example.com/avatar/user-1024.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0024@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010024",
+                            "status": 1,
+                            "createTime": "2026-12-24 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 43
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1025",
+                            "username": "朱琳",
+                            "avatar": "https://example.com/avatar/user-1025.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0025@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010025",
+                            "status": 0,
+                            "createTime": "2026-01-25 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 44
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1026",
+                            "username": "秦浩",
+                            "avatar": "https://example.com/avatar/user-1026.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0026@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010026",
+                            "status": 1,
+                            "createTime": "2026-02-26 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 45
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1027",
+                            "username": "尤佳",
+                            "avatar": "https://example.com/avatar/user-1027.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0027@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010027",
+                            "status": 1,
+                            "createTime": "2026-03-27 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 46
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1028",
+                            "username": "薛宁",
+                            "avatar": "https://example.com/avatar/user-1028.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0028@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010028",
+                            "status": 0,
+                            "createTime": "2026-04-28 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 47
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1029",
+                            "username": "侯健",
+                            "avatar": "https://example.com/avatar/user-1029.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0029@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010029",
+                            "status": 1,
+                            "createTime": "2026-05-01 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 48
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1030",
+                            "username": "孟雪",
+                            "avatar": "https://example.com/avatar/user-1030.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0030@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010030",
+                            "status": 1,
+                            "createTime": "2026-06-02 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 49
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1031",
+                            "username": "杜江",
+                            "avatar": "https://example.com/avatar/user-1031.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0031@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010031",
+                            "status": 0,
+                            "createTime": "2026-07-03 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 20
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1032",
+                            "username": "曹颖",
+                            "avatar": "https://example.com/avatar/user-1032.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0032@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010032",
+                            "status": 1,
+                            "createTime": "2026-08-04 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 21
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1033",
+                            "username": "梁晨",
+                            "avatar": "https://example.com/avatar/user-1033.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0033@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010033",
+                            "status": 1,
+                            "createTime": "2026-09-05 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 22
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1034",
+                            "username": "蒋欣",
+                            "avatar": "https://example.com/avatar/user-1034.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0034@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010034",
+                            "status": 0,
+                            "createTime": "2026-10-06 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 23
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1035",
+                            "username": "田野",
+                            "avatar": "https://example.com/avatar/user-1035.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0035@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010035",
+                            "status": 1,
+                            "createTime": "2026-11-07 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 24
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1036",
+                            "username": "董洁",
+                            "avatar": "https://example.com/avatar/user-1036.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0036@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010036",
+                            "status": 1,
+                            "createTime": "2026-12-08 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 25
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1037",
+                            "username": "袁泉",
+                            "avatar": "https://example.com/avatar/user-1037.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0037@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010037",
+                            "status": 0,
+                            "createTime": "2026-01-09 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 26
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1038",
+                            "username": "程峰",
+                            "avatar": "https://example.com/avatar/user-1038.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0038@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010038",
+                            "status": 1,
+                            "createTime": "2026-02-10 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 27
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1039",
+                            "username": "叶青",
+                            "avatar": "https://example.com/avatar/user-1039.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0039@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010039",
+                            "status": 1,
+                            "createTime": "2026-03-11 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 28
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1040",
+                            "username": "苏晴",
+                            "avatar": "https://example.com/avatar/user-1040.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0040@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010040",
+                            "status": 0,
+                            "createTime": "2026-04-12 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 29
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1041",
+                            "username": "顾言",
+                            "avatar": "https://example.com/avatar/user-1041.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0041@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010041",
+                            "status": 1,
+                            "createTime": "2026-05-13 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 30
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1042",
+                            "username": "陆远",
+                            "avatar": "https://example.com/avatar/user-1042.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0042@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010042",
+                            "status": 1,
+                            "createTime": "2026-06-14 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 31
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1043",
+                            "username": "夏雨",
+                            "avatar": "https://example.com/avatar/user-1043.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0043@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010043",
+                            "status": 0,
+                            "createTime": "2026-07-15 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 32
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1044",
+                            "username": "乔安",
+                            "avatar": "https://example.com/avatar/user-1044.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0044@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010044",
+                            "status": 1,
+                            "createTime": "2026-08-16 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 33
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1045",
+                            "username": "白杨",
+                            "avatar": "https://example.com/avatar/user-1045.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0045@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010045",
+                            "status": 1,
+                            "createTime": "2026-09-17 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 34
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1046",
+                            "username": "江涛",
+                            "avatar": "https://example.com/avatar/user-1046.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0046@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010046",
+                            "status": 0,
+                            "createTime": "2026-10-18 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 35
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1047",
+                            "username": "石磊",
+                            "avatar": "https://example.com/avatar/user-1047.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0047@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010047",
+                            "status": 1,
+                            "createTime": "2026-11-19 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 36
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1048",
+                            "username": "金鑫",
+                            "avatar": "https://example.com/avatar/user-1048.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0048@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010048",
+                            "status": 1,
+                            "createTime": "2026-12-20 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 37
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1049",
+                            "username": "魏晨",
+                            "avatar": "https://example.com/avatar/user-1049.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0049@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010049",
+                            "status": 0,
+                            "createTime": "2026-01-21 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 38
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1050",
+                            "username": "陶然",
+                            "avatar": "https://example.com/avatar/user-1050.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0050@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010050",
+                            "status": 1,
+                            "createTime": "2026-02-22 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 39
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1051",
+                            "username": "Alice Smith",
+                            "avatar": "https://example.com/avatar/user-1051.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0051@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010051",
+                            "status": 1,
+                            "createTime": "2026-03-23 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 40
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1052",
+                            "username": "James Brown",
+                            "avatar": "https://example.com/avatar/user-1052.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0052@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010052",
+                            "status": 0,
+                            "createTime": "2026-04-24 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 41
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1053",
+                            "username": "Emma Wilson",
+                            "avatar": "https://example.com/avatar/user-1053.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0053@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010053",
+                            "status": 1,
+                            "createTime": "2026-05-25 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 42
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1054",
+                            "username": "Oliver Jones",
+                            "avatar": "https://example.com/avatar/user-1054.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0054@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010054",
+                            "status": 1,
+                            "createTime": "2026-06-26 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 43
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1055",
+                            "username": "Sophia Taylor",
+                            "avatar": "https://example.com/avatar/user-1055.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0055@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010055",
+                            "status": 0,
+                            "createTime": "2026-07-27 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 44
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1056",
+                            "username": "Liam Davis",
+                            "avatar": "https://example.com/avatar/user-1056.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0056@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010056",
+                            "status": 1,
+                            "createTime": "2026-08-28 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 45
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1057",
+                            "username": "Ava Miller",
+                            "avatar": "https://example.com/avatar/user-1057.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0057@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010057",
+                            "status": 1,
+                            "createTime": "2026-09-01 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 46
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1058",
+                            "username": "Noah Anderson",
+                            "avatar": "https://example.com/avatar/user-1058.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0058@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010058",
+                            "status": 0,
+                            "createTime": "2026-10-02 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 47
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1059",
+                            "username": "Mia Thomas",
+                            "avatar": "https://example.com/avatar/user-1059.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0059@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010059",
+                            "status": 1,
+                            "createTime": "2026-11-03 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 48
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1060",
+                            "username": "Ethan Jackson",
+                            "avatar": "https://example.com/avatar/user-1060.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0060@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010060",
+                            "status": 1,
+                            "createTime": "2026-12-04 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 49
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1061",
+                            "username": "Chloe White",
+                            "avatar": "https://example.com/avatar/user-1061.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0061@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010061",
+                            "status": 0,
+                            "createTime": "2026-01-05 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 20
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1062",
+                            "username": "Lucas Harris",
+                            "avatar": "https://example.com/avatar/user-1062.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0062@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010062",
+                            "status": 1,
+                            "createTime": "2026-02-06 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 21
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1063",
+                            "username": "Grace Martin",
+                            "avatar": "https://example.com/avatar/user-1063.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0063@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010063",
+                            "status": 1,
+                            "createTime": "2026-03-07 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 22
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1064",
+                            "username": "Mason Thompson",
+                            "avatar": "https://example.com/avatar/user-1064.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0064@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010064",
+                            "status": 0,
+                            "createTime": "2026-04-08 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 23
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1065",
+                            "username": "Lily Garcia",
+                            "avatar": "https://example.com/avatar/user-1065.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0065@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010065",
+                            "status": 1,
+                            "createTime": "2026-05-09 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 24
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1066",
+                            "username": "Logan Martinez",
+                            "avatar": "https://example.com/avatar/user-1066.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0066@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010066",
+                            "status": 1,
+                            "createTime": "2026-06-10 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 25
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1067",
+                            "username": "Zoe Robinson",
+                            "avatar": "https://example.com/avatar/user-1067.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0067@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010067",
+                            "status": 0,
+                            "createTime": "2026-07-11 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 26
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1068",
+                            "username": "Henry Clark",
+                            "avatar": "https://example.com/avatar/user-1068.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0068@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010068",
+                            "status": 1,
+                            "createTime": "2026-08-12 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 27
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1069",
+                            "username": "Ella Rodriguez",
+                            "avatar": "https://example.com/avatar/user-1069.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0069@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010069",
+                            "status": 1,
+                            "createTime": "2026-09-13 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 28
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1070",
+                            "username": "Jack Lewis",
+                            "avatar": "https://example.com/avatar/user-1070.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0070@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010070",
+                            "status": 0,
+                            "createTime": "2026-10-14 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 29
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1071",
+                            "username": "Nora Lee",
+                            "avatar": "https://example.com/avatar/user-1071.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0071@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010071",
+                            "status": 1,
+                            "createTime": "2026-11-15 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 30
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1072",
+                            "username": "Leo Walker",
+                            "avatar": "https://example.com/avatar/user-1072.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0072@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010072",
+                            "status": 1,
+                            "createTime": "2026-12-16 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 31
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1073",
+                            "username": "Ruby Hall",
+                            "avatar": "https://example.com/avatar/user-1073.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0073@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010073",
+                            "status": 0,
+                            "createTime": "2026-01-17 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 32
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1074",
+                            "username": "Owen Allen",
+                            "avatar": "https://example.com/avatar/user-1074.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0074@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010074",
+                            "status": 1,
+                            "createTime": "2026-02-18 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 33
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1075",
+                            "username": "Lucy Young",
+                            "avatar": "https://example.com/avatar/user-1075.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0075@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010075",
+                            "status": 1,
+                            "createTime": "2026-03-19 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 34
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1076",
+                            "username": "Ryan King",
+                            "avatar": "https://example.com/avatar/user-1076.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0076@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010076",
+                            "status": 0,
+                            "createTime": "2026-04-20 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 35
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1077",
+                            "username": "Maya Wright",
+                            "avatar": "https://example.com/avatar/user-1077.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0077@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010077",
+                            "status": 1,
+                            "createTime": "2026-05-21 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 36
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1078",
+                            "username": "Adam Scott",
+                            "avatar": "https://example.com/avatar/user-1078.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0078@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010078",
+                            "status": 1,
+                            "createTime": "2026-06-22 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 37
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1079",
+                            "username": "Eva Green",
+                            "avatar": "https://example.com/avatar/user-1079.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0079@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010079",
+                            "status": 0,
+                            "createTime": "2026-07-23 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 38
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1080",
+                            "username": "Isaac Baker",
+                            "avatar": "https://example.com/avatar/user-1080.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0080@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010080",
+                            "status": 1,
+                            "createTime": "2026-08-24 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 39
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1081",
+                            "username": "Anna Adams",
+                            "avatar": "https://example.com/avatar/user-1081.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0081@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010081",
+                            "status": 1,
+                            "createTime": "2026-09-25 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 40
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1082",
+                            "username": "Dylan Nelson",
+                            "avatar": "https://example.com/avatar/user-1082.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0082@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010082",
+                            "status": 0,
+                            "createTime": "2026-10-26 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 41
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1083",
+                            "username": "Clara Hill",
+                            "avatar": "https://example.com/avatar/user-1083.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0083@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010083",
+                            "status": 1,
+                            "createTime": "2026-11-27 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 42
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1084",
+                            "username": "Caleb Moore",
+                            "avatar": "https://example.com/avatar/user-1084.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0084@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010084",
+                            "status": 1,
+                            "createTime": "2026-12-28 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 43
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1085",
+                            "username": "Julia Carter",
+                            "avatar": "https://example.com/avatar/user-1085.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0085@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010085",
+                            "status": 0,
+                            "createTime": "2026-01-01 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 44
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1086",
+                            "username": "Aaron Mitchell",
+                            "avatar": "https://example.com/avatar/user-1086.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0086@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010086",
+                            "status": 1,
+                            "createTime": "2026-02-02 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 45
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1087",
+                            "username": "Sarah Perez",
+                            "avatar": "https://example.com/avatar/user-1087.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0087@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010087",
+                            "status": 1,
+                            "createTime": "2026-03-03 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 46
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1088",
+                            "username": "Felix Roberts",
+                            "avatar": "https://example.com/avatar/user-1088.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0088@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010088",
+                            "status": 0,
+                            "createTime": "2026-04-04 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 47
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1089",
+                            "username": "Emily Turner",
+                            "avatar": "https://example.com/avatar/user-1089.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0089@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010089",
+                            "status": 1,
+                            "createTime": "2026-05-05 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 48
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1090",
+                            "username": "Oscar Phillips",
+                            "avatar": "https://example.com/avatar/user-1090.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0090@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010090",
+                            "status": 1,
+                            "createTime": "2026-06-06 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 49
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1091",
+                            "username": "Laura Campbell",
+                            "avatar": "https://example.com/avatar/user-1091.png",
+                            "address": "上海市浦东新区",
+                            "email": "user0091@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010091",
+                            "status": 0,
+                            "createTime": "2026-07-07 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 20
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1092",
+                            "username": "Simon Parker",
+                            "avatar": "https://example.com/avatar/user-1092.png",
+                            "address": "北京市朝阳区",
+                            "email": "user0092@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010092",
+                            "status": 1,
+                            "createTime": "2026-08-08 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 21
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1093",
+                            "username": "Amy Evans",
+                            "avatar": "https://example.com/avatar/user-1093.png",
+                            "address": "广东省深圳市南山区",
+                            "email": "user0093@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010093",
+                            "status": 1,
+                            "createTime": "2026-09-09 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 22
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1094",
+                            "username": "David Edwards",
+                            "avatar": "https://example.com/avatar/user-1094.png",
+                            "address": "浙江省杭州市西湖区",
+                            "email": "user0094@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010094",
+                            "status": 0,
+                            "createTime": "2026-10-10 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 23
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1095",
+                            "username": "Rose Collins",
+                            "avatar": "https://example.com/avatar/user-1095.png",
+                            "address": "江苏省南京市鼓楼区",
+                            "email": "user0095@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010095",
+                            "status": 1,
+                            "createTime": "2026-11-11 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 24
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1096",
+                            "username": "Peter Stewart",
+                            "avatar": "https://example.com/avatar/user-1096.png",
+                            "address": "湖北省武汉市武昌区",
+                            "email": "user0096@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010096",
+                            "status": 1,
+                            "createTime": "2026-12-12 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 25
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1097",
+                            "username": "Nina Sanchez",
+                            "avatar": "https://example.com/avatar/user-1097.png",
+                            "address": "四川省成都市武侯区",
+                            "email": "user0097@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010097",
+                            "status": 0,
+                            "createTime": "2026-01-13 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 26
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1098",
+                            "username": "Kevin Morris",
+                            "avatar": "https://example.com/avatar/user-1098.png",
+                            "address": "山东省青岛市市南区",
+                            "email": "user0098@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010098",
+                            "status": 1,
+                            "createTime": "2026-02-14 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 27
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1099",
+                            "username": "Irene Rogers",
+                            "avatar": "https://example.com/avatar/user-1099.png",
+                            "address": "福建省厦门市思明区",
+                            "email": "user0099@example.com",
+                            "gender": 1,
+                            "idCard": "310101199001010099",
+                            "status": 1,
+                            "createTime": "2026-03-15 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 28
+                              }
+                            }
+                          },
+                          {
+                            "id": "user-1100",
+                            "username": "Eric Morgan",
+                            "avatar": "https://example.com/avatar/user-1100.png",
+                            "address": "陕西省西安市雁塔区",
+                            "email": "user0100@example.com",
+                            "gender": 2,
+                            "idCard": "310101199001010100",
+                            "status": 0,
+                            "createTime": "2026-04-16 09:30:00",
+                            "user": {
+                              "detail": {
+                                "age": 29
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "emptyPage": {
+                    "summary": "超出总页数时返回空列表（page=11）",
+                    "value": {
+                      "code": 200,
+                      "msg": "查询成功",
+                      "data": {
+                        "pageNum": 11,
+                        "pageSize": 10,
+                        "total": 100,
+                        "list": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/delete": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "批量删除用户",
+        "operationId": "deleteUsers",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DeleteUsersRequest" },
+              "example": { "id": ["user-1001", "user-1002"] }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MutationSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/edit": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "编辑用户",
+        "operationId": "editUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserInfo" },
+              "example": {
+                "id": "user-1001",
+                "username": "张明",
+                "avatar": "https://example.com/avatar/user-1001.png",
+                "address": "上海市浦东新区世纪大道",
+                "email": "zhangming@example.com",
+                "gender": 1,
+                "idCard": "310101199001011234",
+                "status": 1,
+                "createTime": "2026-01-10 09:30:00",
+                "user": { "detail": { "age": 36 } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MutationSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/add": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "新增用户",
+        "operationId": "addUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AddUserRequest" },
+              "example": {
+                "username": "王芳",
+                "avatar": "https://example.com/avatar/new-user.png",
+                "address": "上海市静安区南京西路",
+                "email": "wangfang@example.com",
+                "gender": 2,
+                "idCard": "310101199808081234"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MutationSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/file/upload/img": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "上传用户头像",
+        "operationId": "uploadAvatar",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "图片文件，前端限制不超过 5 MiB"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "上传成功；头像组件读取 data.fileUrl",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvatarUploadResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "上传成功",
+                  "data": {
+                    "fileUrl": "https://example.com/avatar/20260719-user.png"
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/import": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "批量导入用户",
+        "operationId": "importUsers",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": ".xls 或 .xlsx 文件，前端提示最大 5 MiB"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MutationSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/export": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "获取用户导入模板数据",
+        "description": "当前前端未设置 blob 响应类型，而是将整个 JSON 响应序列化后保存为 .xlsx。此定义按现有消费逻辑提供 JSON。",
+        "operationId": "exportUserTemplate",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": false },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "可序列化的模板数据",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ExportResponse" },
+                "example": {
+                  "code": 200,
+                  "msg": "模板生成成功",
+                  "data": {
+                    "columns": [
+                      "username",
+                      "gender",
+                      "idCard",
+                      "email",
+                      "address",
+                      "avatar"
+                    ],
+                    "rows": [
+                      {
+                        "username": "示例用户",
+                        "gender": 1,
+                        "idCard": "310101199001011234",
+                        "email": "demo@example.com",
+                        "address": "上海市浦东新区",
+                        "avatar": "https://example.com/avatar/demo.png"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/change": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "修改用户状态",
+        "operationId": "changeUserStatus",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChangeStatusRequest" },
+              "example": { "id": "user-1001", "status": 0 }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/MutationSuccess" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/user/department": {
+      "get": {
+        "tags": ["部门"],
+        "summary": "获取部门树",
+        "operationId": "listDepartments",
+        "responses": {
+          "200": {
+            "description": "部门树；组件读取 data 并要求节点包含 id、name、children",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DepartmentResponse" },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": [
+                    {
+                      "id": "dept-headquarters",
+                      "name": "总部",
+                      "children": [
+                        {
+                          "id": "dept-tech",
+                          "name": "技术中心",
+                          "children": [
+                            {
+                              "id": "dept-frontend",
+                              "name": "前端组",
+                              "children": []
+                            },
+                            {
+                              "id": "dept-backend",
+                              "name": "后端组",
+                              "children": []
+                            },
+                            {
+                              "id": "dept-test",
+                              "name": "测试组",
+                              "children": []
+                            },
+                            {
+                              "id": "dept-devops",
+                              "name": "运维组",
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "id": "dept-product",
+                          "name": "产品中心",
+                          "children": [
+                            {
+                              "id": "dept-product-design",
+                              "name": "产品设计组",
+                              "children": []
+                            },
+                            {
+                              "id": "dept-ui",
+                              "name": "UI 设计组",
+                              "children": []
+                            },
+                            {
+                              "id": "dept-user-research",
+                              "name": "用户研究组",
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "id": "dept-operation",
+                          "name": "运营中心",
+                          "children": [
+                            {
+                              "id": "dept-content",
+                              "name": "内容运营组",
+                              "children": []
+                            },
+                            {
+                              "id": "dept-market",
+                              "name": "市场推广组",
+                              "children": []
+                            },
+                            {
+                              "id": "dept-customer",
+                              "name": "客户成功组",
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "id": "dept-finance",
+                          "name": "财务部",
+                          "children": []
+                        },
+                        {
+                          "id": "dept-hr",
+                          "name": "人力资源部",
+                          "children": []
+                        },
+                        { "id": "dept-legal", "name": "法务部", "children": [] }
+                      ]
+                    },
+                    {
+                      "id": "dept-east-region",
+                      "name": "华东区域",
+                      "children": [
+                        {
+                          "id": "dept-shanghai",
+                          "name": "上海分公司",
+                          "children": []
+                        },
+                        {
+                          "id": "dept-hangzhou",
+                          "name": "杭州分公司",
+                          "children": []
+                        },
+                        {
+                          "id": "dept-nanjing",
+                          "name": "南京分公司",
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "dept-south-region",
+                      "name": "华南区域",
+                      "children": [
+                        {
+                          "id": "dept-shenzhen",
+                          "name": "深圳分公司",
+                          "children": []
+                        },
+                        {
+                          "id": "dept-guangzhou",
+                          "name": "广州分公司",
+                          "children": []
+                        },
+                        {
+                          "id": "dept-xiamen",
+                          "name": "厦门分公司",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "AccessToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-access-token",
+        "description": "前端发送格式：Bearer <access_token>"
+      }
+    },
+    "responses": {
+      "MutationSuccess": {
+        "description": "操作成功；调用方不读取 data",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/BaseResponse" },
+            "example": { "code": 200, "msg": "操作成功" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "未登录或 Token 已失效",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+            "example": { "code": 401, "msg": "登录状态已过期，请重新登录" }
+          }
+        }
+      },
+      "ServerError": {
+        "description": "服务器错误",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+            "example": { "code": 500, "msg": "服务器内部错误" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "required": ["code", "msg"],
+        "properties": {
+          "code": { "type": "integer", "format": "int32", "example": 200 },
+          "msg": { "type": "string", "example": "操作成功" },
+          "data": { "nullable": true, "description": "调用方未消费该字段" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["code", "msg"],
+        "properties": {
+          "code": { "type": "integer", "format": "int32", "example": 400 },
+          "msg": { "type": "string", "example": "请求参数错误" },
+          "data": { "nullable": true }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "additionalProperties": false,
+        "properties": {
+          "username": { "type": "string", "minLength": 1, "example": "admin" },
+          "password": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 32,
+            "pattern": "^[a-fA-F0-9]{32}$",
+            "description": "前端使用 MD5 后提交，而非明文密码",
+            "example": "e10adc3949ba59abbe56e057f20f883e"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": { "type": "integer", "enum": [200] },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "object",
+            "required": ["access_token"],
+            "properties": {
+              "access_token": { "type": "string", "minLength": 1 },
+              "userInfo": {
+                "type": "object",
+                "required": ["username"],
+                "properties": { "username": { "type": "string" } },
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "UserListRequest": {
+        "type": "object",
+        "required": ["page", "pageSize"],
+        "properties": {
+          "page": { "type": "integer", "minimum": 1, "example": 1 },
+          "pageSize": { "type": "integer", "minimum": 1, "example": 10 },
+          "type": {
+            "type": "integer",
+            "description": "调用方固定传 1；代码未定义业务含义",
+            "example": 1
+          },
+          "startTime": {
+            "type": "string",
+            "description": "调用格式 YYYY-MM-DD HH:mm:ss",
+            "example": "2026-01-01 00:00:00"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "调用格式 YYYY-MM-DD HH:mm:ss",
+            "example": "2026-12-31 23:59:59"
+          },
+          "username": { "type": "string" },
+          "idCard": { "type": "string" },
+          "minAge": {
+            "type": "string",
+            "description": "当前页面从输入框以字符串发送"
+          },
+          "maxAge": {
+            "type": "string",
+            "description": "当前页面从输入框以字符串发送"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "0=禁用，1=启用"
+          },
+          "gender": {
+            "type": "integer",
+            "enum": [1, 2],
+            "description": "1=男，2=女"
+          },
+          "departmentId": { "type": "array", "items": { "type": "string" } },
+          "userStatus": { "type": "array", "items": { "type": "integer" } },
+          "userRole": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "UserListResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": { "type": "integer", "enum": [200] },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "object",
+            "required": ["pageNum", "pageSize", "total", "list"],
+            "properties": {
+              "pageNum": { "type": "integer", "minimum": 1 },
+              "pageSize": { "type": "integer", "minimum": 1 },
+              "total": { "type": "integer", "minimum": 0 },
+              "list": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/UserInfo" }
+              }
+            }
+          }
+        }
+      },
+      "UserInfo": {
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "avatar",
+          "address",
+          "email",
+          "gender",
+          "idCard",
+          "status",
+          "createTime",
+          "user"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "username": { "type": "string", "minLength": 2, "maxLength": 20 },
+          "avatar": { "type": "string", "format": "uri" },
+          "address": { "type": "string", "minLength": 4, "maxLength": 30 },
+          "email": { "type": "string", "format": "email" },
+          "gender": {
+            "type": "integer",
+            "enum": [1, 2],
+            "description": "1=男，2=女"
+          },
+          "idCard": {
+            "type": "string",
+            "pattern": "^(?:[0-9Xx]{15}|[0-9Xx]{18})$"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "0=禁用，1=启用"
+          },
+          "createTime": {
+            "type": "string",
+            "description": "页面展示的创建时间字符串"
+          },
+          "user": {
+            "type": "object",
+            "required": ["detail"],
+            "properties": {
+              "detail": {
+                "type": "object",
+                "required": ["age"],
+                "properties": { "age": { "type": "integer", "minimum": 0 } }
+              }
+            }
+          },
+          "photo": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PhotoFile" }
+          }
+        }
+      },
+      "PhotoFile": {
+        "type": "object",
+        "required": [
+          "name",
+          "percentage",
+          "raw",
+          "size",
+          "status",
+          "uid",
+          "url"
+        ],
+        "properties": {
+          "name": { "type": "string" },
+          "percentage": { "type": "number" },
+          "raw": {
+            "type": "object",
+            "required": ["uid"],
+            "properties": { "uid": { "type": "string" } }
+          },
+          "size": { "type": "integer" },
+          "status": { "type": "string" },
+          "uid": { "type": "integer" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      },
+      "AddUserRequest": {
+        "type": "object",
+        "required": [
+          "username",
+          "avatar",
+          "address",
+          "email",
+          "gender",
+          "idCard"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "username": { "type": "string", "minLength": 2, "maxLength": 20 },
+          "avatar": { "type": "string", "format": "uri" },
+          "address": { "type": "string", "minLength": 4, "maxLength": 30 },
+          "email": { "type": "string", "format": "email" },
+          "gender": {
+            "type": "integer",
+            "enum": [1, 2],
+            "description": "1=男，2=女"
+          },
+          "idCard": {
+            "type": "string",
+            "pattern": "^(?:[0-9Xx]{15}|[0-9Xx]{18})$"
+          },
+          "photo": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PhotoFile" }
+          }
+        }
+      },
+      "DeleteUsersRequest": {
+        "type": "object",
+        "required": ["id"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "ChangeStatusRequest": {
+        "type": "object",
+        "required": ["id", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "0=禁用，1=启用"
+          }
+        }
+      },
+      "AvatarUploadResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": { "type": "integer", "enum": [200] },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "object",
+            "required": ["fileUrl"],
+            "properties": { "fileUrl": { "type": "string", "format": "uri" } }
+          }
+        }
+      },
+      "ExportResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": { "type": "integer", "enum": [200] },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "object",
+            "required": ["columns", "rows"],
+            "properties": {
+              "columns": { "type": "array", "items": { "type": "string" } },
+              "rows": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/AddUserRequest" }
+              }
+            }
+          }
+        }
+      },
+      "DepartmentNode": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "children": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DepartmentNode" }
+          }
+        }
+      },
+      "DepartmentResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": { "type": "integer", "enum": [200] },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DepartmentNode" }
+          }
+        }
+      }
+    }
+  }
+}

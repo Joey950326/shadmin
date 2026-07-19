@@ -8,6 +8,7 @@ export default antfu({
   ignores: [
     './src/components/ui/**/*',
     './src/components/diceui/**/*',
+    './docs/**/*.mock.js',
 
   ],
   stylistic: {
