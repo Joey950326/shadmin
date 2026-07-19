@@ -32,8 +32,8 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
   },
   {
     id: 'age',
-    accessorKey: 'age',
-    // accessorFn: row => row.user.detail.age,
+    // accessorKey: 'age',
+    accessorFn: row => row.user.detail.age,
     header: '年龄',
   },
   {

@@ -198,8 +198,8 @@ export const columns: ColumnDef<Api.User.UserInfo>[] = [
   // 年龄
   {
     id: 'age',
-    // accessorFn: row => row.user.detail.age,
-    accessorKey: 'age',
+    accessorFn: row => row.user.detail.age,
+    // accessorKey: 'age',
     header: ({ column }) => {
       const currentSort = column.getIsSorted()
       const handleClick = () => {
