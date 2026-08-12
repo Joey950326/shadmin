@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -24,7 +25,7 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 import { useAvatarUpload, useDeleteUser, useEditUser, useUserList } from '@/services/api/hooks/useUser'
-import { columns } from './columns'
+import { createColumns } from './columns'
 import DepartmentTree from './components/DepartmentTree'
 import ScrollSelector from './components/ScrollSelector'
 
@@ -45,51 +46,55 @@ interface BasicTableProps<T> {
   onAvatarUpload: UseMutationResult<Api.User.AvatarUploadResponse, unknown, Api.User.AvatarUploadParams>
 }
 
-const statusData = [
-  {
-    label: '在职',
-    value: '1',
-  },
-  {
-    label: '待培训',
-    value: '2',
-  },
-  {
-    label: '待上岗',
-    value: '3',
-  },
-  {
-    label: '已离职',
-    value: '4',
-  },
-  {
-    label: '已退休',
-    value: '5',
-  },
-]
+function createStatusData(t: (key: string) => string) {
+  return [
+    {
+      label: t('tree.employed'),
+      value: '1',
+    },
+    {
+      label: t('tree.training'),
+      value: '2',
+    },
+    {
+      label: t('tree.pendingOnboarding'),
+      value: '3',
+    },
+    {
+      label: t('tree.resigned'),
+      value: '4',
+    },
+    {
+      label: t('tree.retired'),
+      value: '5',
+    },
+  ]
+}
 
-const roleData = [
-  {
-    label: '超级管理员',
-    value: '1',
-  },
-  {
-    label: 'CEO',
-    value: '2',
-  },
-  {
-    label: '部门主管',
-    value: '3',
-  },
-  {
-    label: '人事经理',
-    value: '4',
-  },
-  {
-    label: 'HR',
-    value: '5',
-  },
-]
+function createRoleData(t: (key: string) => string) {
+  return [
+    {
+      label: t('tree.superAdmin'),
+      value: '1',
+    },
+    {
+      label: t('tree.ceo'),
+      value: '2',
+    },
+    {
+      label: t('tree.departmentManager'),
+      value: '3',
+    },
+    {
+      label: t('tree.hrManager'),
+      value: '4',
+    },
+    {
+      label: t('tree.hr'),
+      value: '5',
+    },
+  ]
+}
 
 function BasicTable({
   columns,
@@ -100,6 +105,9 @@ function BasicTable({
   onAvatarUpload,
   departmentId = [],
 }: BasicTableProps<Api.User.UserInfo>) {
+  const { t } = useTranslation()
+  const statusData = useMemo(() => createStatusData(t), [t])
+  const roleData = useMemo(() => createRoleData(t), [t])
   // 用户状态筛选
   const [statusSelected, setStatusSelected] = useState<StatusItem[]>([])
   const handleStatusSelected = (val: StatusItem[]) => {
@@ -140,13 +148,13 @@ function BasicTable({
     const deleteParams = { id: Array.isArray(rowId) ? rowId : [rowId] }
     onRowDelete.mutate(deleteParams, {
       onSuccess: () => {
-        toast.success('删除成功', {
+        toast.success(t('table.deleteSuccess'), {
           position: 'top-right',
         })
       },
       onError: (error) => {
-        console.error('删除失败', error)
-        toast.error('删除失败', {
+        console.error('Delete failed', error)
+        toast.error(t('table.deleteFailed'), {
           position: 'top-right',
         })
       },
@@ -154,18 +162,18 @@ function BasicTable({
         refetch()
       },
     })
-  }, [onRowDelete, refetch])
+  }, [onRowDelete, refetch, t])
 
   const handleEdit = useCallback((data: Api.User.UserInfo, cb?: () => void) => {
     onRowEdit.mutate(data, {
       onSuccess: () => {
-        toast.success('编辑成功', {
+        toast.success(t('table.editSuccess'), {
           position: 'top-right',
         })
       },
       onError: (error) => {
-        console.error('编辑失败', error)
-        toast.error('编辑失败', {
+        console.error('Edit failed', error)
+        toast.error(t('table.editFailed'), {
           position: 'top-right',
         })
       },
@@ -174,24 +182,24 @@ function BasicTable({
         refetch()
       },
     })
-  }, [onRowEdit, refetch])
+  }, [onRowEdit, refetch, t])
 
   const handleAvatarUpload = useCallback((params: Api.User.AvatarUploadParams, successCb?: (data: Api.User.AvatarUploadResponse) => void, failCb?: (error: Error) => void) => {
     onAvatarUpload.mutate(params, {
       onSuccess: (data) => {
-        toast.success('上传成功', {
+        toast.success(t('table.uploadSuccess'), {
           position: 'top-right',
         })
         successCb?.(data)
       },
       onError: (error) => {
-        toast.error('上传失败', {
+        toast.error(t('table.uploadFailed'), {
           position: 'top-right',
         })
         failCb?.(error as Error)
       },
     })
-  }, [onAvatarUpload])
+  }, [onAvatarUpload, t])
 
   const table = useReactTable({
     data: tableData,
@@ -228,7 +236,7 @@ function BasicTable({
         table.setPageIndex(value - 1)
       }
       else {
-        toast.error('请输入正常范围的页码', {
+        toast.error(t('table.invalidPage'), {
           position: 'top-right',
         })
       }
@@ -315,7 +323,7 @@ function BasicTable({
             <PaginationItem className="hidden sm:block">
               <div className="flex items-center">
                 <Button className=" rounded-r-none " variant="outline" size="sm" onClick={handleJump}>
-                  跳转至
+                  {t('table.pageJump')}
                 </Button>
                 <Input ref={inputRef} placeholder={currentPage} className="max-w-14 h-8 rounded-l-none" defaultValue={currentPage} />
               </div>
@@ -358,18 +366,16 @@ function BasicTable({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10">10 条</SelectItem>
-                  <SelectItem value="20">20 条</SelectItem>
-                  <SelectItem value="50">50 条</SelectItem>
-                  <SelectItem value="100">100 条</SelectItem>
+                  <SelectItem value="10">{t('table.itemsPerPage', { count: 10 })}</SelectItem>
+                  <SelectItem value="20">{t('table.itemsPerPage', { count: 20 })}</SelectItem>
+                  <SelectItem value="50">{t('table.itemsPerPage', { count: 50 })}</SelectItem>
+                  <SelectItem value="100">{t('table.itemsPerPage', { count: 100 })}</SelectItem>
                 </SelectContent>
               </Select>
             </PaginationItem>
             <PaginationItem className="hidden sm:block">
               <span className="text-sm px-2">
-                共
-                {pageCount}
-                页
+                {t('table.totalPages', { count: pageCount })}
               </span>
             </PaginationItem>
 
@@ -382,7 +388,8 @@ function BasicTable({
 }
 
 export default function Index() {
-  const tableColumns = useMemo(() => columns, [])
+  const { t } = useTranslation()
+  const tableColumns = useMemo(() => createColumns(t), [t])
   const deleteMutation = useDeleteUser()
   const editMutation = useEditUser()
   const avatarUploadMutaiton = useAvatarUpload()

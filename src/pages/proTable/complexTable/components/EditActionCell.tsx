@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { UserInfoFormRef } from './UsefInfoForm'
 import type { Api } from '@/services/api/types/api'
 import { memo, useCallback, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import UserInfoForm from './UsefInfoForm'
@@ -17,6 +18,7 @@ interface EditActionCellPros {
 }
 
 function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit }: EditActionCellPros) {
+  const { t } = useTranslation()
   const [dialogOpen, setDialogOpen] = useState<boolean>(visible ?? false)
   const [confirmDisable, setConfirmDisable] = useState<boolean>(true)
 
@@ -52,8 +54,8 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit }
         ? (
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>编辑用户</DialogTitle>
-                <DialogDescription>编辑用户性别，地址，年龄，等相关信息</DialogDescription>
+                <DialogTitle>{t('table.editUser')}</DialogTitle>
+                <DialogDescription>{t('table.userInfoDescription')}</DialogDescription>
               </DialogHeader>
 
               <UserInfoForm value={userInfo} ref={ref} onComfirmStatusChange={val => setConfirmDisable(!val)} />
@@ -61,16 +63,16 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit }
               <DialogFooter>
                 <DialogClose asChild>
                   <Button type="button" variant="outline">
-                    取消
+                    {t('cancel')}
                   </Button>
                 </DialogClose>
 
-                <Button disabled={confirmDisable} onClick={handleConfirm}>确定</Button>
+                <Button disabled={confirmDisable} onClick={handleConfirm}>{t('confirm')}</Button>
               </DialogFooter>
             </DialogContent>
           )
         : (
-            <div className="size-full flex items-center justify-center">暂无用户信息</div>
+            <div className="size-full flex items-center justify-center">{t('table.noUserInfo')}</div>
           )}
     </Dialog>
   )

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { FileWithPreview } from '@/components/uploader/types'
 import { DownloadIcon, FolderUpIcon, LoaderIcon } from 'lucide-react'
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { FileDownloader, FileDownloaderTrigger } from '@/components/fileDownloader'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ interface UploaderDialogProps {
 }
 
 export default function UploaderDialog({ children }: UploaderDialogProps) {
+  const { t } = useTranslation()
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [selectedFiles, setSelectedFiles] = useState<Array<FileWithPreview>>([])
   const { mutate, isPending } = useImportUser()
@@ -24,13 +26,13 @@ export default function UploaderDialog({ children }: UploaderDialogProps) {
     if (selectedFiles.length > 0) {
       mutate({ file: selectedFiles[0] }, {
         onSuccess() {
-          toast.success('导入成功', {
+          toast.success(t('table.importSuccess'), {
             position: 'top-right',
           })
         },
         onError(error) {
           console.error('导入用户失败：', error)
-          toast.error('导入用户失败', {
+          toast.error(t('table.importFailed'), {
             position: 'top-right',
           })
         },
@@ -39,7 +41,7 @@ export default function UploaderDialog({ children }: UploaderDialogProps) {
         },
       })
     }
-  }, [mutate, selectedFiles])
+  }, [mutate, selectedFiles, t])
   // 上传逻辑
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -50,43 +52,43 @@ export default function UploaderDialog({ children }: UploaderDialogProps) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>批量导入</DialogTitle>
+          <DialogTitle>{t('table.batchImport')}</DialogTitle>
           <DialogDescription>
-            批量添加新用户
+            {t('table.batchImportDescription')}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div className="flex flex:col sm:flex-row sm:items-center gap-2">
-            <Label>模板下载</Label>
-            <FileDownloader fileName="用户模板" onDownloadingChange={setIsDownloading}>
+            <Label>{t('table.downloadTemplate')}</Label>
+            <FileDownloader fileName={t('table.userTemplate')} onDownloadingChange={setIsDownloading}>
               <FileDownloaderTrigger>
                 <Button size="sm" variant="outline" disabled={isDownloading}>
                   {isDownloading ? <LoaderIcon /> : <DownloadIcon />}
-                  {isDownloading ? '下载中 ' : '点击下载'}
+                  {isDownloading ? t('table.downloading') : t('table.clickToDownload')}
 
                 </Button>
               </FileDownloaderTrigger>
             </FileDownloader>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-            <Label>文件上传</Label>
+            <Label>{t('table.uploadFile')}</Label>
             <Uploader onUpload={setSelectedFiles}>
               <UploaderContent className="gap-2">
                 <div className="size-full flex flex-col items-center gap-4">
                   <Button variant="outline" size="icon" className="size-12 pointer-events-none">
                     <FolderUpIcon className="size-6 text-primary/60" />
                   </Button>
-                  <div>将文件拖到此处，或点击按钮上传</div>
+                  <div>{t('table.dropFileHere')}</div>
                   <UploaderTrigger>
                     <Button variant="outline" size="sm">
-                      选择文件
+                      {t('table.selectFile')}
                     </Button>
                   </UploaderTrigger>
 
                 </div>
               </UploaderContent>
               <UploaderDescription>
-                请上传 .xls , .xlsx 标准格式文件，文件最大为 5M
+                {t('table.uploadFileHint')}
               </UploaderDescription>
               <UploaderFileList />
             </Uploader>
@@ -96,11 +98,11 @@ export default function UploaderDialog({ children }: UploaderDialogProps) {
         <DialogFooter>
           <div className="flex items-center justify-end gap-2">
             <DialogClose asChild>
-              <Button variant="outline">取消</Button>
+              <Button variant="outline">{t('cancel')}</Button>
             </DialogClose>
 
             <Button disabled={selectedFiles.length === 0 || isPending} onClick={handleConfirm}>
-              确定
+              {t('confirm')}
               {isPending && <Spinner />}
             </Button>
           </div>

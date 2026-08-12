@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { cn } from '@/lib/utils'
 
@@ -15,11 +16,12 @@ interface DeleteUserButtonProps {
 function DeleteUserButton({
   children,
   className,
-  confirmText = '确定',
-  alertText = '确定删除选中用户?',
-  cancelText = '取消',
+  confirmText,
+  alertText,
+  cancelText,
   onConfirm,
 }: DeleteUserButtonProps) {
+  const { t } = useTranslation()
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -30,14 +32,14 @@ function DeleteUserButton({
       )}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle>温馨提示</AlertDialogTitle>
+          <AlertDialogTitle>{t('table.friendlyReminder')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {alertText}
+            {alertText ?? t('table.confirmDeleteSelectedUsers')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={() => onConfirm?.()}>{confirmText}</AlertDialogAction>
+          <AlertDialogCancel>{cancelText ?? t('cancel')}</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" onClick={() => onConfirm?.()}>{confirmText ?? t('confirm')}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -1,104 +1,107 @@
 import type { ColumnDef } from '@tanstack/react-table'
+import type { TFunction } from 'i18next'
 import type { Api } from '@/services/api/types/api'
 import { Button } from '@/components/ui/button'
 import DeleteActionCell from './components/DeleteActionCell'
 import EditActionCell from './components/EditActionCell'
 import ViewActionCell from './components/ViewActionCell'
 
-export const columns: ColumnDef<Api.User.UserInfo>[] = [
+export function createColumns(t: TFunction): ColumnDef<Api.User.UserInfo>[] {
+  return [
   // {
   //   accessorKey: 'id',
   //   header: 'ID',
   // },
-  {
-    id: 'username',
-    accessorKey: 'username',
-    header: '用户名',
-  },
-  {
-    id: 'gender',
-    accessorKey: 'gender',
-    header: '性别',
-  },
-  {
-    id: 'age',
-    // accessorKey: 'age',
-    accessorFn: row => row.user.detail.age,
-    header: '年龄',
-  },
-  {
-    id: 'idCard',
-    accessorKey: 'idCard',
-    header: '身份证号',
-  },
-  {
-    id: 'email',
-    accessorKey: 'email',
-    header: '邮箱',
-  },
-  {
-    id: 'address',
-    accessorKey: 'address',
-    header: '地址',
-  },
-  {
-    id: 'status',
-    accessorKey: 'status',
-    header: '状态',
-  },
-  {
-    id: 'createTime',
-    accessorKey: 'createTime',
-    header: '创建时间',
-  },
-  {
-    id: 'actions',
-    header: '操作',
-    cell: ({ row, table }) => {
-      // 删除用户
-      const handleDeleteConfirm = (rowId: string) => {
-        const onRowDelete = table.options.meta?.onRowDelete
-        onRowDelete?.(rowId)
-      }
-      const isDeleting = Boolean(table.options.meta?.deleteLoading)
-
-      // 修改用户
-      // const handleEdit = (data: Api.User.UserInfo) => {
-      //   const onRowEdit = table.options.meta?.onRowEdit
-      //   onRowEdit?.(data)
-      // }
-
-      const handleEdit = table.options.meta?.onRowEdit
-
-      const handleAvatarUpload = table.options.meta?.onAvatarUpload
-
-      return (
-        <div className="flex items-center justify-end gap-2">
-          <ViewActionCell userInfo={row.original}>
-            <Button
-              variant="outline"
-              size="sm"
-            >
-              查看
-            </Button>
-          </ViewActionCell>
-          <EditActionCell userInfo={row.original} onEdit={handleEdit} onAvatarUpload={handleAvatarUpload}>
-            <Button
-              variant="outline"
-              size="sm"
-            >
-              编辑
-            </Button>
-          </EditActionCell>
-
-          <DeleteActionCell
-            rowData={row.original}
-            onConfirm={handleDeleteConfirm}
-            isLoading={isDeleting}
-          />
-        </div>
-
-      )
+    {
+      id: 'username',
+      accessorKey: 'username',
+      header: t('table.username'),
     },
-  },
-]
+    {
+      id: 'gender',
+      accessorKey: 'gender',
+      header: t('table.gender'),
+    },
+    {
+      id: 'age',
+      // accessorKey: 'age',
+      accessorFn: row => row.user.detail.age,
+      header: t('table.age'),
+    },
+    {
+      id: 'idCard',
+      accessorKey: 'idCard',
+      header: t('table.idCard'),
+    },
+    {
+      id: 'email',
+      accessorKey: 'email',
+      header: t('table.email'),
+    },
+    {
+      id: 'address',
+      accessorKey: 'address',
+      header: t('table.address'),
+    },
+    {
+      id: 'status',
+      accessorKey: 'status',
+      header: t('table.status'),
+    },
+    {
+      id: 'createTime',
+      accessorKey: 'createTime',
+      header: t('table.createdAt'),
+    },
+    {
+      id: 'actions',
+      header: t('table.actions'),
+      cell: ({ row, table }) => {
+      // 删除用户
+        const handleDeleteConfirm = (rowId: string) => {
+          const onRowDelete = table.options.meta?.onRowDelete
+          onRowDelete?.(rowId)
+        }
+        const isDeleting = Boolean(table.options.meta?.deleteLoading)
+
+        // 修改用户
+        // const handleEdit = (data: Api.User.UserInfo) => {
+        //   const onRowEdit = table.options.meta?.onRowEdit
+        //   onRowEdit?.(data)
+        // }
+
+        const handleEdit = table.options.meta?.onRowEdit
+
+        const handleAvatarUpload = table.options.meta?.onAvatarUpload
+
+        return (
+          <div className="flex items-center justify-end gap-2">
+            <ViewActionCell userInfo={row.original}>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {t('table.view')}
+              </Button>
+            </ViewActionCell>
+            <EditActionCell userInfo={row.original} onEdit={handleEdit} onAvatarUpload={handleAvatarUpload}>
+              <Button
+                variant="outline"
+                size="sm"
+              >
+                {t('table.edit')}
+              </Button>
+            </EditActionCell>
+
+            <DeleteActionCell
+              rowData={row.original}
+              onConfirm={handleDeleteConfirm}
+              isLoading={isDeleting}
+            />
+          </div>
+
+        )
+      },
+    },
+  ]
+}

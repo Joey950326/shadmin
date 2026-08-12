@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react'
 import { EditIcon } from 'lucide-react'
 import { memo, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
@@ -14,6 +15,7 @@ interface AvatarUploadPros {
 }
 
 function AvatarUpload({ value, onValueChange, disabled, onUploadingChange }: AvatarUploadPros) {
+  const { t } = useTranslation()
   const [avatarUrl, setAvatarUrl] = useState<string>(value)
   const inputRef = useRef<HTMLInputElement>(null)
   const { mutate, isPending } = useAvatarUpload()
@@ -29,13 +31,13 @@ function AvatarUpload({ value, onValueChange, disabled, onUploadingChange }: Ava
     if (!file)
       return
     if (!file.type.startsWith('image/')) {
-      toast.error('请选择图片文件', {
+      toast.error(t('table.selectImage'), {
         position: 'top-right',
       })
       return
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('图片大小不能超过 5MB', {
+      toast.error(t('table.imageTooLarge'), {
         position: 'top-right',
       })
       return
@@ -46,12 +48,12 @@ function AvatarUpload({ value, onValueChange, disabled, onUploadingChange }: Ava
     mutate({ file }, {
       onSuccess: (data) => {
         onValueChange(data?.data?.fileUrl || value)
-        toast.success('上传成功', {
+        toast.success(t('table.uploadSuccess'), {
           position: 'top-right',
         })
       },
       onError: (error) => {
-        toast.error('上传失败', {
+        toast.error(t('table.uploadFailed'), {
           position: 'top-right',
         })
         setAvatarUrl(value)
@@ -71,7 +73,7 @@ function AvatarUpload({ value, onValueChange, disabled, onUploadingChange }: Ava
     <Avatar className="relative h-20 p-2 flex justify-center overflow-hidden">
       <AvatarImage className="w-full z-1" src={avatarUrl} loading="lazy" />
       <AvatarFallback>
-        头像
+        {t('table.avatar')}
       </AvatarFallback>
       {/* 上传组件 */}
       <Input

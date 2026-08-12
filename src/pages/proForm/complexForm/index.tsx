@@ -1,5 +1,6 @@
 import type { BasicFormRefDef } from './ComplexForm'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import BasicFormCmp from './ComplexForm'
 
 function ComplexForm() {
+  const { t } = useTranslation()
   const ref = useRef<BasicFormRefDef>(null)
   const handleReset = () => {
     if (ref.current) {
@@ -20,7 +22,7 @@ function ComplexForm() {
       if (formData) {
         toast(
           <div>
-            <span>提交的数据：</span>
+            <span>{t('form.submittedData')}</span>
             <div>
               {
                 Object.entries(formData).map(([key, value]) => {
@@ -44,9 +46,9 @@ function ComplexForm() {
   return (
     <Card className="size-full">
       <CardHeader>
-        <CardTitle>活动申请</CardTitle>
+        <CardTitle>{t('form.activityApplicationTitle')}</CardTitle>
         <CardDescription>
-          创建，申请活动
+          {t('form.activityApplicationDescription')}
         </CardDescription>
       </CardHeader>
       <ScrollArea className="overflow-y-auto">
@@ -57,10 +59,10 @@ function ComplexForm() {
       <CardFooter>
         <Field orientation="horizontal" className="flex items-center justify-end">
           <Button type="button" variant="outline" onClick={handleReset}>
-            重置
+            {t('reset')}
           </Button>
           <Button type="submit" form="form-rhf-demo" onClick={handleConfirm}>
-            提交
+            {t('submit')}
           </Button>
         </Field>
       </CardFooter>

@@ -1,6 +1,7 @@
 import type { MouseEvent, ReactNode } from 'react'
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, MenuIcon, XIcon } from 'lucide-react'
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +21,7 @@ interface SortFilterHeaderProps<FilterType> {
 }
 
 function SortFilterHeader<T,>({ id, children, filterValue, onFilterChange, sortValue, onSortChange }: SortFilterHeaderProps<T>) {
+  const { t } = useTranslation()
   const currentFilter = filterValue ?? ''
   const currentSort = sortValue ?? 'false'
 
@@ -68,12 +70,12 @@ function SortFilterHeader<T,>({ id, children, filterValue, onFilterChange, sortV
           {
             !filterDisabled && (
               <div className="flex flex-row items-center gap-1 ">
-                <Label className="shrink-0" htmlFor="usernameFilter">筛选：</Label>
+                <Label className="shrink-0" htmlFor="usernameFilter">{t('table.filter')}</Label>
                 <Input
                   size={16}
                   className="flex-1 h-8"
                   id="usernameFilter"
-                  placeholder="请输入用户名"
+                  placeholder={t('table.inputUsername')}
                   value={currentFilter}
                   onChange={e => onFilterChange?.(e.target.value as T)}
                 />
@@ -83,7 +85,7 @@ function SortFilterHeader<T,>({ id, children, filterValue, onFilterChange, sortV
           {
             !sortDisabled && (
               <div className="flex flex-row items-center gap-1">
-                <Label className="shrink">排序：</Label>
+                <Label className="shrink">{t('table.sort')}</Label>
                 <ToggleGroup
                   value={currentSort.toString()}
                   onValueChange={val => onSortChange?.(val as SortType)}

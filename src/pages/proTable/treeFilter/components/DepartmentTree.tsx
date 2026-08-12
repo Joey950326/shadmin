@@ -1,4 +1,5 @@
 import { memo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TreeList, TreeSearch, TreeSelector } from '@/components/treeSelector'
 import { useDepartmentList } from '@/services/api/hooks/useDepartment'
 
@@ -7,6 +8,7 @@ interface DepartmentTreeProps {
 }
 
 function DepartmentTree({ onSelectedChange }: DepartmentTreeProps) {
+  const { t } = useTranslation()
   const [selected, setSelected] = useState<Array<string>>()
 
   const { data, isLoading } = useDepartmentList()
@@ -24,7 +26,7 @@ function DepartmentTree({ onSelectedChange }: DepartmentTreeProps) {
       onSelectedChange={handleSelectedChange}
       isLoading={isLoading}
     >
-      <TreeSearch placeholder="搜索部门名称..." />
+      <TreeSearch placeholder={t('tree.searchDepartmentName')} />
       <TreeList maxHeight="500px" />
     </TreeSelector>
   )

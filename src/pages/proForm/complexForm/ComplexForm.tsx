@@ -1,8 +1,9 @@
 import type { Ref } from 'react'
-import type * as z from 'zod'
+import type { FormDataType } from './schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useImperativeHandle } from 'react'
+import { useImperativeHandle, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { DatePicker, DatetimePicker, TimePicker as TimePickerCmp } from '@/components/datetimePicker'
 import { Field, FieldError, FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -12,26 +13,28 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { getNow } from '@/utils'
-import { ActivityZoneValue, formSchema } from './schema'
+import { ActivityZoneValue, createFormSchema } from './schema'
 
 export interface BasicFormRefDef {
-  getFormData: () => Promise<z.infer<typeof formSchema> | null>
+  getFormData: () => Promise<FormDataType | null>
   reset: () => void
 }
 
 interface BasicFormCmpProps {
   id?: string
   ref: Ref<BasicFormRefDef>
-  value?: z.infer<typeof formSchema>
-  onConfirm?: (val: z.infer<typeof formSchema>) => void
+  value?: FormDataType
+  onConfirm?: (val: FormDataType) => void
 }
 
 function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { t } = useTranslation()
+  const formSchema = useMemo(() => createFormSchema(t), [t])
+  const form = useForm<FormDataType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       activityName: '',
-      activityZone: '',
+      activityZone: '' as FormDataType['activityZone'],
       activityTime: getNow() as Date,
       instantDelivery: false,
       activityType: [],
@@ -64,14 +67,14 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} orientation="horizontal">
               <Label htmlFor="form-activityName" className="min-w-16">
-                活动名称
+                {t('form.activityName')}
               </Label>
               <Input
                 {...field}
                 className="max-w-xl"
                 id="form-activityName"
                 aria-invalid={fieldState.invalid}
-                placeholder="请输入活动名称"
+                placeholder={t('form.inputActivityName')}
                 autoComplete="off"
               />
               {fieldState.invalid && (
@@ -87,14 +90,16 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} orientation="horizontal">
               <Label htmlFor="form-activityZone" className="min-w-16">
-                活动范围
+                {t('form.activityZone')}
               </Label>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger className="w-full max-w-sm">
-                  <SelectValue placeholder="请选择活动范围" />
+                  <SelectValue placeholder={t('form.selectActivityZone')} />
                 </SelectTrigger>
                 <SelectContent className="p-2">
-                  {ActivityZoneValue.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                  {ActivityZoneValue.map(v => (
+                    <SelectItem key={v} value={v}>{t(`form.${v === 'zone one' ? 'zoneOne' : 'zoneTwo'}`)}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {fieldState.invalid && (
@@ -113,7 +118,7 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
             return (
               <Field data-invalid={fieldState.invalid} orientation="horizontal">
                 <Label htmlFor="form-activityTime" className="min-w-16">
-                  活动时间
+                  {t('form.activityTime')}
                 </Label>
                 <DatetimePicker value={field.value} onValueChange={field.onChange}>
                   <TimePickerCmp />
@@ -135,11 +140,11 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} orientation="horizontal">
               <Label htmlFor="form-instantDelivery">
-                活动通知
+                {t('form.activityNotification')}
               </Label>
               <div className="flex items-center space-x-2">
                 <Switch id="form-instantDelivery" checked={field.value} onCheckedChange={field.onChange} />
-                <Label htmlFor="form-instantDelivery">开启</Label>
+                <Label htmlFor="form-instantDelivery">{t('form.enable')}</Label>
               </div>
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
@@ -155,17 +160,17 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} orientation="horizontal">
               <Label htmlFor="form-activityType" className="min-w-16">
-                活动类型
+                {t('form.activityType')}
               </Label>
               <ToggleGroup value={field.value} onValueChange={field.onChange} variant="outline" type="multiple">
-                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="online" aria-label="Toggle bold">
-                  在线活动
+                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="online" aria-label={t('form.onlineActivity')}>
+                  {t('form.onlineActivity')}
                 </ToggleGroupItem>
-                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="offline" aria-label="Toggle italic">
-                  离线活动
+                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="offline" aria-label={t('form.offlineActivity')}>
+                  {t('form.offlineActivity')}
                 </ToggleGroupItem>
-                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="promotion" aria-label="Toggle strikethrough">
-                  促销活动
+                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="promotion" aria-label={t('form.promotionActivity')}>
+                  {t('form.promotionActivity')}
                 </ToggleGroupItem>
               </ToggleGroup>
               {fieldState.invalid && (
@@ -182,14 +187,14 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} orientation="horizontal">
               <Label htmlFor="form-resource" className="min-w-16">
-                活动资源
+                {t('form.activityResource')}
               </Label>
               <ToggleGroup value={field.value} onValueChange={field.onChange} variant="outline" type="multiple">
-                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="sponsor" aria-label="Toggle bold">
-                  赞助
+                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="sponsor" aria-label={t('form.sponsor')}>
+                  {t('form.sponsor')}
                 </ToggleGroupItem>
-                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="venue" aria-label="Toggle italic">
-                  场地
+                <ToggleGroupItem className="data-[state=on]:bg-primary/20" value="venue" aria-label={t('form.venue')}>
+                  {t('form.venue')}
                 </ToggleGroupItem>
 
               </ToggleGroup>
@@ -207,14 +212,14 @@ function BasicFormCmp({ id, ref, value }: BasicFormCmpProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid} orientation="horizontal">
               <Label htmlFor="form-activityDescription" className="min-w-16">
-                活动描述
+                {t('form.activityDescription')}
               </Label>
               <Textarea
                 {...field}
                 className="max-w-xl"
                 id="form-activityDescription"
                 aria-invalid={fieldState.invalid}
-                placeholder="请输入活动描述内容"
+                placeholder={t('form.inputActivityDescription')}
                 autoComplete="off"
               />
               {fieldState.invalid && (

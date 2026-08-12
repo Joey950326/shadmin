@@ -39,7 +39,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useAvatarUpload, useDeleteUser, useEditUser, useStatusChange, useUserList } from '@/services/api/hooks/useUser'
 import { getDateNow } from '@/utils'
-import { columns } from './columns'
+import { createColumns } from './columns'
 import AddUserButton from './components/AddUserButton'
 import DeleteUserButton from './components/DeleteUserButton'
 import UploaderDialog from './components/UploaderDialog'
@@ -316,7 +316,7 @@ function ComplexTable({
                   <Input ref={usernameInputRef} placeholder={t('table.searchUsername')} />
                   {
                     !toolExpand && (
-                      <Button className={toolExpand ? 'hidden' : 'block'} variant="outline" aria-label="Search" onClick={handleSearch}>
+                      <Button className={toolExpand ? 'hidden' : 'block'} variant="outline" aria-label={t('search')} onClick={handleSearch}>
                         <SearchIcon />
                       </Button>
                     )
@@ -370,8 +370,8 @@ function ComplexTable({
               </DrawerTrigger>
               <DrawerContent>
                 <DrawerHeader>
-                  <DrawerTitle>{t('table.settings')}</DrawerTitle>
-                  <DrawerDescription>{t('table.settingsDescription')}</DrawerDescription>
+                  <DrawerTitle>{t('table.tableSettings')}</DrawerTitle>
+                  <DrawerDescription>{t('table.tableSettingsDescription')}</DrawerDescription>
                 </DrawerHeader>
                 <div className="flex flex-col px-4 gap-4">
                   <FieldGroup className="gap-4">
@@ -442,7 +442,7 @@ function ComplexTable({
                   <FieldSeparator />
                   <FieldGroup className="gap-4">
                     <Field orientation="horizontal">
-                      <Label>{`${t('table.userData')} ${t('import')}:`}</Label>
+                      <Label>{`${t('table.userDataImport')}:`}</Label>
                       <UploaderDialog>
                         <Button size="sm" variant="outline">
                           {t('table.batchImport')}
@@ -451,11 +451,11 @@ function ComplexTable({
                       </UploaderDialog>
                     </Field>
                     <Field orientation="horizontal">
-                      <Label>{`${t('table.userData')} ${t('export')}:`}</Label>
-                      <FileDownloader fileName="用户数据" onDownloadingChange={setIsExportting}>
+                      <Label>{`${t('table.userDataExport')}:`}</Label>
+                      <FileDownloader fileName={t('table.userDataExport')} onDownloadingChange={setIsExportting}>
                         <FileDownloaderTrigger>
                           <Button size="sm" variant="outline" disabled={isExportting}>
-                            {isExportting ? '导入数据中' : '导出数据'}
+                            {isExportting ? t('table.importingData') : t('export')}
                             {isExportting ? <LoaderIcon /> : <DownloadIcon />}
 
                           </Button>
@@ -681,9 +681,7 @@ function ComplexTable({
             </PaginationItem>
             <PaginationItem className="hidden sm:block">
               <span className="text-sm px-2">
-                共
-                {pageCount}
-                页
+                {t('table.totalPages', { count: pageCount })}
               </span>
             </PaginationItem>
 
@@ -697,7 +695,8 @@ function ComplexTable({
 }
 
 export default function Index() {
-  const tableColumns = useMemo(() => columns, [])
+  const { t } = useTranslation()
+  const tableColumns = useMemo(() => createColumns(t), [t])
   const deleteMutation = useDeleteUser()
   const editMutation = useEditUser()
   const avatarUploadMutaiton = useAvatarUpload()

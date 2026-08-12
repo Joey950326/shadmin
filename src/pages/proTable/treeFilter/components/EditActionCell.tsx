@@ -4,6 +4,7 @@ import type { Api } from '@/services/api/types/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -22,20 +23,24 @@ interface EditActionCellPros {
   onAvatarUpload?: (data: Api.User.AvatarUploadParams, successCb?: (data: Api.User.AvatarUploadResponse) => void, failCb?: (error: Error) => void) => void
 }
 
-const formSchema = z.object({
-  avatar: z.url('头像必须为有效网址'),
-  username: z.string().min(2, '用户名至少为4位字符').max(20, '用户名不能超过20个字符'),
-  gender: z.number().refine(val => ['1', '2'].includes(val.toString()), '性别只能为男/女'),
-  idCard: z.string('身份证号码不能为空，且必须为字符串')
-    .trim()
-    .refine(val => /^[0-9X]{15}$|^[0-9X]{18}$/i.test(val), {
-      message: '身份证号码格式不正确（应为15位或18位）',
-    }),
-  email: z.email('请输入正确的邮箱格式'),
-  address: z.string().trim().min(4, '地址字数不少于4个字符').max(30, '地址字数不超过30个字符'),
-})
+function createFormSchema(t: (key: string) => string) {
+  return z.object({
+    avatar: z.url(t('table.formValidation.avatarRequired')),
+    username: z.string().min(2, t('table.formValidation.usernameMin')).max(20, t('table.formValidation.usernameMax')),
+    gender: z.number().refine(val => ['1', '2'].includes(val.toString()), t('table.formValidation.genderInvalid')),
+    idCard: z.string(t('table.formValidation.idCardRequired'))
+      .trim()
+      .refine(val => /^[0-9X]{15}$|^[0-9X]{18}$/i.test(val), {
+        message: t('table.formValidation.idCardInvalid'),
+      }),
+    email: z.email(t('table.formValidation.emailInvalid')),
+    address: z.string().trim().min(4, t('table.formValidation.addressMin')).max(30, t('table.formValidation.addressMax')),
+  })
+}
 
 function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, onAvatarUpload }: EditActionCellPros) {
+  const { t } = useTranslation()
+  const formSchema = useMemo(() => createFormSchema(t), [t])
   const defaultForm: z.infer<typeof formSchema> = {
     avatar: '',
     username: '',
@@ -85,8 +90,8 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
         ? (
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>编辑用户</DialogTitle>
-                <DialogDescription>编辑用户性别，地址，年龄，等相关信息</DialogDescription>
+                <DialogTitle>{t('table.editUser')}</DialogTitle>
+                <DialogDescription>{t('table.userInfoDescription')}</DialogDescription>
               </DialogHeader>
               <form
                 id="edit-user-form"
@@ -99,7 +104,7 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                   render={({ field }) => (
                     <Field className="w-20">
                       <FieldLabel htmlFor="avatar">
-                        用户头像
+                        {t('table.userAvatar')}
                       </FieldLabel>
                       <AvatarUpload
                         ref={avatarRef}
@@ -119,13 +124,13 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                     return (
                       <Field data-invalid={fieldState.error}>
                         <FieldLabel htmlFor="username">
-                          用户名
+                          {t('table.username')}
                         </FieldLabel>
                         <Input
                           id="username"
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          placeholder="请输入用户名"
+                          placeholder={t('table.inputUsername')}
                           autoComplete="off"
                           autoFocus={false}
                         />
@@ -145,7 +150,7 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                     return (
                       <Field data-invalid={fieldState.error}>
                         <FieldLabel htmlFor="gender">
-                          性别
+                          {t('table.gender')}
                         </FieldLabel>
                         <Select
                           name={field.name}
@@ -153,12 +158,12 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                           onValueChange={val => field.onChange(Number(val))}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="请选择性别" />
+                            <SelectValue placeholder={t('table.selectGender')} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectItem value="1">男士</SelectItem>
-                              <SelectItem value="2">女士</SelectItem>
+                              <SelectItem value="1">{t('table.maleTitle')}</SelectItem>
+                              <SelectItem value="2">{t('table.femaleTitle')}</SelectItem>
                             </SelectGroup>
 
                           </SelectContent>
@@ -178,13 +183,13 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                     return (
                       <Field data-invalid={fieldState.error}>
                         <FieldLabel htmlFor="idCard">
-                          用户名
+                          {t('table.idCard')}
                         </FieldLabel>
                         <Input
                           id="idCard"
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          placeholder="请输入身份证"
+                          placeholder={t('table.inputIdCard')}
                           autoComplete="off"
                           autoFocus={false}
                         />
@@ -203,13 +208,13 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                     return (
                       <Field data-invalid={fieldState.error}>
                         <FieldLabel htmlFor="email">
-                          邮箱
+                          {t('table.email')}
                         </FieldLabel>
                         <Input
                           id="email"
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          placeholder="请输入邮箱"
+                          placeholder={t('table.inputEmail')}
                           autoComplete="off"
                           autoFocus={false}
                         />
@@ -228,13 +233,13 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
                     return (
                       <Field data-invalid={fieldState.error}>
                         <FieldLabel htmlFor="address">
-                          邮箱
+                          {t('table.address')}
                         </FieldLabel>
                         <Input
                           id="address"
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          placeholder="请输入地址"
+                          placeholder={t('table.inputAddress')}
                           autoComplete="off"
                           autoFocus={false}
                         />
@@ -250,14 +255,14 @@ function EditActionCell({ userInfo, children, visible, onVisibleChange, onEdit, 
 
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline">取消</Button>
+                  <Button type="button" variant="outline">{t('cancel')}</Button>
                 </DialogClose>
-                <Button type="submit" form="edit-user-form" disabled={avatarRef?.current?.isUploading || !isFormChange}>确定</Button>
+                <Button type="submit" form="edit-user-form" disabled={avatarRef?.current?.isUploading || !isFormChange}>{t('confirm')}</Button>
               </DialogFooter>
             </DialogContent>
           )
         : (
-            <div className="size-full flex items-center justify-center">暂无用户信息</div>
+            <div className="size-full flex items-center justify-center">{t('table.noUserInfo')}</div>
           )}
     </Dialog>
   )

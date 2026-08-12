@@ -1,5 +1,6 @@
 import type { JSX } from 'react'
 import { memo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
@@ -40,6 +41,7 @@ function Item<T extends ItemValue>({ itemValue, onSelected, isActive }: ItemProp
 }
 
 function ScrollSelector<T extends ItemValue>({ data, selected, onSelectedChange, multiple = false }: ScrollSelectorProps<T>) {
+  const { t } = useTranslation()
   const [innerSelected, setInnerSelected] = useState<T[]>(() => Array.from(selected))
 
   const handleSelected = (item: T) => {
@@ -57,7 +59,7 @@ function ScrollSelector<T extends ItemValue>({ data, selected, onSelectedChange,
 
   return (
     <Field orientation="horizontal" className="flex px-3 ">
-      <Label className="w-1/6 max-w-32 shrink-0 text-sm">用户状态（单选）</Label>
+      <Label className="w-1/6 max-w-32 shrink-0 text-sm">{t('tree.userStatusSingle')}</Label>
       <ScrollArea className="w-5/6 grow">
         <div
           className="w-full flex flex-row items-center gap-4 p-2"

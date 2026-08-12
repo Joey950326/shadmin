@@ -3,6 +3,7 @@ import type { Api } from '@/services/api/types/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -10,20 +11,22 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { cn } from '@/lib/utils'
 import AvatarUpload from './AvatarUpload'
 
-const formSchema = z.object({
-  avatar: z.url('请上传头像'),
-  username: z.string().min(2, '用户名至少为4位字符').max(20, '用户名不能超过20个字符'),
-  gender: z.number().refine(val => ['1', '2'].includes(val.toString()), '性别只能为男/女'),
-  idCard: z.string('身份证号码不能为空，且必须为字符串')
-    .trim()
-    .refine(val => /^[0-9X]{15}$|^[0-9X]{18}$/i.test(val), {
-      message: '身份证号码格式不正确（应为15位或18位）',
-    }),
-  email: z.email('请输入正确的邮箱格式'),
-  address: z.string().trim().min(4, '地址字数不少于4个字符').max(30, '地址字数不超过30个字符'),
-})
+function createFormSchema(t: (key: string) => string) {
+  return z.object({
+    avatar: z.url(t('table.formValidation.avatarRequired')),
+    username: z.string().min(2, t('table.formValidation.usernameMin')).max(20, t('table.formValidation.usernameMax')),
+    gender: z.number().refine(val => ['1', '2'].includes(val.toString()), t('table.formValidation.genderInvalid')),
+    idCard: z.string(t('table.formValidation.idCardRequired'))
+      .trim()
+      .refine(val => /^[0-9X]{15}$|^[0-9X]{18}$/i.test(val), {
+        message: t('table.formValidation.idCardInvalid'),
+      }),
+    email: z.email(t('table.formValidation.emailInvalid')),
+    address: z.string().trim().min(4, t('table.formValidation.addressMin')).max(30, t('table.formValidation.addressMax')),
+  })
+}
 
-type ValueType = z.infer<typeof formSchema>
+type ValueType = z.infer<ReturnType<typeof createFormSchema>>
 
 export interface UserInfoFormRef {
   getValues: () => ValueType
@@ -42,7 +45,9 @@ interface UserInfoFormProps {
 }
 
 export default function UserInfoForm({ value, onValueChange, className, ref, disabled, onComfirmStatusChange }: UserInfoFormProps) {
-  const defaultForm: z.infer<typeof formSchema> = {
+  const { t } = useTranslation()
+  const formSchema = useMemo(() => createFormSchema(t), [t])
+  const defaultForm: ValueType = {
     avatar: '',
     username: '',
     gender: 1,
@@ -51,7 +56,7 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
     address: '',
     ...value,
   }
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<ValueType>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultForm,
     mode: 'onChange',
@@ -95,7 +100,7 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
         render={({ field, fieldState }) => (
           <Field className="w-20">
             <FieldLabel htmlFor="avatar">
-              用户头像
+              {t('table.userAvatar')}
             </FieldLabel>
             <AvatarUpload
               value={field.value}
@@ -118,13 +123,13 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
           return (
             <Field data-invalid={fieldState.error}>
               <FieldLabel htmlFor="username">
-                用户名
+                {t('table.username')}
               </FieldLabel>
               <Input
                 id="username"
                 {...field}
                 aria-invalid={fieldState.invalid}
-                placeholder="请输入用户名"
+                placeholder={t('table.inputUsername')}
                 autoComplete="off"
                 autoFocus={false}
                 disabled={disabled}
@@ -145,7 +150,7 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
           return (
             <Field data-invalid={fieldState.error}>
               <FieldLabel htmlFor="gender">
-                性别
+                {t('table.gender')}
               </FieldLabel>
               <Select
                 name={field.name}
@@ -154,12 +159,12 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
                 disabled={disabled}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="请选择性别" />
+                  <SelectValue placeholder={t('table.selectGender')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="1">男士</SelectItem>
-                    <SelectItem value="2">女士</SelectItem>
+                    <SelectItem value="1">{t('table.maleTitle')}</SelectItem>
+                    <SelectItem value="2">{t('table.femaleTitle')}</SelectItem>
                   </SelectGroup>
 
                 </SelectContent>
@@ -179,13 +184,13 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
           return (
             <Field data-invalid={fieldState.error}>
               <FieldLabel htmlFor="idCard">
-                用户名
+                {t('table.idCard')}
               </FieldLabel>
               <Input
                 id="idCard"
                 {...field}
                 aria-invalid={fieldState.invalid}
-                placeholder="请输入身份证"
+                placeholder={t('table.inputIdCard')}
                 autoComplete="off"
                 autoFocus={false}
                 disabled={disabled}
@@ -205,13 +210,13 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
           return (
             <Field data-invalid={fieldState.error}>
               <FieldLabel htmlFor="email">
-                邮箱
+                {t('table.email')}
               </FieldLabel>
               <Input
                 id="email"
                 {...field}
                 aria-invalid={fieldState.invalid}
-                placeholder="请输入邮箱"
+                placeholder={t('table.inputEmail')}
                 autoComplete="off"
                 autoFocus={false}
                 disabled={disabled}
@@ -231,13 +236,13 @@ export default function UserInfoForm({ value, onValueChange, className, ref, dis
           return (
             <Field data-invalid={fieldState.error}>
               <FieldLabel htmlFor="address">
-                邮箱
+                {t('table.address')}
               </FieldLabel>
               <Input
                 id="address"
                 {...field}
                 aria-invalid={fieldState.invalid}
-                placeholder="请输入地址"
+                placeholder={t('table.inputAddress')}
                 autoComplete="off"
                 autoFocus={false}
                 disabled={disabled}

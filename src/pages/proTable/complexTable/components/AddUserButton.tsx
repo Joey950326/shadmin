@@ -2,6 +2,7 @@ import type { UserInfoFormRef } from './UsefInfoForm'
 import type { Api } from '@/services/api/types/api'
 import { BadgePlusIcon } from 'lucide-react'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -14,6 +15,7 @@ interface AddUserButtonProps {
 }
 
 export default function AddUserButton({ onSuccessCb }: AddUserButtonProps) {
+  const { t } = useTranslation()
   const [userInfo] = useState<Api.User.UserInfo | null>(null)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const ref = useRef<UserInfoFormRef>(null)
@@ -34,13 +36,13 @@ export default function AddUserButton({ onSuccessCb }: AddUserButtonProps) {
         // 提交网络
         mutate(value, {
           onSuccess() {
-            toast.success('新增成功', {
+            toast.success(t('table.addSuccess'), {
               position: 'top-right',
             })
             onSuccessCb?.()
           },
           onError() {
-            toast.error('新增失败', {
+            toast.error(t('table.addFailed'), {
               position: 'top-right',
             })
           },
@@ -50,13 +52,13 @@ export default function AddUserButton({ onSuccessCb }: AddUserButtonProps) {
         })
       }
     }
-  }, [mutate, onSuccessCb])
+  }, [mutate, onSuccessCb, t])
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
-          新增用户
+          {t('table.addUser')}
           <BadgePlusIcon className="hidden lg:block" />
         </Button>
       </DialogTrigger>
@@ -64,15 +66,15 @@ export default function AddUserButton({ onSuccessCb }: AddUserButtonProps) {
       <DialogContent className="px-4">
         <ScrollArea className="max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>编辑用户</DialogTitle>
-            <DialogDescription>编辑用户性别，地址，年龄，等相关信息</DialogDescription>
+            <DialogTitle>{t('table.addUser')}</DialogTitle>
+            <DialogDescription>{t('table.userInfoDescription')}</DialogDescription>
           </DialogHeader>
           <UserInfoForm value={userInfo} ref={ref} onComfirmStatusChange={setFormCanCofirm} className="p-2" />
           <DialogFooter className="p-4">
             <DialogClose asChild>
-              <Button type="button" variant="outline">取消</Button>
+              <Button type="button" variant="outline">{t('cancel')}</Button>
             </DialogClose>
-            <Button disabled={buttonDisabled} onClick={handleConfirm}>确定</Button>
+            <Button disabled={buttonDisabled} onClick={handleConfirm}>{t('confirm')}</Button>
           </DialogFooter>
         </ScrollArea>
       </DialogContent>
