@@ -20,7 +20,7 @@ export function WatermarkProvider({
   color = 'rgba(0, 0, 0, 0.15)',
   rotate = -22,
   gapX = 200,
-  gapY = 160,
+  gapY = 100,
   opacity = 1,
   fontFamily = 'system-ui, -apple-system, sans-serif',
   fontWeight = 'normal',
@@ -34,13 +34,13 @@ export function WatermarkProvider({
   // 用于强制水印在主题切换后重新生成
   //   const [themeVersion, setThemeVersion] = useState(0)
 
-  const [resolvedColor, setResolvedColor] = useState<string>('')
-
   const getResolvedColor = useCallback(() => {
     return color.startsWith('--') || color.startsWith('var(')
       ? getCssVar(color)
       : color
   }, [color])
+
+  const [resolvedColor, setResolvedColor] = useState<string>(() => getResolvedColor())
 
   /**
    * 监听主题变化（class / data-theme）
@@ -69,7 +69,7 @@ export function WatermarkProvider({
 
   // 生成水印（依赖 themeVersion，主题真正切换完成后才会重新执行）
   const watermarkUrl = useMemo(() => {
-    if (!visible)
+    if (!visible || !resolvedColor)
       return ''
 
     // 此时再读取 CSS 变量，已经是最新主题色
@@ -119,7 +119,7 @@ export function WatermarkProvider({
   }, [content, fontSize, rotate, gapX, gapY, opacity, fontFamily, fontWeight, visible, resolvedColor])
 
   // ... 后面渲染部分保持不变
-  if (!visible) {
+  if (!visible || !watermarkUrl) {
     return <>{children}</>
   }
 
