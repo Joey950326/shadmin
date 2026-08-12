@@ -28,7 +28,7 @@ export function applyThemeMode(isDark: boolean) {
           clipPath: isDark ? [...clipPath].reverse() : clipPath,
         },
         {
-          duration: 500,
+          duration: 300,
           easing: 'ease-out',
           // 通过 pseudoElement 指定动画应用于过渡的旧视图或新视图，确保动画效果正确显示
           pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
