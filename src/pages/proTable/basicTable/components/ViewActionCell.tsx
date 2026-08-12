@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Api } from '@/services/api/types/api'
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -16,6 +17,7 @@ interface ViewActionCellPros {
 }
 
 function ViewActionCell({ userInfo, children, className, visible, onVisibleChange }: ViewActionCellPros) {
+  const { t } = useTranslation()
   return (
     <Dialog open={visible} onOpenChange={onVisibleChange}>
       {children && (
@@ -27,8 +29,8 @@ function ViewActionCell({ userInfo, children, className, visible, onVisibleChang
         && (
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>查看用户</DialogTitle>
-              <DialogDescription>展示用户性别，地址，年龄，等相关信息</DialogDescription>
+              <DialogTitle>{t('table.viewUser')}</DialogTitle>
+              <DialogDescription>{t('table.userDetailsDescription')}</DialogDescription>
             </DialogHeader>
             <FieldGroup className={cn(
               'gap-4',
@@ -38,44 +40,44 @@ function ViewActionCell({ userInfo, children, className, visible, onVisibleChang
 
               <Field className="w-20">
                 <FieldLabel htmlFor="avatar">
-                  用户头像
+                  {t('table.userAvatar')}
                 </FieldLabel>
                 <Avatar className="h-20 p-2 flex justify-center">
                   <AvatarImage className="w-full" src={userInfo.avatar} loading="lazy" />
-                  <AvatarFallback>头像</AvatarFallback>
+                  <AvatarFallback>{t('table.avatar')}</AvatarFallback>
                 </Avatar>
               </Field>
               <Field>
                 <FieldLabel htmlFor="username">
-                  用户姓名
+                  {t('table.userName')}
                 </FieldLabel>
                 <Input id="username" disabled value={userInfo.username}>
                 </Input>
               </Field>
               <Field>
                 <FieldLabel htmlFor="gender">
-                  性别
+                  {t('table.gender')}
                 </FieldLabel>
                 <Input id="gender" disabled value={userInfo.gender}>
                 </Input>
               </Field>
               <Field>
                 <FieldLabel htmlFor="idCard">
-                  身份证
+                  {t('table.idCard')}
                 </FieldLabel>
                 <Input id="idCard" disabled value={userInfo.idCard}>
                 </Input>
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">
-                  邮箱
+                  {t('table.email')}
                 </FieldLabel>
                 <Input id="email" disabled value={userInfo.email}>
                 </Input>
               </Field>
               <Field>
                 <FieldLabel htmlFor="address">
-                  地址
+                  {t('table.address')}
                 </FieldLabel>
                 <Input id="address" disabled value={userInfo.address}>
                 </Input>

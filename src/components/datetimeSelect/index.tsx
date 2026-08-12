@@ -4,6 +4,7 @@ import { Calendar as CalendarIcon } from 'lucide-react'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { enUS, zhCN } from 'react-day-picker/locale'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -25,6 +26,7 @@ const localeMap: Record<'zh' | 'en', typeof zhCN> = {
 }
 
 export function DatetimeSelect({ value, onChange, className }: DatetimeSelectProps) {
+  const { t } = useTranslation()
   const initDate = {
     from: value?.from ?? now,
     to: value?.to ?? now,
@@ -92,9 +94,9 @@ export function DatetimeSelect({ value, onChange, className }: DatetimeSelectPro
 
   const displayText = useMemo(() => {
     if (!date?.from)
-      return '选择时间范围'
+      return t('time.selectRange')
     return date.to ? `${format(date.from, 'yyyy-MM-dd HH:mm:ss')} - ${format(date.to, 'yyyy-MM-dd HH:mm:ss')}` : format(date.from, 'yyyy-MM-dd HH:mm:ss')
-  }, [date])
+  }, [date, t])
 
   // 快捷按钮
   //   const setQuickRange = (type: string) => {

@@ -24,7 +24,7 @@ export default function SettingSheet() {
           </SheetTrigger>
         </TooltipTrigger>
         <TooltipContent>
-          <p>设置</p>
+          <p>{t('settings.title')}</p>
         </TooltipContent>
       </Tooltip>
 
@@ -48,15 +48,15 @@ export default function SettingSheet() {
             <TabsList className="w-[90%] mx-auto h-8">
               <TabsTrigger value="theme" className='data-[state="active"]:bg-primary/20!'>
                 <PaletteIcon />
-                主题设置
+                {t('settings.theme')}
               </TabsTrigger>
               <TabsTrigger value="layout" className='data-[state="active"]:bg-primary/20!'>
                 <LayoutTemplateIcon />
-                布局设置
+                {t('settings.layout')}
               </TabsTrigger>
               <TabsTrigger value="other" className='data-[state="active"]:bg-primary/20!'>
                 <PencilIcon />
-                其他设置
+                {t('settings.other')}
               </TabsTrigger>
             </TabsList>
 

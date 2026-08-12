@@ -1,5 +1,6 @@
 import type { DynamicFormRefDef } from './DynamicForm'
 import { useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import DynamicFormCmp from './DynamicForm'
 
 function DynamicForm() {
+  const { t } = useTranslation()
   const ref = useRef<DynamicFormRefDef>(null)
   const handleReset = useCallback(() => {
     ref.current?.reset()
@@ -16,7 +18,7 @@ function DynamicForm() {
     if (formData) {
       toast(
         <div>
-          <span>提交的数据：</span>
+          <span>{t('form.submittedData')}</span>
           <div>
             {
               Object.entries(formData).map(([key, value]) => {
@@ -37,15 +39,15 @@ function DynamicForm() {
       // 进行后续操作，如网络提交。。。
     }
     else {
-      toast.error('表单校验不通过', {
+      toast.error(t('form.formInvalid'), {
         position: 'top-right',
       })
     }
-  }, [])
+  }, [t])
   return (
     <Card className="size-full">
       <CardHeader>
-        <CardTitle>基础表单</CardTitle>
+        <CardTitle>{t('form.basicTitle')}</CardTitle>
       </CardHeader>
       <ScrollArea className="overflow-y-auto">
         <CardContent>
@@ -54,9 +56,9 @@ function DynamicForm() {
       </ScrollArea>
       <CardFooter className="space-x-4">
         <Button type="reset" variant="outline" onClick={handleReset}>
-          重置
+          {t('reset')}
         </Button>
-        <Button onClick={handleConfirm}>提交</Button>
+        <Button onClick={handleConfirm}>{t('submit')}</Button>
       </CardFooter>
     </Card>
   )

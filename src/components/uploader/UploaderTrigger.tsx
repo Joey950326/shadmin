@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { isValidElement, memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { useUploader } from './useUploader'
 
@@ -10,6 +11,7 @@ interface UploaderTriggerProps {
 }
 
 function UploaderTrigger({ children }: UploaderTriggerProps) {
+  const { t } = useTranslation()
   const { fileInputRef, isUploading } = useUploader()
 
   const handleClick = () => {
@@ -32,7 +34,7 @@ function UploaderTrigger({ children }: UploaderTriggerProps) {
       disabled={isUploading}
       onClick={handleClick}
     >
-      选择文件
+      {t('table.selectFile')}
     </Button>
   )
 }

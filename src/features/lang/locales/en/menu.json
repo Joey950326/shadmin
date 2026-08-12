@@ -2,7 +2,31 @@
   "home": "Home",
   "dashboard": {
     "title": "Dashboard",
-    "dataVisualization": "Data Visualization"
+    "dataVisualization": "Data Visualization",
+    "giteeVisitors": "Gitee Visitors",
+    "githubVisitors": "GitHub Visitors",
+    "todayVisitors": "Today's Visitors",
+    "yesterdayVisitors": "Yesterday's Visitors",
+    "visitorReport": "Visitor Report",
+    "visitorSourceDescription": "Data source: {{source}}",
+    "visitors": "Visitors",
+    "visitorTrend": "Visitor Trend",
+    "visitorBar": "Bar Chart",
+    "visitorBarDescription": "Visitor trends over the last three months"
+  },
+  "table": {
+    "title": "Table Examples",
+    "basicTable": "Basic Table",
+    "treeTable": "Tree Table",
+    "filterTable": "Filter Table",
+    "complexTable": "Complex Table"
+  },
+  "form": {
+    "title": "Common Forms",
+    "basicForm": "Basic Form",
+    "complexForm": "Complex Form",
+    "validateForm": "Validation Form",
+    "dynamicForm": "Dynamic Form"
   },
   "dataScreen": "Data Screen",
   "proTable": "Super Table",
@@ -16,6 +40,8 @@
   "externalLink": "External Link",
   "about": "About Us",
   "chart": {
+    "title": "Common Charts",
+    "barChart": "bar chart",
     "lineChart": "line chart",
     "areaChart": "area chart",
     "pieChart": "pie chart",

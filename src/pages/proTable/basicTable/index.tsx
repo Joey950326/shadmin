@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -24,7 +25,7 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 import { useAvatarUpload, useDeleteUser, useEditUser, useUserList } from '@/services/api/hooks/useUser'
-import { columns } from './columns'
+import { createColumns } from './columns'
 
 interface BasicTableProps<T> {
   columns: ColumnDef<T>[]
@@ -43,6 +44,7 @@ function BasicTable({
   onRowEdit,
   onAvatarUpload,
 }: BasicTableProps<Api.User.UserInfo>) {
+  const { t } = useTranslation()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -66,13 +68,13 @@ function BasicTable({
     const deleteParams = { id: Array.isArray(rowId) ? rowId : [rowId] }
     onRowDelete.mutate(deleteParams, {
       onSuccess: () => {
-        toast.success('删除成功', {
+        toast.success(t('table.deleteSuccess'), {
           position: 'top-right',
         })
       },
       onError: (error) => {
         console.error('删除失败', error)
-        toast.error('删除失败', {
+        toast.error(t('table.deleteFailed'), {
           position: 'top-right',
         })
       },
@@ -80,18 +82,18 @@ function BasicTable({
         refetch()
       },
     })
-  }, [onRowDelete, refetch])
+  }, [onRowDelete, refetch, t])
 
   const handleEdit = useCallback((data: Api.User.UserInfo, cb?: () => void) => {
     onRowEdit.mutate(data, {
       onSuccess: () => {
-        toast.success('编辑成功', {
+        toast.success(t('table.editSuccess'), {
           position: 'top-right',
         })
       },
       onError: (error) => {
         console.error('编辑失败', error)
-        toast.error('编辑失败', {
+        toast.error(t('table.editFailed'), {
           position: 'top-right',
         })
       },
@@ -100,24 +102,24 @@ function BasicTable({
         refetch()
       },
     })
-  }, [onRowEdit, refetch])
+  }, [onRowEdit, refetch, t])
 
   const handleAvatarUpload = useCallback((params: Api.User.AvatarUploadParams, successCb?: (data: Api.User.AvatarUploadResponse) => void, failCb?: (error: Error) => void) => {
     onAvatarUpload.mutate(params, {
       onSuccess: (data) => {
-        toast.success('上传成功', {
+        toast.success(t('table.uploadSuccess'), {
           position: 'top-right',
         })
         successCb?.(data)
       },
       onError: (error) => {
-        toast.error('上传失败', {
+        toast.error(t('table.uploadFailed'), {
           position: 'top-right',
         })
         failCb?.(error as Error)
       },
     })
-  }, [onAvatarUpload])
+  }, [onAvatarUpload, t])
 
   const table = useReactTable({
     data: tableData,
@@ -154,7 +156,7 @@ function BasicTable({
         table.setPageIndex(value - 1)
       }
       else {
-        toast.error('请输入正常范围的页码', {
+        toast.error(t('table.invalidPage'), {
           position: 'top-right',
         })
       }
@@ -235,7 +237,7 @@ function BasicTable({
             <PaginationItem className="hidden sm:block">
               <div className="flex items-center">
                 <Button className=" rounded-r-none " variant="outline" size="sm" onClick={handleJump}>
-                  跳转至
+                  {t('table.pageJump')}
                 </Button>
                 <Input ref={inputRef} placeholder={currentPage} className="max-w-14 h-8 rounded-l-none" defaultValue={currentPage} />
               </div>
@@ -243,7 +245,7 @@ function BasicTable({
 
             {table.getCanPreviousPage() && (
               <PaginationItem>
-                <PaginationPrevious text="上一页" onClick={() => table.previousPage()} />
+                <PaginationPrevious text={t('pagination.previous')} onClick={() => table.previousPage()} />
               </PaginationItem>
             )}
             {
@@ -264,7 +266,7 @@ function BasicTable({
             {
               table.getCanNextPage() && (
                 <PaginationItem>
-                  <PaginationNext text="下一页" onClick={() => table.nextPage()} />
+                  <PaginationNext text={t('pagination.next')} onClick={() => table.nextPage()} />
                 </PaginationItem>
               )
             }
@@ -278,18 +280,16 @@ function BasicTable({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10">10 条</SelectItem>
-                  <SelectItem value="20">20 条</SelectItem>
-                  <SelectItem value="50">50 条</SelectItem>
-                  <SelectItem value="100">100 条</SelectItem>
+                  <SelectItem value="10">{t('table.itemsPerPage', { count: 10 })}</SelectItem>
+                  <SelectItem value="20">{t('table.itemsPerPage', { count: 20 })}</SelectItem>
+                  <SelectItem value="50">{t('table.itemsPerPage', { count: 50 })}</SelectItem>
+                  <SelectItem value="100">{t('table.itemsPerPage', { count: 100 })}</SelectItem>
                 </SelectContent>
               </Select>
             </PaginationItem>
             <PaginationItem className="hidden sm:block">
               <span className="text-sm px-2">
-                共
-                {pageCount}
-                页
+                {t('table.totalPages', { count: pageCount })}
               </span>
             </PaginationItem>
 
@@ -302,7 +302,8 @@ function BasicTable({
 }
 
 export default function Index() {
-  const tableColumns = useMemo(() => columns, [])
+  const { t } = useTranslation()
+  const tableColumns = useMemo(() => createColumns(t), [t])
   const deleteMutation = useDeleteUser()
   const editMutation = useEditUser()
   const avatarUploadMutaiton = useAvatarUpload()

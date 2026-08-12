@@ -23,20 +23,22 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 
-const registerFormSchema = z
-  .object({
-    username: z.string().min(1, '用户名不能为空'),
-    password: z.string().min(6, '密码长度不能少于6个字符').max(20, '密码长度不能超过20个字符'),
-    passwordConfirm: z.string().min(6, '确认密码长度不能少于6个字符').max(20, '确认密码长度不能超过20个字符'),
-  })
-  .refine(data => data.password === data.passwordConfirm, {
-    path: ['passwordConfirm'], // 将错误关联到 passwordConfirm 字段
-    message: '两次输入的密码不一致',
-  })
-
-type RegisterFormValues = z.infer<typeof registerFormSchema>
+interface RegisterFormValues {
+  username: string
+  password: string
+  passwordConfirm: string
+}
 
 function RegisterPage() {
+  const { t } = useTranslation()
+  const registerFormSchema = z.object({
+    username: z.string().min(1, t('auth:common.usernameNotEmpty')),
+    password: z.string().min(6, t('auth:common.passwordMinLength', { count: 6 })).max(20, t('auth:common.passwordMaxLength', { count: 20 })),
+    passwordConfirm: z.string().min(6, t('auth:common.passwordMinLength', { count: 6 })).max(20, t('auth:common.passwordMaxLength', { count: 20 })),
+  }).refine(data => data.password === data.passwordConfirm, {
+    path: ['passwordConfirm'],
+    message: t('auth:register.passwordMismatch'),
+  })
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -51,16 +53,14 @@ function RegisterPage() {
     console.warn('注册表单数据：', data)
   }
 
-  const { t } = useTranslation()
-
   return (
     <div className="flex justify-center items-center gap-2 size-full">
       <section className="flex-1 sm:flex-1/2">
         <Card className="w-full max-w-2xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <CardHeader>
-            <CardTitle>账户注册</CardTitle>
+            <CardTitle>{t('auth:register.accountRegister')}</CardTitle>
             <CardDescription>
-              输入用户名或密码进行注册
+              {t('auth:register.description')}
             </CardDescription>
             <CardAction>
               <NavLink to="/auth/login" className="flex flex-row items-center gap-2">
@@ -77,12 +77,12 @@ function RegisterPage() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field className="grid gap-2" data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="register-form-username">用户名</FieldLabel>
+                      <FieldLabel htmlFor="register-form-username">{t('auth:common.username')}</FieldLabel>
                       <Input
                         {...field}
                         id="register-form-username"
                         type="text"
-                        placeholder="请输入用户名"
+                        placeholder={t('auth:common.inputUsername')}
                       />
                       {fieldState.invalid && (<FieldError errors={[fieldState.error]} />)}
                     </Field>
@@ -93,12 +93,12 @@ function RegisterPage() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field className="grid gap-2" data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="register-form-password">密码</FieldLabel>
+                      <FieldLabel htmlFor="register-form-password">{t('auth:common.password')}</FieldLabel>
                       <Input
                         {...field}
                         id="register-form-password"
                         type="password"
-                        placeholder="请输入密码"
+                        placeholder={t('auth:common.inputPassword')}
                       />
                       {fieldState.invalid && (<FieldError errors={[fieldState.error]} />)}
                     </Field>
@@ -110,12 +110,12 @@ function RegisterPage() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field className="grid gap-2" data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="register-form-passwordConfirm">确认密码</FieldLabel>
+                      <FieldLabel htmlFor="register-form-passwordConfirm">{t('auth:register.confirmPassword')}</FieldLabel>
                       <Input
                         {...field}
                         id="register-form-passwordConfirm"
                         type="password"
-                        placeholder="请确认密码"
+                        placeholder={t('auth:register.inputConfirmPassword')}
                       />
                       {fieldState.invalid && (<FieldError errors={[fieldState.error]} />)}
                     </Field>
@@ -127,7 +127,7 @@ function RegisterPage() {
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button type="submit" className="w-full" form="register-form" disabled={!form.formState.isValid}>
-              确定
+              {t('confirm')}
             </Button>
             {/* <Button type="submit" className="w-full" onClick={handleLoginClick}>
               返回

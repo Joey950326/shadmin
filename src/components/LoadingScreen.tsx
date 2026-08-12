@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 // components/FullScreenLoader.tsx
 import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
@@ -10,9 +11,12 @@ interface FullScreenLoaderProps {
 
 export default function FullScreenLoader({
   open,
-  text = '加载中...',
+  text,
   className,
 }: FullScreenLoaderProps) {
+  const { t } = useTranslation()
+  const loaderText = text ?? t('loading')
+
   if (!open)
     return null
 
@@ -27,9 +31,9 @@ export default function FullScreenLoader({
       <div className="flex flex-col items-center gap-4">
         <Spinner className="h-16 w-16 text-ring" />
 
-        {text && (
+        {loaderText && (
           <p className="text-ring text-sm font-medium tracking-wide">
-            {text}
+            {loaderText}
           </p>
         )}
       </div>

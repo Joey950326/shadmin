@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { XIcon } from 'lucide-react'
 import { memo, useCallback, useEffect, useImperativeHandle } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -28,6 +29,7 @@ const DEFAULT_FORM_VALUE = {
 }
 
 function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
+  const { t } = useTranslation()
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: DEFAULT_FORM_VALUE,
@@ -76,13 +78,13 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="form-name">
-                用户名
+                {t('form.username')}
               </FieldLabel>
               <Input
                 {...field}
                 id="form-name"
                 aria-invalid={fieldState.invalid}
-                placeholder="请输入用户名"
+                placeholder={t('form.inputUsername')}
                 autoComplete="off"
                 className="max-w-md"
               />
@@ -94,9 +96,9 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
         />
         {/* 手机号 */}
         <FieldSet className="gap-4">
-          <FieldLegend variant="label">手机号</FieldLegend>
+          <FieldLegend variant="label">{t('form.phone')}</FieldLegend>
           <FieldDescription>
-            最多可添加1个手机号和4个备用手机号
+            {t('form.phoneDescription')}
           </FieldDescription>
           {/* 动态手机号 */}
           <FieldGroup className="gap-4">
@@ -117,7 +119,7 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
                           {...controllerField}
                           id={`form-phones-${index}`}
                           aria-invalid={fieldState.invalid}
-                          placeholder="请输入11位手机号"
+                          placeholder={t('form.inputPhone')}
                         />
                         {phoneFields.length > 1 && (
                           <InputGroupAddon align="inline-end">
@@ -126,7 +128,7 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
                               variant="ghost"
                               size="icon-xs"
                               onClick={() => phoneRemove(index)}
-                              aria-label={`Remove phone ${index + 1}`}
+                              aria-label={`${t('form.phone')} ${index + 1}`}
                             >
                               <XIcon />
                             </InputGroupButton>
@@ -149,7 +151,7 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
               disabled={phoneFields.length >= 5}
               className="max-w-md"
             >
-              添加手机号
+              {t('form.addPhone')}
             </Button>
             {form.formState.errors.emails?.root && (
               <FieldError errors={[form.formState.errors.emails.root]} />
@@ -159,9 +161,9 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
 
         {/* 邮箱 */}
         <FieldSet className="gap-4">
-          <FieldLegend variant="label">邮箱</FieldLegend>
+          <FieldLegend variant="label">{t('form.email')}</FieldLegend>
           <FieldDescription>
-            最多可添加1个邮箱和4个备用邮箱
+            {t('form.emailDescription')}
           </FieldDescription>
           {/* 动态邮箱 */}
           <FieldGroup className="gap-4">
@@ -182,7 +184,7 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
                           {...controllerField}
                           id={`form-emails-${index}`}
                           aria-invalid={fieldState.invalid}
-                          placeholder="请输入邮箱地址"
+                          placeholder={t('form.inputEmailAddress')}
                           type="email"
                           autoComplete="email"
                         />
@@ -193,7 +195,7 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
                               variant="ghost"
                               size="icon-xs"
                               onClick={() => emailRemove(index)}
-                              aria-label={`Remove email ${index + 1}`}
+                              aria-label={`${t('form.email')} ${index + 1}`}
                             >
                               <XIcon />
                             </InputGroupButton>
@@ -216,7 +218,7 @@ function DynamicFormCmp({ ref, value, onValueChange }: DynamicFormProps) {
               disabled={emailsFields.length >= 5}
               className="max-w-md"
             >
-              添加邮箱
+              {t('form.addEmail')}
             </Button>
             {form.formState.errors.emails?.root && (
               <FieldError errors={[form.formState.errors.emails.root]} />

@@ -1,5 +1,6 @@
 import { KeyIcon, LogOutIcon, UserIcon } from 'lucide-react'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Avatar,
   AvatarFallback,
@@ -20,6 +21,7 @@ const defaultAvatarSrc = 'https://placehold.co/400x400/orange/white?text=T'
 
 export default function AvatarDropdown() {
   const { logout, userInfo } = useAuth()
+  const { t } = useTranslation()
 
   const avatarSrc = useMemo(() => {
     if (userInfo?.username) {
@@ -34,8 +36,8 @@ export default function AvatarDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
           <Avatar className="size-6">
-            <AvatarImage src={avatarSrc} alt="shadcn" />
-            <AvatarFallback>avatar</AvatarFallback>
+            <AvatarImage src={avatarSrc} alt={t('table:avatar')} />
+            <AvatarFallback>{t('table:avatar')}</AvatarFallback>
           </Avatar>
           <span className="hidden md:block">{userInfo?.username}</span>
         </Button>
@@ -44,18 +46,18 @@ export default function AvatarDropdown() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <UserIcon />
-            <span>个人信息</span>
+            <span>{t('profile')}</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <KeyIcon />
-            <span>修改密码</span>
+            <span>{t('changePassword')}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem variant="destructive" onClick={logout}>
             <LogOutIcon />
-            <span>退出登录</span>
+            <span>{t('logout')}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

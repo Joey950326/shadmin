@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import ThemeButtonGroups from '@/features/theme/ThemeToggleGroups'
 import { cn } from '@/lib/utils'
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '../ui/field'
@@ -10,14 +11,15 @@ interface ThemeTabContentProps {
 }
 
 export default function ThemeTabContent({ className }: ThemeTabContentProps) {
+  const { t } = useTranslation()
   return (
     <FieldGroup className={cn('h-full max-w-sm', className)}>
       <FieldLabel htmlFor="switch-theme-mode">
         <Field orientation="horizontal">
           <FieldContent>
-            <FieldTitle>黑暗模式</FieldTitle>
+            <FieldTitle>{t('settings.darkMode')}</FieldTitle>
             <FieldDescription>
-              控制网页的整体色调，有亮色/暗色两种模式可选。选择“跟随系统”会根据浏览器的设置自动切换。
+              {t('settings.darkModeDescription')}
             </FieldDescription>
           </FieldContent>
           {/* <Switch id="switch-share" /> */}
@@ -28,9 +30,9 @@ export default function ThemeTabContent({ className }: ThemeTabContentProps) {
       <FieldLabel htmlFor="toggle-theme">
         <Field>
           <FieldContent>
-            <FieldTitle>主题颜色</FieldTitle>
+            <FieldTitle>{t('settings.themeColor')}</FieldTitle>
             <FieldDescription>
-              控制网页的主题颜色，请选择您喜欢的皮肤。
+              {t('settings.themeColorDescription')}
             </FieldDescription>
           </FieldContent>
           <PresetColorToggle id="toggle-theme" />
@@ -39,9 +41,9 @@ export default function ThemeTabContent({ className }: ThemeTabContentProps) {
       <FieldLabel htmlFor="switch-gray-mode">
         <Field orientation="horizontal">
           <FieldContent>
-            <FieldTitle>灰度模式</FieldTitle>
+            <FieldTitle>{t('settings.grayMode')}</FieldTitle>
             <FieldDescription>
-              将网页的颜色转换为灰度，适合色弱用户或需要专注内容时使用。
+              {t('settings.grayModeDescription')}
             </FieldDescription>
           </FieldContent>
           {/* <Switch id="switch-gray-mode" /> */}
@@ -51,9 +53,9 @@ export default function ThemeTabContent({ className }: ThemeTabContentProps) {
       <FieldLabel htmlFor="switch-notifications">
         <Field orientation="horizontal">
           <FieldContent>
-            <FieldTitle>色弱模式</FieldTitle>
+            <FieldTitle>{t('settings.colorWeakMode')}</FieldTitle>
             <FieldDescription>
-              控制网页的颜色显示，适合色弱用户使用。
+              {t('settings.colorWeakModeDescription')}
             </FieldDescription>
           </FieldContent>
           <WeakSwitcher id="switch-notifications" />

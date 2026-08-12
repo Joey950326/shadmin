@@ -2,6 +2,7 @@ import type { ChangeEvent, Ref } from 'react'
 import type { Api } from '@/services/api/types/api'
 import { EditIcon } from 'lucide-react'
 import { memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
@@ -19,6 +20,7 @@ interface AvatarUploadPros {
 }
 
 function AvatarUpload({ value, onValueChange, onAvatarUpload, ref }: AvatarUploadPros) {
+  const { t } = useTranslation()
   const [avatarUrl, setAvatarUrl] = useState<string>(value)
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -34,13 +36,13 @@ function AvatarUpload({ value, onValueChange, onAvatarUpload, ref }: AvatarUploa
     if (!file)
       return
     if (!file.type.startsWith('image/')) {
-      toast.error('请选择图片文件', {
+      toast.error(t('table.selectImage'), {
         position: 'top-right',
       })
       return
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('图片大小不能超过 5MB', {
+      toast.error(t('table.imageTooLarge'), {
         position: 'top-right',
       })
       return
@@ -69,7 +71,7 @@ function AvatarUpload({ value, onValueChange, onAvatarUpload, ref }: AvatarUploa
     <Avatar className="relative h-20 p-2 flex justify-center overflow-hidden">
 
       <AvatarImage className="w-full z-1" src={avatarUrl} loading="lazy" />
-      <AvatarFallback>头像</AvatarFallback>
+      <AvatarFallback>{t('table.avatar')}</AvatarFallback>
       {/* 上传组件 */}
       <Input
         ref={inputRef}

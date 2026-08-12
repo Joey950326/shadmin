@@ -45,12 +45,11 @@ const languageMap: Record<string, string> = {
 export default function VisitorBar({ chartData, className }: VisitorBarProps) {
   const { t, i18n } = useTranslation()
 
-  const [activeChart, setActiveChart]
-    = useState<keyof typeof chartConfig>('gitee')
+  const [activeChart, setActiveChart] = useState<(typeof sourceArray)[number]>('gitee')
 
   const chartConfig = useMemo(() => ({
     views: {
-      label: 'Page Views',
+      label: t('menu:dashboard.visitors'),
     },
     gitee: {
       label: t('menu:dashboard.giteeVisitors'),
@@ -164,7 +163,7 @@ export default function VisitorBar({ chartData, className }: VisitorBarProps) {
         </ChartContainer>
       </CardContent>
       <CardFooter className="box-border">
-        <span className="text-xs text-muted-foreground">虚构数据，仅供展示</span>
+        <span className="text-xs text-muted-foreground">{t('chart.mockDataHint')}</span>
       </CardFooter>
     </Card>
   )

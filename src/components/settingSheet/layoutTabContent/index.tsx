@@ -1,4 +1,5 @@
 import type { LayoutType } from '@/store/modules/app'
+import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '@/components/ui/field'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -8,6 +9,7 @@ import LayoutBox from './LayoutBox'
 import TabSwitcher from './TabSwitcher'
 
 export default function LayoutContent() {
+  const { t } = useTranslation()
   const mode = useAppSelector(state => state.app.layout)
 
   const dispatch = useAppDispatch()
@@ -20,8 +22,8 @@ export default function LayoutContent() {
     <FieldGroup className="h-full max-w-sm">
       <Card className="box-border w-full border shadow-none">
         <CardHeader>
-          <CardTitle>布局设置</CardTitle>
-          <CardDescription>选择你喜欢的布局方式</CardDescription>
+          <CardTitle>{t('settings.layout')}</CardTitle>
+          <CardDescription>{t('settings.layoutDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <LayoutBox className="w-full h-36 sm:h-32" mode={mode} onModeChange={handleModeChange} />
@@ -30,9 +32,9 @@ export default function LayoutContent() {
       <FieldLabel htmlFor="tab-switch">
         <Field orientation="horizontal">
           <FieldContent>
-            <FieldTitle>页面标签</FieldTitle>
+            <FieldTitle>{t('settings.pageTabs')}</FieldTitle>
             <FieldDescription>
-              记录经常访问的页面，方便快速切换。可在标签页上右键关闭或刷新。
+              {t('settings.pageTabsDescription')}
             </FieldDescription>
           </FieldContent>
           <TabSwitcher id="tab-switch" />

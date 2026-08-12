@@ -1,5 +1,6 @@
 import { LoaderIcon } from 'lucide-react'
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import TreeItem from './TreeItem'
@@ -14,13 +15,14 @@ function TreeList({
   className,
   maxHeight = '400px',
 }: TreeListProps) {
+  const { t } = useTranslation()
   const { filteredDepartments, isLoading } = useTreeSelector()
 
   if (isLoading) {
     return (
       <div className="bg-primary/10 size-full flex flex-col justify-center items-center gap-2">
         <LoaderIcon className="text-muted-foreground" />
-        <span className="text-muted-foreground">加载中</span>
+        <span className="text-muted-foreground">{t('loadingData')}</span>
       </div>
     )
   }
@@ -28,7 +30,7 @@ function TreeList({
   if (!isLoading && filteredDepartments.length === 0) {
     return (
       <div className="py-12 text-center text-muted-foreground text-sm">
-        没有找到匹配的部门
+        {t('tree.noMatchingDepartments')}
       </div>
     )
   }

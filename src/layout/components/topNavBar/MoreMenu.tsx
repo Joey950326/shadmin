@@ -1,6 +1,7 @@
 import type { JSX } from 'react'
 import type { MenuItem } from '../MenuItem'
 import { MoreHorizontal } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 import { Button } from '@/components/ui/button'
 import {
@@ -78,6 +79,7 @@ function MoreMenuItem({
 }
 
 export default function MoreMenu({ activeId, items, open, onOpenChange, onSelect }: MoreMenuProps) {
+  const { t } = useTranslation()
   if (items.length === 0)
     return null
 
@@ -98,7 +100,7 @@ export default function MoreMenu({ activeId, items, open, onOpenChange, onSelect
         className="min-w-60"
         onCloseAutoFocus={e => e.preventDefault()}
       >
-        <DropdownMenuLabel>更多菜单</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('moreMenu')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {items.map(item => (

@@ -1,6 +1,7 @@
 import type { FileWithPreview } from './types'
 import { XIcon } from 'lucide-react'
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { transformFileSize } from '@/utils'
 import { Button } from '../ui/button'
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '../ui/item'
@@ -12,13 +13,14 @@ interface UploaderFileItemProps {
 }
 
 export function UploaderFileItem({ index, file }: UploaderFileItemProps) {
+  const { t } = useTranslation()
   const { removeFile, isUploading } = useUploader()
   return (
     <Item variant="outline" size="sm" className="py-2 bg-primary/5">
       <ItemContent>
         <ItemTitle>{file.name}</ItemTitle>
         <ItemDescription className="text-xs">
-          文件大小
+          {t('file.fileSize')}
           {' '}
           { transformFileSize(file.size) }
         </ItemDescription>

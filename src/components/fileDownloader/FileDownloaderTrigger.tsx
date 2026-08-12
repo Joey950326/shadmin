@@ -3,6 +3,7 @@ import { Slot } from '@radix-ui/react-slot'
 import { LoaderIcon } from 'lucide-react'
 
 import { isValidElement, memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/button'
 import useFileDownloader from './useFileDownloader'
 
@@ -11,6 +12,7 @@ interface FileDownloaderTriggerProps {
 }
 
 function FileDownloaderTrigger({ children }: FileDownloaderTriggerProps) {
+  const { t } = useTranslation()
   const { download, isDownloading } = useFileDownloader()
   const handleDownload = () => {
     download()
@@ -33,7 +35,7 @@ function FileDownloaderTrigger({ children }: FileDownloaderTriggerProps) {
       onClick={handleDownload}
       className="flex items-center"
     >
-      {isDownloading ? '下载中' : '下载'}
+      {isDownloading ? t('table.downloading') : t('download')}
       {isDownloading && <LoaderIcon />}
 
     </Button>

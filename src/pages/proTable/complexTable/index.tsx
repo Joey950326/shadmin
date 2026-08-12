@@ -11,6 +11,7 @@ import {
 } from '@tanstack/react-table'
 import { ArrowRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, DeleteIcon, DownloadIcon, ImportIcon, LoaderIcon, SearchIcon, TextAlignStartIcon } from 'lucide-react'
 import { Fragment, useCallback, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { DatetimeSelect } from '@/components/datetimeSelect'
@@ -80,6 +81,7 @@ function ComplexTable({
   onAvatarUpload,
   onStatusChange,
 }: ComplexTableProps<Api.User.UserInfo>) {
+  const { t } = useTranslation()
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -152,13 +154,13 @@ function ComplexTable({
     const deleteParams = Array.isArray(rowId) ? { id: rowId } : { id: [rowId] }
     return onRowDelete.mutate(deleteParams, {
       onSuccess: () => {
-        toast.success('删除成功', {
+        toast.success(t('table.deleteSuccess'), {
           position: 'top-right',
         })
       },
       onError: (error) => {
         console.error('删除失败', error)
-        toast.error('删除失败', {
+        toast.error(t('table.deleteFailed'), {
           position: 'top-right',
         })
       },
@@ -167,18 +169,18 @@ function ComplexTable({
         cb?.()
       },
     })
-  }, [onRowDelete, refetch])
+  }, [onRowDelete, refetch, t])
 
   const handleEdit = useCallback((data: Api.User.UserInfo, cb?: () => void) => {
     onRowEdit.mutate(data, {
       onSuccess: () => {
-        toast.success('编辑成功', {
+        toast.success(t('table.editSuccess'), {
           position: 'top-right',
         })
       },
       onError: (error) => {
         console.error('编辑失败', error)
-        toast.error('编辑失败', {
+        toast.error(t('table.editFailed'), {
           position: 'top-right',
         })
       },
@@ -187,35 +189,35 @@ function ComplexTable({
         refetch()
       },
     })
-  }, [onRowEdit, refetch])
+  }, [onRowEdit, refetch, t])
 
   const handleAvatarUpload = useCallback((params: Api.User.AvatarUploadParams, successCb?: (data: Api.User.AvatarUploadResponse) => void, failCb?: (error: Error) => void) => {
     onAvatarUpload.mutate(params, {
       onSuccess: (data) => {
-        toast.success('上传成功', {
+        toast.success(t('table.uploadSuccess'), {
           position: 'top-right',
         })
         successCb?.(data)
       },
       onError: (error) => {
-        toast.error('上传失败', {
+        toast.error(t('table.uploadFailed'), {
           position: 'top-right',
         })
         failCb?.(error as Error)
       },
     })
-  }, [onAvatarUpload])
+  }, [onAvatarUpload, t])
 
   const handleStatusChange = useCallback((params: Api.User.StatusChangeParams, successCb?: (data: Api.User.StatusChangeResponse) => void, failCb?: (error: Error) => void) => {
     onStatusChange.mutate(params, {
       onSuccess: (data) => {
-        toast.success('修改成功', {
+        toast.success(t('table.changeSuccess'), {
           position: 'top-right',
         })
         successCb?.(data)
       },
       onError: (error) => {
-        toast.error('修改失败', {
+        toast.error(t('table.changeFailed'), {
           position: 'top-right',
         })
         failCb?.(error as Error)
@@ -224,7 +226,7 @@ function ComplexTable({
         refetch()
       },
     })
-  }, [onStatusChange, refetch])
+  }, [onStatusChange, refetch, t])
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -271,7 +273,7 @@ function ComplexTable({
         table.setPageIndex(value - 1)
       }
       else {
-        toast.error('请输入正常范围的页码', {
+        toast.error(t('table.invalidPage'), {
           position: 'top-right',
         })
       }
@@ -311,7 +313,7 @@ function ComplexTable({
             <FieldGroup className="flex-1 grid grid-cols-6 lg:grid-cols-12 items-center">
               <Field className="col-span-6">
                 <ButtonGroup>
-                  <Input ref={usernameInputRef} placeholder="搜索用户名" />
+                  <Input ref={usernameInputRef} placeholder={t('table.searchUsername')} />
                   {
                     !toolExpand && (
                       <Button className={toolExpand ? 'hidden' : 'block'} variant="outline" aria-label="Search" onClick={handleSearch}>
@@ -328,17 +330,17 @@ function ComplexTable({
               {/* <Field className="col-span-2">
                 <UploaderDialog>
                   <Button size="sm">
-                    批量导入
+                    {t('table.batchImport')}
                     <ImportIcon className="hidden lg:block" />
                   </Button>
                 </UploaderDialog>
               </Field>
               <Field className="col-span-2">
-                <FileDownloader fileName="用户数据" onDownloadingChange={setIsExportting}>
+                <FileDownloader fileName={t('table.userTemplate')} onDownloadingChange={setIsExportting}>
                   <FileDownloaderTrigger>
                     <Button size="sm" variant="outline" disabled={isExportting}>
                       {isExportting ? <LoaderIcon /> : <DownloadIcon />}
-                      {isExportting ? '导入数据中' : '导出数据'}
+                      {isExportting ? t('table.downloading') : t('export')}
 
                     </Button>
                   </FileDownloaderTrigger>
@@ -353,7 +355,7 @@ function ComplexTable({
                     size="sm"
                     disabled={table.getFilteredSelectedRowModel().rows.length === 0}
                   >
-                    批量删除
+                    {t('table.batchDelete')}
                     <DeleteIcon className="hidden lg:block" />
                   </Button>
                 </DeleteUserButton>
@@ -368,17 +370,17 @@ function ComplexTable({
               </DrawerTrigger>
               <DrawerContent>
                 <DrawerHeader>
-                  <DrawerTitle>表格设置</DrawerTitle>
-                  <DrawerDescription>表格操作，设置表格的列可见</DrawerDescription>
+                  <DrawerTitle>{t('table.settings')}</DrawerTitle>
+                  <DrawerDescription>{t('table.settingsDescription')}</DrawerDescription>
                 </DrawerHeader>
                 <div className="flex flex-col px-4 gap-4">
                   <FieldGroup className="gap-4">
                     <Field orientation="horizontal">
-                      <Label htmlFor="username-visible" className="min-w-20">用户名：</Label>
+                      <Label htmlFor="username-visible" className="min-w-20">{`${t('table.username')}:`}</Label>
                       <Switch id="username-visible" checked={true} disabled />
                     </Field>
                     <Field orientation="horizontal">
-                      <Label htmlFor="status-visible" className="min-w-20">状态：</Label>
+                      <Label htmlFor="status-visible" className="min-w-20">{`${t('status')}:`}</Label>
                       <Switch
                         id="status-visible"
                         checked={table.getColumn('status')?.getIsVisible()}
@@ -386,7 +388,7 @@ function ComplexTable({
                       />
                     </Field>
                     <Field orientation="horizontal">
-                      <Label htmlFor="age-visible" className="min-w-20">年龄：</Label>
+                      <Label htmlFor="age-visible" className="min-w-20">{`${t('table.age')}:`}</Label>
                       <Switch
                         id="age-visible"
                         checked={table.getColumn('age')?.getIsVisible()}
@@ -394,7 +396,7 @@ function ComplexTable({
                       />
                     </Field>
                     <Field orientation="horizontal">
-                      <Label htmlFor="idcard-visible" className="min-w-20">身份证号：</Label>
+                      <Label htmlFor="idcard-visible" className="min-w-20">{`${t('table.idCard')}:`}</Label>
                       <Switch
                         id="idcard-visible"
                         checked={table.getColumn('idCard')?.getIsVisible()}
@@ -402,7 +404,7 @@ function ComplexTable({
                       />
                     </Field>
                     <Field orientation="horizontal">
-                      <Label htmlFor="gender-visible" className="min-w-20">性别：</Label>
+                      <Label htmlFor="gender-visible" className="min-w-20">{`${t('table.gender')}:`}</Label>
                       <Switch
                         id="gender-visible"
                         checked={table.getColumn('gender')?.getIsVisible()}
@@ -411,7 +413,7 @@ function ComplexTable({
                     </Field>
 
                     <Field orientation="horizontal">
-                      <Label htmlFor="email-visible" className="min-w-20">邮箱：</Label>
+                      <Label htmlFor="email-visible" className="min-w-20">{`${t('table.email')}:`}</Label>
                       <Switch
                         id="email-visible"
                         checked={table.getColumn('email')?.getIsVisible()}
@@ -420,7 +422,7 @@ function ComplexTable({
                     </Field>
 
                     <Field orientation="horizontal">
-                      <Label htmlFor="address-visible" className="min-w-20">地址：</Label>
+                      <Label htmlFor="address-visible" className="min-w-20">{`${t('table.address')}:`}</Label>
                       <Switch
                         id="address-visible"
                         checked={table.getColumn('address')?.getIsVisible()}
@@ -429,7 +431,7 @@ function ComplexTable({
                     </Field>
 
                     <Field orientation="horizontal">
-                      <Label htmlFor="createTime-visible" className="min-w-20">创建时间：</Label>
+                      <Label htmlFor="createTime-visible" className="min-w-20">{`${t('table.createdAt')}:`}</Label>
                       <Switch
                         id="createTime-visible"
                         checked={table.getColumn('createTime')?.getIsVisible()}
@@ -440,16 +442,16 @@ function ComplexTable({
                   <FieldSeparator />
                   <FieldGroup className="gap-4">
                     <Field orientation="horizontal">
-                      <Label>用户数据导入:</Label>
+                      <Label>{`${t('table.userData')} ${t('import')}:`}</Label>
                       <UploaderDialog>
                         <Button size="sm" variant="outline">
-                          批量导入
+                          {t('table.batchImport')}
                           <ImportIcon className="hidden lg:block" />
                         </Button>
                       </UploaderDialog>
                     </Field>
                     <Field orientation="horizontal">
-                      <Label>用户数据导出:</Label>
+                      <Label>{`${t('table.userData')} ${t('export')}:`}</Label>
                       <FileDownloader fileName="用户数据" onDownloadingChange={setIsExportting}>
                         <FileDownloaderTrigger>
                           <Button size="sm" variant="outline" disabled={isExportting}>
@@ -463,9 +465,9 @@ function ComplexTable({
                   </FieldGroup>
                 </div>
                 <DrawerFooter>
-                  <Button variant="outline" onClick={handleResetVisible}>重置</Button>
+                  <Button variant="outline" onClick={handleResetVisible}>{t('reset')}</Button>
                   <DrawerClose asChild>
-                    <Button>关闭</Button>
+                    <Button>{t('closeAll')}</Button>
                   </DrawerClose>
                 </DrawerFooter>
               </DrawerContent>
@@ -476,35 +478,35 @@ function ComplexTable({
           <CollapsibleContent className="w-full">
             <FieldGroup className="grid grid-cols-12">
               <Field className="col-span-12 md:col-span-6 ">
-                <FieldLabel>时间范围</FieldLabel>
+                <FieldLabel>{t('table.timeRange')}</FieldLabel>
                 <DatetimeSelect value={selectDatetime} onChange={setSelectDatetime}></DatetimeSelect>
               </Field>
               {/* 性别 */}
               <Field className="col-span-6 md:col-span-3">
-                <FieldLabel className="pl-2">性别</FieldLabel>
+                <FieldLabel className="pl-2">{t('table.gender')}</FieldLabel>
                 <Select value={genderSelected} onValueChange={setGenderSelected}>
                   <SelectTrigger>
-                    <SelectValue placeholder="请选择性别" />
+                    <SelectValue placeholder={t('table.selectGender')} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="1">男</SelectItem>
-                      <SelectItem value="2">女</SelectItem>
+                      <SelectItem value="1">{t('male')}</SelectItem>
+                      <SelectItem value="2">{t('female')}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               </Field>
               {/* 用户状态 */}
               <Field className="col-span-6 md:col-span-3">
-                <FieldLabel className="pl-2">用户状态</FieldLabel>
+                <FieldLabel className="pl-2">{t('table.userStatus')}</FieldLabel>
                 <Select value={statusSelected} onValueChange={setStatusSelected}>
                   <SelectTrigger id="radius-x">
-                    <SelectValue placeholder="请选择用户状态" />
+                    <SelectValue placeholder={t('table.selectUserStatus')} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="1">启用</SelectItem>
-                      <SelectItem value="2">禁用</SelectItem>
+                      <SelectItem value="1">{t('enabled')}</SelectItem>
+                      <SelectItem value="2">{t('disabled')}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -513,23 +515,23 @@ function ComplexTable({
               {/* 身份证号 */}
               <Field className="col-span-6 md:col-span-4">
                 <FieldLabel>
-                  身份证号
+                  {t('table.idCard')}
                 </FieldLabel>
-                <Input ref={idCardInputRef} placeholder="请输入身份证号码"></Input>
+                <Input ref={idCardInputRef} placeholder={t('table.inputIdCardNumber')}></Input>
               </Field>
               {/* 年龄范围 */}
               <Field className="col-span-6 md:col-span-3">
-                <FieldLabel className="pl-2">用户年龄</FieldLabel>
+                <FieldLabel className="pl-2">{t('table.userAge')}</FieldLabel>
                 <ButtonGroup>
-                  <Input ref={minAgeInputRef} placeholder="请输入最小年龄" type="number" defaultValue={18} className="text-center" />
+                  <Input ref={minAgeInputRef} placeholder={t('table.inputMinAge')} type="number" defaultValue={18} className="text-center" />
                   <ArrowRightIcon className="h-full p-2 bg-primary/5" size={14} />
-                  <Input ref={maxAgeInputRef} placeholder="请输入最大年龄" type="number" defaultValue={60} className="text-center" />
+                  <Input ref={maxAgeInputRef} placeholder={t('table.inputMaxAge')} type="number" defaultValue={60} className="text-center" />
                 </ButtonGroup>
               </Field>
             </FieldGroup>
             <div className="w-full flex justify-end gap-2 pt-4 md:pt-0">
-              <Button variant="outline" onClick={handleResetSearch}>重置</Button>
-              <Button onClick={handleSearch}>搜索</Button>
+              <Button variant="outline" onClick={handleResetSearch}>{t('reset')}</Button>
+              <Button onClick={handleSearch}>{t('search')}</Button>
             </div>
 
           </CollapsibleContent>
@@ -602,7 +604,7 @@ function ComplexTable({
                       <TableCell colSpan={row.getAllCells().length} className="p-0 bg-muted/30">
                         <ScrollArea className="w-full max-w-[100vw] lg:max-w-[calc(100vw-16rem)]">
                           <div className=" flex justify-center p-6 w-full bg-primary/5">
-                            更多信息：
+                            {t('table.moreInfo')}
                             {
                               row.original ? <div>{JSON.stringify(row.original)}</div> : ''
                             }
@@ -627,7 +629,7 @@ function ComplexTable({
             <PaginationItem className="hidden sm:block">
               <div className="flex items-center">
                 <Button className=" rounded-r-none " variant="outline" size="sm" onClick={handleJump}>
-                  跳转至
+                  {t('table.pageJump')}
                 </Button>
                 <Input ref={inputRef} placeholder={currentPage} className="max-w-14 h-8 rounded-l-none" defaultValue={currentPage} />
               </div>
@@ -635,7 +637,7 @@ function ComplexTable({
 
             {table.getCanPreviousPage() && (
               <PaginationItem>
-                <PaginationPrevious text="上一页" onClick={() => table.previousPage()} />
+                <PaginationPrevious text={t('pagination.previous')} onClick={() => table.previousPage()} />
               </PaginationItem>
             )}
             {
@@ -656,7 +658,7 @@ function ComplexTable({
             {
               table.getCanNextPage() && (
                 <PaginationItem>
-                  <PaginationNext text="下一页" onClick={() => table.nextPage()} />
+                  <PaginationNext text={t('pagination.next')} onClick={() => table.nextPage()} />
                 </PaginationItem>
               )
             }
@@ -670,10 +672,10 @@ function ComplexTable({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10">10 条</SelectItem>
-                  <SelectItem value="20">20 条</SelectItem>
-                  <SelectItem value="50">50 条</SelectItem>
-                  <SelectItem value="100">100 条</SelectItem>
+                  <SelectItem value="10">{t('table.itemsPerPage', { count: 10 })}</SelectItem>
+                  <SelectItem value="20">{t('table.itemsPerPage', { count: 20 })}</SelectItem>
+                  <SelectItem value="50">{t('table.itemsPerPage', { count: 50 })}</SelectItem>
+                  <SelectItem value="100">{t('table.itemsPerPage', { count: 100 })}</SelectItem>
                 </SelectContent>
               </Select>
             </PaginationItem>

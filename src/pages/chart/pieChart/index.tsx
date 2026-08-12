@@ -4,6 +4,7 @@ import type { ChartData, TotalSales } from './types'
 import type { ChartConfig } from '@/components/ui/chart'
 import { TrendingUpIcon } from 'lucide-react'
 import { memo, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Label, Legend, Pie, PieChart, Sector } from 'recharts'
 import {
   Card,
@@ -143,6 +144,7 @@ function transformChartData(data: ChartData) {
 }
 
 function PieChartCmp() {
+  const { t } = useTranslation()
   const chartData = useMemo(() => transformChartData(DEMO_DATA), [])
   const [currentIndex, setCurrentIndex] = useState<number>(-1)
   const [activeChart, setActiveChart]
@@ -162,9 +164,9 @@ function PieChartCmp() {
     <Card className="size-full py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>扇型图</CardTitle>
+          <CardTitle>{t('chart.pieTitle')}</CardTitle>
           <CardDescription>
-            简单扇型图示例
+            {t('chart.simplePieChart')}
           </CardDescription>
         </div>
         <div className="flex">
@@ -269,12 +271,12 @@ function PieChartCmp() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm min-h-16 shrink-0">
         <div className="flex gap-2 leading-none font-medium">
-          店铺手机型号销售数据
+          {t('chart.salesByPhoneModel')}
           {' '}
           <TrendingUpIcon className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          店铺近半年手机各型号销量统计
+          {t('chart.phoneSalesSummary')}
         </div>
       </CardFooter>
     </Card>

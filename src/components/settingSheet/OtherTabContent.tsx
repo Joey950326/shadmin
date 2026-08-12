@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setAppState } from '@/store/modules/app'
@@ -9,6 +10,7 @@ interface OtherTabContentProps {
 }
 
 export default function OtherTabContent({ className }: OtherTabContentProps) {
+  const { t } = useTranslation()
   const showWatermark = useAppSelector(state => state.app.showWatermark)
   const dispatch = useAppDispatch()
 
@@ -21,9 +23,9 @@ export default function OtherTabContent({ className }: OtherTabContentProps) {
       <FieldLabel htmlFor="switch-watermark">
         <Field orientation="horizontal">
           <FieldContent>
-            <FieldTitle>水印</FieldTitle>
+            <FieldTitle>{t('settings.watermark')}</FieldTitle>
             <FieldDescription>
-              控制网页是否显示全屏水印内容
+              {t('settings.watermarkDescription')}
             </FieldDescription>
           </FieldContent>
           <Switch

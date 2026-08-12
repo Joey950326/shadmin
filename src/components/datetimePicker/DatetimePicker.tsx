@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { CalendarIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { getNow } from '@/utils'
 import { Button } from '../ui/button'
@@ -16,6 +17,7 @@ interface DatetimePickerProps {
 }
 
 function DatetimePicker({ children, value, onValueChange, className }: DatetimePickerProps) {
+  const { t } = useTranslation()
   const innerValue = useMemo(() => value ? getDateFromTimestamp(value) : getNow() as Date, [value])
   const [innerDate, setInnerDate] = useState<string>(() => getDateFromDate(innerValue))
   const [innerTime, setInnerTime] = useState<string>(() => getTimeFromDate(innerValue))
@@ -30,10 +32,10 @@ function DatetimePicker({ children, value, onValueChange, className }: DatetimeP
 
   const displayText = useMemo(() => {
     if (!innerDate && !innerTime) {
-      return '请选择时间'
+      return t('time.selectRange')
     }
     return `${innerDate} ${innerTime}`
-  }, [innerDate, innerTime])
+  }, [innerDate, innerTime, t])
 
   useEffect(() => {
     const fullDateString = `${innerDate} ${innerTime}`

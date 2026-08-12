@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { FileWithPreview } from './types'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { UploaderContext } from './UploaderContext'
@@ -26,6 +27,7 @@ function Uploader({
   onUpload,
   onLoadingChange,
 }: UploaderProps) {
+  const { t } = useTranslation()
   const [files, setFiles] = useState<Array<FileWithPreview>>([])
   const [isDragOver] = useState<boolean>(false)
   const [isUploading, setIsUploading] = useState<boolean>(false)
@@ -65,21 +67,21 @@ function Uploader({
       return newFiles.filter((file) => {
         // 校验文件数量
         if (files.length + newFiles.length > maxFiles) {
-          toast.error(`最多支持上传${maxFiles}个文件`, {
+          toast.error(t('file.maxFiles', { count: maxFiles }), {
             position: 'top-right',
           })
           return false
         }
         // accept 类型校验
         if (!isFileAccepted(file)) {
-          toast.error(`文件 ${file.name} 不是允许的格式，仅支持 ${accept}`, {
+          toast.error(t('file.unsupportedType', { name: file.name, accept }), {
             position: 'top-right',
           })
           return false
         }
         // 文件大小校验
         if (file.size > maxSize * 1024 * 1024) {
-          toast.error(`文件 ${file.name} 超过最大大小限制 ${maxSize}MB`, {
+          toast.error(t('file.fileTooLarge', { name: file.name, size: maxSize }), {
             position: 'top-right',
           })
           return false
@@ -88,7 +90,7 @@ function Uploader({
         return true
       })
     },
-    [accept, files.length, isFileAccepted, maxFiles, maxSize],
+    [accept, files.length, isFileAccepted, maxFiles, maxSize, t],
   )
 
   const addFiles = useCallback(

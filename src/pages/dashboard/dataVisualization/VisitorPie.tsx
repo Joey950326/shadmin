@@ -19,26 +19,6 @@ export const description = 'A donut chart with text'
 //   { source: 'yesterday', visitors: 173, fill: 'color-mix(in oklch, var(--color-primary) 55%, transparent)' },
 // ]
 
-const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  gitee: {
-    label: 'gitee访问数',
-
-  },
-  github: {
-    label: 'github访问数',
-  },
-  today: {
-    label: 'today访问数',
-  },
-  yesterday: {
-    label: 'yesterday访问数',
-  },
-
-} satisfies ChartConfig
-
 interface ChartDataType {
   source: string
   visitors: number
@@ -50,11 +30,17 @@ interface VisitorPieProps {
 }
 
 export default function ChartPieDonutText({ chartData }: VisitorPieProps) {
+  const { t } = useTranslation()
+  const chartConfig = React.useMemo(() => ({
+    visitors: { label: t('menu:dashboard.visitors') },
+    gitee: { label: t('menu:dashboard.giteeVisitors') },
+    github: { label: t('menu:dashboard.githubVisitors') },
+    today: { label: t('menu:dashboard.todayVisitors') },
+    yesterday: { label: t('menu:dashboard.yesterdayVisitors') },
+  }) satisfies ChartConfig, [t])
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
   }, [chartData])
-  const { t } = useTranslation()
-
   return (
 
     <ChartContainer

@@ -1,6 +1,7 @@
 import type { LayoutType } from '@/store/modules/app'
 import { CheckIcon } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
@@ -14,10 +15,11 @@ interface BoxItemProps {
   className?: string
   checked: boolean
   onSelected: () => void
+  title: string
 }
 
 /** 经典布局 */
-export function ClassicLayoutBox({ className, checked = false, onSelected }: BoxItemProps) {
+export function ClassicLayoutBox({ className, checked = false, onSelected, title }: BoxItemProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -42,14 +44,14 @@ export function ClassicLayoutBox({ className, checked = false, onSelected }: Box
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        <span>经典布局</span>
+        <span>{title}</span>
       </TooltipContent>
     </Tooltip>
   )
 }
 
 /** 垂直布局 */
-export function VerticalLayoutBox({ className, checked = false, onSelected }: BoxItemProps) {
+export function VerticalLayoutBox({ className, checked = false, onSelected, title }: BoxItemProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -75,7 +77,7 @@ export function VerticalLayoutBox({ className, checked = false, onSelected }: Bo
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        <span>垂直布局</span>
+        <span>{title}</span>
       </TooltipContent>
     </Tooltip>
 
@@ -83,7 +85,7 @@ export function VerticalLayoutBox({ className, checked = false, onSelected }: Bo
 }
 
 /** 水平布局 */
-export function HorizontalLayoutBox({ className, checked = false, onSelected }: BoxItemProps) {
+export function HorizontalLayoutBox({ className, checked = false, onSelected, title }: BoxItemProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -105,14 +107,14 @@ export function HorizontalLayoutBox({ className, checked = false, onSelected }: 
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        <span>水平布局</span>
+        <span>{title}</span>
       </TooltipContent>
     </Tooltip>
   )
 }
 
 /** 列布局 */
-export function ColumnLayoutBox({ className, checked = false, onSelected }: BoxItemProps) {
+export function ColumnLayoutBox({ className, checked = false, onSelected, title }: BoxItemProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -137,13 +139,14 @@ export function ColumnLayoutBox({ className, checked = false, onSelected }: BoxI
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        <span>列布局</span>
+        <span>{title}</span>
       </TooltipContent>
     </Tooltip>
   )
 }
 
 export default function LayoutBox({ className, mode, onModeChange }: LayoutBoxProps) {
+  const { t } = useTranslation()
   const [layoutMode, setLayoutMode] = useState<LayoutType | null>(mode)
 
   const handleModeChange = (newMode: LayoutType) => {
@@ -154,10 +157,10 @@ export default function LayoutBox({ className, mode, onModeChange }: LayoutBoxPr
   return (
 
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-      <VerticalLayoutBox onSelected={() => handleModeChange('vertical')} className={className} checked={layoutMode === 'vertical'} />
-      <ClassicLayoutBox onSelected={() => handleModeChange('classic')} className={className} checked={layoutMode === 'classic'} />
-      <HorizontalLayoutBox onSelected={() => handleModeChange('horizontal')} className={className} checked={layoutMode === 'horizontal'} />
-      <ColumnLayoutBox onSelected={() => handleModeChange('column')} className={className} checked={layoutMode === 'column'} />
+      <VerticalLayoutBox title={t('settings.verticalLayout')} onSelected={() => handleModeChange('vertical')} className={className} checked={layoutMode === 'vertical'} />
+      <ClassicLayoutBox title={t('settings.classicLayout')} onSelected={() => handleModeChange('classic')} className={className} checked={layoutMode === 'classic'} />
+      <HorizontalLayoutBox title={t('settings.horizontalLayout')} onSelected={() => handleModeChange('horizontal')} className={className} checked={layoutMode === 'horizontal'} />
+      <ColumnLayoutBox title={t('settings.columnLayout')} onSelected={() => handleModeChange('column')} className={className} checked={layoutMode === 'column'} />
     </div>
   )
 }

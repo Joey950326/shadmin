@@ -1,5 +1,6 @@
 import type { Api } from '@/services/api/types/api'
 import { CircleAlertIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
@@ -11,6 +12,7 @@ interface DeleteActionCellPros {
 }
 
 export default function DeleteActionCell({ rowData, onConfirm, isLoading }: DeleteActionCellPros) {
+  const { t } = useTranslation()
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -18,16 +20,16 @@ export default function DeleteActionCell({ rowData, onConfirm, isLoading }: Dele
           variant="destructive"
           size="sm"
         >
-          删除
+          {t('delete')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>温馨提示</AlertDialogTitle>
+          <AlertDialogTitle>{t('table.friendlyReminder')}</AlertDialogTitle>
           <AlertDialogDescription className="flex items-center gap-2">
             <CircleAlertIcon />
             <span>
-              确定删除
+              {t('table.deletePrompt')}
               <span className="font-bold">
                 {rowData.username}
                 ?
@@ -36,16 +38,16 @@ export default function DeleteActionCell({ rowData, onConfirm, isLoading }: Dele
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>取消</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction onClick={() => onConfirm(rowData.id)} disabled={isLoading}>
             {isLoading
               ? (
                   <div className="flex items-center gap-2">
                     <Spinner className="size-4" />
-                    <span>删除中</span>
+                    <span>{t('table.deleting')}</span>
                   </div>
                 )
-              : '确定'}
+              : t('confirm')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

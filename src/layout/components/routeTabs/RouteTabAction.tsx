@@ -1,4 +1,5 @@
 import { Grid2x2XIcon, LocateFixedIcon, MoreHorizontal, RotateCcwIcon, SquareXIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
@@ -9,6 +10,7 @@ interface RouteTabActionProps {
 }
 
 export default function RouteTabAction({ className }: RouteTabActionProps) {
+  const { t } = useTranslation()
   const { onFreshTab, onCloseCurrentTab, onCloseOtherTab, onCloseAllTab } = useRouteTabListContext()
 
   const handleFreshTab = () => {
@@ -38,7 +40,7 @@ export default function RouteTabAction({ className }: RouteTabActionProps) {
           <DropdownMenuGroup>
             <DropdownMenuItem onSelect={handleFreshTab} className="cursor-pointer">
               <RotateCcwIcon />
-              刷新
+              {t('refresh')}
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
@@ -48,15 +50,15 @@ export default function RouteTabAction({ className }: RouteTabActionProps) {
               onSelect={handleCloseCurrentTab}
             >
               <LocateFixedIcon />
-              关闭当前
+              {t('closeCurrent')}
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer" onSelect={handleCloseOtherTab}>
               <Grid2x2XIcon />
-              关闭其他
+              {t('closeOther')}
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer" onSelect={handleCloseAllTab}>
               <SquareXIcon />
-              关闭所有
+              {t('closeAll')}
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

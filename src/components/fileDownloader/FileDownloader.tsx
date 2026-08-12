@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { memo, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useUserImportDownload } from '@/services/api/hooks/useUser'
 import { getDateNowText } from '@/utils'
@@ -41,7 +42,9 @@ async function openSystemFileSelector({ fileName, fileType, blob }: FileSelector
   return false
 }
 
-function FileDownloader({ children, fileName = '下载内容', fileType = '.xlsx', onDownloadingChange }: FileDownloaderProps) {
+function FileDownloader({ children, fileName, fileType = '.xlsx', onDownloadingChange }: FileDownloaderProps) {
+  const { t } = useTranslation()
+  const downloadFileName = fileName ?? t('file.downloadContent')
   const [isDownloading, setIsDownloading] = useState<boolean>(false)
   const { refetch } = useUserImportDownload({})
 
@@ -50,7 +53,7 @@ function FileDownloader({ children, fileName = '下载内容', fileType = '.xlsx
       setIsDownloading(true)
       onDownloadingChange?.(true)
 
-      toast.warning('如果数据量太大，下载时间会稍长，请耐心等待', {
+      toast.warning(t('file.downloadWarning'), {
         position: 'top-right',
       })
 
@@ -60,12 +63,12 @@ function FileDownloader({ children, fileName = '下载内容', fileType = '.xlsx
         const fileData = refetchResult
 
         if (!fileData) {
-          throw new Error('没有返回文件数据')
+          throw new Error(t('file.noFileData'))
         }
 
         const blob = new Blob([JSON.stringify(fileData.data)])
 
-        const uniqueFilename = `${fileName}-${getDateNowText()} `
+        const uniqueFilename = `${downloadFileName}-${getDateNowText()} `
 
         const writeSuccess = await openSystemFileSelector({ fileName: uniqueFilename, fileType, blob })
 
@@ -82,7 +85,7 @@ function FileDownloader({ children, fileName = '下载内容', fileType = '.xlsx
       }
 
       if (refetchResult.isError) {
-        toast.error('下载模板失败', { position: 'top-right' })
+        toast.error(t('file.downloadTemplateFailed'), { position: 'top-right' })
         console.error(refetchResult.error)
       }
     }
@@ -93,7 +96,7 @@ function FileDownloader({ children, fileName = '下载内容', fileType = '.xlsx
       setIsDownloading(false)
       onDownloadingChange?.(false)
     }
-  }, [fileName, fileType, refetch, onDownloadingChange])
+  }, [downloadFileName, fileType, onDownloadingChange, refetch, t])
 
   const contextValue = useMemo(() => ({
     isDownloading,

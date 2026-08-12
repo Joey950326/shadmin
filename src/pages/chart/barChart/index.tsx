@@ -3,6 +3,7 @@ import type { ChartData, HoverOpacity, MonthData, SeriesKey } from './types'
 import type { ChartConfig } from '@/components/ui/chart'
 import { TrendingUpIcon } from 'lucide-react'
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, CartesianGrid, Legend, XAxis } from 'recharts'
 import {
   Card,
@@ -125,6 +126,7 @@ const chartConfig = {
 } as ChartConfig
 
 export default function BarChartCmp() {
+  const { t } = useTranslation()
   const chartData = transformChartData(DEMO_DATA)
   const [hoverOpacity, setHoverOpacity] = useState<HoverOpacity>({})
   const handleLegendMouseEnter = useCallback((payload: LegendPayload) => {
@@ -138,8 +140,8 @@ export default function BarChartCmp() {
   return (
     <Card className="size-full">
       <CardHeader>
-        <CardTitle>柱状图</CardTitle>
-        <CardDescription>简单柱状图示例</CardDescription>
+        <CardTitle>{t('chart.barTitle')}</CardTitle>
+        <CardDescription>{t('chart.simpleBarChart')}</CardDescription>
       </CardHeader>
       {/* 这里必须加上overflow-hidden 否则图表无法响应式 */}
       <CardContent className="overflow-hidden">
@@ -181,12 +183,12 @@ export default function BarChartCmp() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm min-h-16 shrink-0">
         <div className="flex gap-2 leading-none font-medium">
-          店铺手机型号销售数据
+          {t('chart.salesByPhoneModel')}
           {' '}
           <TrendingUpIcon className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          店铺近半年手机各型号销量统计
+          {t('chart.phoneSalesSummary')}
         </div>
       </CardFooter>
     </Card>

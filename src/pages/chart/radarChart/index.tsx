@@ -4,6 +4,7 @@ import type { SeriesKey } from './types'
 import type { ChartConfig } from '@/components/ui/chart'
 import { TrendingUpIcon } from 'lucide-react'
 import { memo, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Legend, PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts'
 import {
   Card,
@@ -107,6 +108,7 @@ const chartConfig = {
 } as ChartConfig
 
 function RadarChartCmp() {
+  const { t } = useTranslation()
   const chartData = useMemo(() => DEMO_DATA, [])
   const [hoverOpacity, setHoverOpacity] = useState<HoverOpacity>({})
   const [activeChart, setActiveChart]
@@ -135,9 +137,9 @@ function RadarChartCmp() {
     <Card className="size-full py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>雷达图</CardTitle>
+          <CardTitle>{t('chart.radarTitle')}</CardTitle>
           <CardDescription>
-            简单雷达图示例
+            {t('chart.simpleRadarChart')}
           </CardDescription>
         </div>
         <div className="flex">
@@ -210,12 +212,12 @@ function RadarChartCmp() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm min-h-16 shrink-0">
         <div className="flex gap-2 leading-none font-medium">
-          店铺手机型号销售数据
+          {t('chart.salesByPhoneModel')}
           {' '}
           <TrendingUpIcon className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          店铺近半年手机各型号销量统计
+          {t('chart.phoneSalesSummary')}
         </div>
       </CardFooter>
     </Card>

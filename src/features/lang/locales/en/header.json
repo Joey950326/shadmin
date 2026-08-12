@@ -1,4 +1,6 @@
 {
   "expandFullscreen": "expand fullscreen",
-  "shrinkFullscreen": "exit fullscreen"
+  "shrinkFullscreen": "exit fullscreen",
+  "customSetting": "preferences",
+  "customSettingDesc": "Manage your account and application preferences"
 }
