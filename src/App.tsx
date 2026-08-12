@@ -9,7 +9,6 @@ import { WatermarkProvider } from './features/watermark/WatermarkProvider'
 export function App() {
   return (
     <ThemeProvider>
-
       <LanguageProvider>
         <WatermarkProvider content="shadmin" color="var(--color-primary)" opacity={0.1}>
           <TooltipProvider>

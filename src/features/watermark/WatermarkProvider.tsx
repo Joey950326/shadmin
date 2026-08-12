@@ -5,6 +5,7 @@ import type { WatermarkOptions } from './types'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getCssVar } from '@/features/watermark/shared'
 import { cn } from '@/lib/utils'
+import { useAppSelector } from '@/store/hooks'
 
 // ... 其他代码保持不变
 
@@ -24,11 +25,12 @@ export function WatermarkProvider({
   opacity = 1,
   fontFamily = 'system-ui, -apple-system, sans-serif',
   fontWeight = 'normal',
-  visible = true,
   zIndex = 999,
   className,
   children,
 }: WatermarkProps) {
+  const showWatermark = useAppSelector(state => state.app.showWatermark)
+
   const containerRef = useRef<HTMLDivElement>(null)
 
   // 用于强制水印在主题切换后重新生成
@@ -69,7 +71,7 @@ export function WatermarkProvider({
 
   // 生成水印（依赖 themeVersion，主题真正切换完成后才会重新执行）
   const watermarkUrl = useMemo(() => {
-    if (!visible || !resolvedColor)
+    if (!showWatermark || !resolvedColor)
       return ''
 
     // 此时再读取 CSS 变量，已经是最新主题色
@@ -116,26 +118,23 @@ export function WatermarkProvider({
     })
 
     return canvas.toDataURL('image/png')
-  }, [content, fontSize, rotate, gapX, gapY, opacity, fontFamily, fontWeight, visible, resolvedColor])
-
-  // ... 后面渲染部分保持不变
-  if (!visible || !watermarkUrl) {
-    return <>{children}</>
-  }
-
+  }, [content, fontSize, rotate, gapX, gapY, opacity, fontFamily, fontWeight, showWatermark, resolvedColor])
   return (
-    <div className={cn('relative h-full w-full', className)}>
-      <div
-        ref={containerRef}
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 select-none"
-        style={{
-          zIndex,
-          backgroundImage: watermarkUrl ? `url(${watermarkUrl})` : undefined,
-          backgroundRepeat: 'repeat',
-          backgroundPosition: '0 0',
-        }}
-      />
+    <div className={cn('relative size-full', className)}>
+      {showWatermark && watermarkUrl && (
+        <div
+          ref={containerRef}
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 select-none"
+          style={{
+            zIndex,
+            backgroundImage: `url(${watermarkUrl})`,
+            backgroundRepeat: 'repeat',
+            backgroundPosition: '0 0',
+          }}
+        />
+      )}
+
       {children}
     </div>
   )

@@ -19,7 +19,7 @@ export interface WatermarkOptions {
   /** 字体粗细 */
   fontWeight?: string | number
   /** 是否显示（可用于全局开关） */
-  visible?: boolean
+  //   visible?: boolean
   /** z-index，建议低于 Modal（如 999） */
   zIndex?: number
 }
