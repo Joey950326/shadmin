@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { selectIsDark, selectPrimaryColor, selectThemeMode, setIsDark } from '@/store/modules/app'
+import { selectPrimaryColor, selectThemeMode, setIsDark } from '@/store/modules/app'
 import { applyThemeMode, changeColorClass, getSystemThemeMode } from './shared'
 
 interface ThemeProviderProps {
@@ -9,7 +9,6 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const dispatch = useAppDispatch()
-  const isDark = useAppSelector(selectIsDark)
   const themeMode = useAppSelector(selectThemeMode)
   const isGray = useAppSelector(state => state.app.isGray)
   const isColorWeak = useAppSelector(state => state.app.isColorWeak)
@@ -25,11 +24,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     }
 
     dispatch(setIsDark(isDark))
-  }, [dispatch, themeMode])
-
-  useEffect(() => {
     applyThemeMode(isDark)
-  }, [isDark])
+  }, [dispatch, themeMode])
 
   // 灰色 / 色弱 模式（合并设置，避免互相覆盖）
   useEffect(() => {
