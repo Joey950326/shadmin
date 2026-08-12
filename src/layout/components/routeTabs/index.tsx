@@ -90,13 +90,19 @@ export default function RouteTabsIndex() {
   }, [initialTabsData, navigate, syncTabsData])
 
   useEffect(() => {
-    // 设置标签页数据，保持与路由同步
+    // 设置标签页数据，保持与路由和当前语言同步
     const inTabsData = initialTabsData.some(tabItem => tabItem.path === location.pathname)
 
-    let newTabsData = initialTabsData.map(tabItem => ({
-      ...tabItem,
-      active: tabItem.path === location.pathname,
-    }))
+    let newTabsData = initialTabsData.map((tabItem) => {
+      const menuItem = getActiveMenuItem(tabItem.path, menuData)
+
+      return {
+        ...tabItem,
+        // 标签页状态中保存的是 title 文本，语言切换后需要重新同步它。
+        title: menuItem?.meta?.title ?? tabItem.title,
+        active: tabItem.path === location.pathname,
+      }
+    })
     if (!inTabsData) {
       const newTitle = getActiveMenuItem(location.pathname, menuData)?.meta?.title
 
@@ -109,13 +115,21 @@ export default function RouteTabsIndex() {
       }
     }
 
-    syncTabsData(newTabsData)
+    const tabsChanged = newTabsData.length !== initialTabsData.length
+      || newTabsData.some((tab, index) => {
+        const oldTab = initialTabsData[index]
+        return tab.path !== oldTab?.path || tab.title !== oldTab?.title || tab.active !== oldTab?.active
+      })
+
+    if (tabsChanged) {
+      syncTabsData(newTabsData)
+    }
 
     return () => {
     // 清理定时器，防止内存泄漏
       cleanUptimers()
     }
-  }, [cleanUptimers, location.pathname, menuData, syncTabsData])
+  }, [cleanUptimers, initialTabsData, location.pathname, menuData, syncTabsData])
 
   /** 刷新标签 */
   const handleFreshTab = useCallback(() => {
