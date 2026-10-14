@@ -198,6 +198,14 @@ const dynamicRoutes = [
         ],
       },
       {
+        path: 'system/roles',
+        lazy: async () => {
+          const Component = (await import('@/pages/system/roles/index.tsx')).default
+          return { Component }
+        },
+        handle: { title: 'menu:system.roles' },
+      },
+      {
         path: 'menuCollapse/subMenu1',
         Component: DevelopingPage,
         handle: { title: 'menu:subMenu1' },

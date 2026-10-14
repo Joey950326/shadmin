@@ -71,5 +71,8 @@
     "pieChart": "pie chart",
     "radarChart": "radar chart",
     "radialChart": "radial chart"
+  },
+  "system": {
+    "roles": "Roles"
   }
 }

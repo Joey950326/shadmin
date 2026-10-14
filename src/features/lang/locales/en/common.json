@@ -287,5 +287,19 @@
     "simpleRadarChart": "Simple radar chart example",
     "simplePieChart": "Simple pie chart example",
     "simpleRadialChart": "Simple radial chart example"
+  },
+  "role": {
+    "title": "Roles",
+    "filters": "Role filters",
+    "name": "Role name",
+    "code": "Role code",
+    "description": "Description",
+    "actions": "Actions",
+    "allStatuses": "All statuses",
+    "pagination": "Role list pagination",
+    "total": "Total: {{total}}",
+    "detailTitle": "Role details",
+    "detailDescription": "Basic role information and authorized menu identifiers.",
+    "authorizedMenuIds": "Authorized page menu IDs"
   }
 }

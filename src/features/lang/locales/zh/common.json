@@ -287,5 +287,19 @@
     "simpleRadarChart": "简单雷达图示例",
     "simplePieChart": "简单扇型图示例",
     "simpleRadialChart": "简单扇型图示例"
+  },
+  "role": {
+    "title": "角色管理",
+    "filters": "角色筛选",
+    "name": "角色名称",
+    "code": "角色编码",
+    "description": "描述",
+    "actions": "操作",
+    "allStatuses": "全部状态",
+    "pagination": "角色列表分页",
+    "total": "共 {{total}} 条",
+    "detailTitle": "角色详情",
+    "detailDescription": "角色基本信息和已授权菜单标识。",
+    "authorizedMenuIds": "已授权页面菜单 ID"
   }
 }

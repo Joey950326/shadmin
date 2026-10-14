@@ -12,6 +12,11 @@ export const QUERY_KEYS = {
   DEPARTMENT: {
     LIST: () => ['department', 'list'] as const,
   },
+  ROLE: {
+    LIST: (params: Api.Role.ListParams) => ['role', 'list', params] as const,
+    DETAIL: (params: Api.Role.DetailParams) => ['role', 'detail', params] as const,
+    OPTIONS: ['role', 'options'] as const,
+  },
 }
 
 export const MUTATION_KEYS = {

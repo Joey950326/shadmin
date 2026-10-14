@@ -71,5 +71,8 @@
     "pieChart": "饼状图",
     "radarChart": "雷达图",
     "radialChart": "径向图"
+  },
+  "system": {
+    "roles": "角色管理"
   }
 }

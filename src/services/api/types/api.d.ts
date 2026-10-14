@@ -142,6 +142,45 @@ declare namespace Api {
 
   }
 
+  namespace Role {
+    interface Info {
+      id: string
+      roleName: string
+      roleCode: string
+      description: string
+      status: 0 | 1
+    }
+
+    interface ListParams {
+      page: number
+      pageSize: number
+      roleName?: string
+      roleCode?: string
+      status?: 0 | 1
+    }
+
+    interface ListResponse extends Base.ResponseData<{
+      pageNum: number
+      pageSize: number
+      total: number
+      list: Info[]
+    }> {}
+
+    interface DetailParams {
+      id: string
+    }
+
+    interface DetailResponse extends Base.ResponseData<Info & { menuIds: string[] }> {}
+
+    interface Option {
+      id: string
+      roleName: string
+      roleCode: string
+    }
+
+    interface OptionsResponse extends Base.ResponseData<Option[]> {}
+  }
+
   namespace Department {
     interface ListParams {}
     interface ListResponse extends Base.ResponseData {
