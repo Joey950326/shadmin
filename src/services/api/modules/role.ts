@@ -40,3 +40,10 @@ export function roleDeleteApi(
 ) {
   return request.post<Api.Role.DeleteResponse>(ROLE_URLS.DELETE, data, options)
 }
+
+export function roleStatusChangeApi(
+  data: Api.Role.StatusChangeParams,
+  options?: Api.Base.RequestOptions,
+) {
+  return request.post<Api.Role.MutationResponse>(ROLE_URLS.CHANGE, data, options)
+}

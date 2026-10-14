@@ -358,6 +358,10 @@
     "deleteMultiplePrompt": "确定删除选中的 {{count}} 个角色吗？",
     "deleteSuccess": "角色删除成功",
     "deleteFailed": "角色删除失败，请重试",
-    "deleting": "删除中..."
+    "deleting": "删除中...",
+    "enable": "启用",
+    "disable": "停用",
+    "statusChangeSuccess": "角色状态更新成功",
+    "statusChangeFailed": "角色状态更新失败，请重试"
   }
 }

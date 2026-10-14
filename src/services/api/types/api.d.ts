@@ -231,6 +231,11 @@ declare namespace Api {
       id: string[]
     }
 
+    interface StatusChangeParams {
+      id: string
+      status: 0 | 1
+    }
+
     interface DetailResponse extends Base.ResponseData<Info & { menuIds: string[] }> {}
 
     interface DeleteResponse extends Base.ResponseData {}

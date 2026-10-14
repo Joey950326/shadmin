@@ -13,6 +13,7 @@ import {
   roleEditApi,
   roleListApi,
   roleOptionsApi,
+  roleStatusChangeApi,
 } from '../modules/role'
 
 export function useRoleList(params: Api.Role.ListParams) {
@@ -66,5 +67,19 @@ export function useDeleteRole() {
     mutationFn: (params: Api.Role.DeleteParams) => roleDeleteApi(params),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['role', 'list'] }),
+  })
+}
+
+export function useRoleStatusChange() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (params: Api.Role.StatusChangeParams) =>
+      roleStatusChangeApi(params),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['role', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ROLE.OPTIONS }),
+      ]),
   })
 }

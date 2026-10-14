@@ -358,6 +358,10 @@
     "deleteMultiplePrompt": "Are you sure you want to delete the {{count}} selected roles?",
     "deleteSuccess": "Roles deleted successfully",
     "deleteFailed": "Failed to delete roles. Please try again.",
-    "deleting": "Deleting..."
+    "deleting": "Deleting...",
+    "enable": "Enable",
+    "disable": "Disable",
+    "statusChangeSuccess": "Role status updated successfully",
+    "statusChangeFailed": "Failed to update role status. Please try again."
   }
 }

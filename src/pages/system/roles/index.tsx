@@ -48,6 +48,7 @@ import {
   useEditRole,
   useRoleDetail,
   useRoleList,
+  useRoleStatusChange,
 } from '@/services/api/hooks/useRole'
 import {
   getAvailableMenuTreeApi,
@@ -103,6 +104,7 @@ export default function RoleListPage() {
   const deleteRole = useDeleteRole()
   const addRole = useAddRole()
   const editRole = useEditRole()
+  const changeRoleStatus = useRoleStatusChange()
   const { data: menuTree, isFetching: menuTreeLoading } = useQuery({
     queryKey: ['menu', 'available-tree'],
     queryFn: getAvailableMenuTreeApi,
@@ -279,6 +281,27 @@ export default function RoleListPage() {
     }
   }
 
+  const handleRoleStatusChange = async (role: Api.Role.Info) => {
+    const status = role.status === 1 ? 0 : 1
+    try {
+      await changeRoleStatus.mutateAsync({ id: role.id, status })
+      toast.success(t('role.statusChangeSuccess'))
+    }
+    catch (error) {
+      const apiMessage
+        = typeof error === 'object' && error !== null && 'msg' in error
+          ? error.msg
+          : undefined
+      toast.error(
+        typeof apiMessage === 'string'
+          ? apiMessage
+          : error instanceof Error && error.message
+            ? error.message
+            : t('role.statusChangeFailed'),
+      )
+    }
+  }
+
   const handleSearch = () => {
     setQuery({
       page: 1,
@@ -413,6 +436,18 @@ export default function RoleListPage() {
                       onClick={() => openEditForm(role.id)}
                     >
                       {t('common.edit')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={changeRoleStatus.isPending}
+                      onClick={() => handleRoleStatusChange(role)}
+                    >
+                      {t(
+                        role.status === 1
+                          ? 'role.disable'
+                          : 'role.enable',
+                      )}
                     </Button>
                     <Button
                       variant="destructive"

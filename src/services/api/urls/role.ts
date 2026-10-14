@@ -7,4 +7,5 @@ export const ROLE_URLS = {
   ADD: `${API_BASE_URL}/role/add`,
   EDIT: `${API_BASE_URL}/role/edit`,
   DELETE: `${API_BASE_URL}/role/delete`,
+  CHANGE: `${API_BASE_URL}/role/change`,
 }
