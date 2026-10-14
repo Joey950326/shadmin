@@ -81,20 +81,15 @@ const emptyMenu: MenuFormValues = {
 function filterMenuTree(
   nodes: Api.Menu.Node[],
   name: string,
-  type: string,
-  status: string,
   language: string,
 ): MenuRow[] {
   const rows: MenuRow[] = []
   const matching = new Map<Api.Menu.Node, boolean>()
   const matchesTree = (node: Api.Menu.Node): boolean => {
     const localizedName = language.startsWith('zh') ? node.nameZh : node.nameEn
-    const matches
-      = localizedName
-        .toLocaleLowerCase()
-        .includes(name.trim().toLocaleLowerCase())
-        && (type === 'all' || node.type === type)
-        && (status === 'all' || String(node.status) === status)
+    const matches = localizedName
+      .toLocaleLowerCase()
+      .includes(name.trim().toLocaleLowerCase())
     const result = matches || (node.children ?? []).some(matchesTree)
     matching.set(node, result)
     return result
@@ -423,8 +418,6 @@ export default function MenuManagementPage() {
   const { t, i18n } = useTranslation()
   const queryClient = useQueryClient()
   const [name, setName] = useState('')
-  const [type, setType] = useState('all')
-  const [status, setStatus] = useState('all')
   const [formState, setFormState] = useState<{
     node?: Api.Menu.Node
     parentId: string
@@ -441,17 +434,13 @@ export default function MenuManagementPage() {
       filterMenuTree(
         nodes,
         name,
-        type,
-        status,
         i18n.resolvedLanguage ?? i18n.language,
       ),
-    [nodes, name, type, status, i18n.language, i18n.resolvedLanguage],
+    [nodes, name, i18n.language, i18n.resolvedLanguage],
   )
 
   const resetFilters = () => {
     setName('')
-    setType('all')
-    setStatus('all')
   }
 
   const updateStatus = async (node: Api.Menu.Node) => {
@@ -537,46 +526,6 @@ export default function MenuManagementPage() {
               onChange={event => setName(event.target.value)}
               placeholder={t('menu:system.searchName')}
             />
-          </div>
-          <div className="flex min-w-40 flex-col gap-2">
-            <label htmlFor="menu-type-filter" className="text-sm font-medium">
-              {t('menu:system.menuType')}
-            </label>
-            <Select value={type} onValueChange={setType}>
-              <SelectTrigger id="menu-type-filter">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="all">
-                    {t('menu:system.allTypes')}
-                  </SelectItem>
-                  <SelectItem value="directory">
-                    {t('menu:system.directory')}
-                  </SelectItem>
-                  <SelectItem value="page">{t('menu:system.page')}</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex min-w-40 flex-col gap-2">
-            <label htmlFor="menu-status-filter" className="text-sm font-medium">
-              {t('menu:system.status')}
-            </label>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger id="menu-status-filter">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="all">
-                    {t('menu:system.allStatuses')}
-                  </SelectItem>
-                  <SelectItem value="1">{t('menu:system.enabled')}</SelectItem>
-                  <SelectItem value="0">{t('menu:system.disabled')}</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
           </div>
           <Button variant="outline" onClick={resetFilters}>
             {t('menu:system.reset')}

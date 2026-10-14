@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_BASE_URL || ''
+import { API_BASE_URL } from './base'
 
 export const ROLE_URLS = {
   LIST: `${API_BASE_URL}/role/list`,

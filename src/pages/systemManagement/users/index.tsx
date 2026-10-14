@@ -86,6 +86,10 @@ function UserDetails({ user }: { user: Api.User.UserInfo }) {
             <Input readOnly value={user.username ?? ''} />
           </Field>
           <Field>
+            <FieldLabel>{t('userManagement.email')}</FieldLabel>
+            <Input readOnly value={user.email ?? ''} />
+          </Field>
+          <Field>
             <FieldLabel>{t('userManagement.phone')}</FieldLabel>
             <Input readOnly value={user.phone ?? ''} />
           </Field>
@@ -300,6 +304,7 @@ export default function UserManagementPage() {
                 />
               </TableHead>
               <TableHead>{t('userManagement.username')}</TableHead>
+              <TableHead>{t('userManagement.email')}</TableHead>
               <TableHead>{t('userManagement.phone')}</TableHead>
               <TableHead>{t('userManagement.gender')}</TableHead>
               <TableHead>{t('userManagement.status')}</TableHead>
@@ -321,6 +326,7 @@ export default function UserManagementPage() {
                   />
                 </TableCell>
                 <TableCell>{user.username}</TableCell>
+                <TableCell>{user.email ?? '—'}</TableCell>
                 <TableCell>{user.phone ?? '—'}</TableCell>
                 <TableCell>
                   {user.gender === 1
@@ -366,7 +372,7 @@ export default function UserManagementPage() {
             ))}
             {!rows.length && (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   {isFetching ? t('loading') : t('noData')}
                 </TableCell>
               </TableRow>

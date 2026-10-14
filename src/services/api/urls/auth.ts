@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_BASE_URL || ''
+import { API_BASE_URL } from './base'
 
 export const AUTH_URLS = {
   LOGIN: `${API_BASE_URL}/login`, // 登录接口

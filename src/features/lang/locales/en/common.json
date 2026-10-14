@@ -239,6 +239,7 @@
     "confirmDelete": "Are you sure you want to delete these {{count}} users? This cannot be undone.",
     "username": "Username",
     "usernamePlaceholder": "Enter username",
+    "email": "Email",
     "phone": "Phone",
     "phonePlaceholder": "Enter phone number",
     "gender": "Gender",

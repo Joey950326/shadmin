@@ -239,6 +239,7 @@
     "confirmDelete": "确定删除这 {{count}} 个用户吗？此操作不可撤销。",
     "username": "用户名",
     "usernamePlaceholder": "请输入用户名",
+    "email": "邮箱",
     "phone": "手机号",
     "phonePlaceholder": "请输入手机号",
     "gender": "性别",
