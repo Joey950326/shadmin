@@ -1,7 +1,20 @@
+import type { MouseEvent } from 'react'
 import type { Api } from '@/services/api/types/api'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -20,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -28,7 +42,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useUserList } from '@/services/api/hooks/useUser'
+import {
+  useDeleteUser,
+  useStatusChange,
+  useUserList,
+} from '@/services/api/hooks/useUser'
 import UserFormDialog from './UserFormDialog'
 
 interface UserFilters {
@@ -108,6 +126,8 @@ export default function UserManagementPage() {
   const { t } = useTranslation()
   const [filters, setFilters] = useState<UserFilters>(emptyFilters)
   const [page, setPage] = useState(1)
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([])
+  const [deleteUserIds, setDeleteUserIds] = useState<string[]>([])
   const params: Api.User.ListParams = {
     page,
     pageSize: 10,
@@ -117,9 +137,66 @@ export default function UserManagementPage() {
     ...(filters.status && { status: Number(filters.status) }),
   }
   const { data, isFetching } = useUserList(params)
+  const deleteUser = useDeleteUser()
+  const statusChange = useStatusChange()
   const rows = data?.data?.list ?? []
   const total = data?.data?.total ?? 0
   const pageCount = Math.max(1, Math.ceil(total / params.pageSize))
+
+  const allPageUsersSelected
+    = rows.length > 0 && rows.every(user => selectedUserIds.includes(user.id))
+
+  const togglePageSelection = (checked: boolean) => {
+    const pageIds = rows.map(user => user.id)
+    setSelectedUserIds(current =>
+      checked
+        ? [...new Set([...current, ...pageIds])]
+        : current.filter(id => !pageIds.includes(id)),
+    )
+  }
+
+  const toggleUserSelection = (id: string, checked: boolean) => {
+    setSelectedUserIds(current =>
+      checked
+        ? [...new Set([...current, id])]
+        : current.filter(userId => userId !== id),
+    )
+  }
+
+  const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    try {
+      await deleteUser.mutateAsync({ id: deleteUserIds })
+      toast.success(t('userManagement.deleteSuccess'))
+      setSelectedUserIds(current =>
+        current.filter(id => !deleteUserIds.includes(id)),
+      )
+      setPage(current =>
+        Math.min(
+          current,
+          Math.max(
+            1,
+            Math.ceil((total - deleteUserIds.length) / params.pageSize),
+          ),
+        ),
+      )
+      setDeleteUserIds([])
+    }
+    catch {
+      toast.error(t('userManagement.deleteFailed'))
+    }
+  }
+
+  const handleStatusChange = (user: Api.User.UserInfo, checked: boolean) => {
+    const status = checked ? 1 : 0
+    statusChange.mutate(
+      { id: user.id, status },
+      {
+        onSuccess: () => toast.success(t('userManagement.statusChangeSuccess')),
+        onError: () => toast.error(t('userManagement.statusChangeFailed')),
+      },
+    )
+  }
 
   const updateFilter = (name: keyof UserFilters, value: string) => {
     setPage(1)
@@ -198,10 +275,30 @@ export default function UserManagementPage() {
           </Select>
         </Field>
       </FieldGroup>
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm text-muted-foreground">
+          {t('userManagement.selectedCount', { count: selectedUserIds.length })}
+        </span>
+        <Button
+          variant="destructive"
+          disabled={!selectedUserIds.length || deleteUser.isPending}
+          onClick={() => setDeleteUserIds(selectedUserIds)}
+        >
+          {t('userManagement.deleteSelected')}
+        </Button>
+      </div>
       <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>
+                <Checkbox
+                  aria-label={t('userManagement.selectPage')}
+                  checked={allPageUsersSelected}
+                  onCheckedChange={checked =>
+                    togglePageSelection(checked === true)}
+                />
+              </TableHead>
               <TableHead>{t('userManagement.username')}</TableHead>
               <TableHead>{t('userManagement.phone')}</TableHead>
               <TableHead>{t('userManagement.gender')}</TableHead>
@@ -213,6 +310,16 @@ export default function UserManagementPage() {
           <TableBody>
             {rows.map(user => (
               <TableRow key={user.id}>
+                <TableCell>
+                  <Checkbox
+                    aria-label={t('userManagement.selectUser', {
+                      name: user.username,
+                    })}
+                    checked={selectedUserIds.includes(user.id)}
+                    onCheckedChange={checked =>
+                      toggleUserSelection(user.id, checked === true)}
+                  />
+                </TableCell>
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.phone ?? '—'}</TableCell>
                 <TableCell>
@@ -223,7 +330,18 @@ export default function UserManagementPage() {
                       : '—'}
                 </TableCell>
                 <TableCell>
-                  {user.status === 1 ? t('enabled') : t('disabled')}
+                  <Switch
+                    aria-label={t('userManagement.toggleStatus', {
+                      name: user.username,
+                    })}
+                    checked={user.status === 1}
+                    disabled={statusChange.isPending}
+                    onCheckedChange={checked =>
+                      handleStatusChange(user, checked)}
+                  />
+                  <span className="sr-only">
+                    {user.status === 1 ? t('enabled') : t('disabled')}
+                  </span>
                 </TableCell>
                 <TableCell>
                   {typeof user.role === 'string'
@@ -234,13 +352,21 @@ export default function UserManagementPage() {
                   <div className="flex items-center gap-2">
                     <UserDetails user={user} />
                     <UserFormDialog key={user.id} user={user} />
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      disabled={deleteUser.isPending}
+                      onClick={() => setDeleteUserIds([user.id])}
+                    >
+                      {t('delete')}
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
             ))}
             {!rows.length && (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={7} className="h-24 text-center">
                   {isFetching ? t('loading') : t('noData')}
                 </TableCell>
               </TableRow>
@@ -248,6 +374,36 @@ export default function UserManagementPage() {
           </TableBody>
         </Table>
       </div>
+      <AlertDialog
+        open={deleteUserIds.length > 0}
+        onOpenChange={open =>
+          !open && !deleteUser.isPending && setDeleteUserIds([])}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('userManagement.confirmDeleteTitle')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('userManagement.confirmDelete', {
+                count: deleteUserIds.length,
+              })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteUser.isPending}>
+              {t('cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={deleteUser.isPending}
+              onClick={handleDelete}
+            >
+              {t('delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <div className="flex items-center justify-end gap-3">
         <span className="text-sm text-muted-foreground">
           {t('userManagement.total', { count: total })}

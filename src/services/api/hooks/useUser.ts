@@ -14,8 +14,10 @@ export function useUserList(params: Api.User.ListParams) {
 
 /** 删除用户 */
 export function useDeleteUser() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: Api.User.DeleteParams): Promise<Api.User.DeleteResponse> => userDeleteApi(params),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user', 'list'] }),
   })
 }
 
@@ -46,8 +48,10 @@ export function useAvatarUpload() {
 
 /** 修改用户状态 */
 export function useStatusChange() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: Api.User.StatusChangeParams): Promise<Api.User.StatusChangeResponse> => userStatusChange(params),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user', 'list'] }),
   })
 }
 

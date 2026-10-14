@@ -149,7 +149,7 @@ declare namespace Api {
 
     interface StatusChangeParams {
       id: string
-      status: number
+      status: 0 | 1
     }
 
     interface ImportUserParams {
