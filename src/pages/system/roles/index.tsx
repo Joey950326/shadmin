@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react'
 import type { Api } from '@/services/api/types/api'
-import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import {
@@ -19,6 +20,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -41,15 +43,43 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import {
+  useAddRole,
   useDeleteRole,
+  useEditRole,
   useRoleDetail,
   useRoleList,
 } from '@/services/api/hooks/useRole'
+import {
+  getAvailableMenuTreeApi,
+  getMenuTreeApi,
+} from '@/services/api/modules/menu'
 
 const PAGE_SIZE = 10
 
+type RoleForm = Pick<
+  Api.Role.MutationParams,
+  'roleName' | 'roleCode' | 'description' | 'status'
+>
+
+const EMPTY_ROLE_FORM: RoleForm = {
+  roleName: '',
+  roleCode: '',
+  description: '',
+  status: 1,
+}
+
+function pageIdsBelow(node: Api.Menu.Node): string[] {
+  if (node.type === 'page')
+    return [node.id]
+  return node.children.flatMap(pageIdsBelow)
+}
+
+function collectPageIds(nodes: Api.Menu.Node[]): string[] {
+  return nodes.flatMap(pageIdsBelow)
+}
+
 export default function RoleListPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [filters, setFilters] = useState({
     roleName: '',
     roleCode: '',
@@ -60,13 +90,34 @@ export default function RoleListPage() {
     pageSize: PAGE_SIZE,
   })
   const [selectedRoleId, setSelectedRoleId] = useState<string>()
+  const [editingRoleId, setEditingRoleId] = useState<string>()
+  const [creatingRole, setCreatingRole] = useState(false)
+  const [form, setForm] = useState<RoleForm>(EMPTY_ROLE_FORM)
+  const [selectedMenuIds, setSelectedMenuIds] = useState<string[]>([])
+  const [retainedHiddenMenuIds, setRetainedHiddenMenuIds] = useState<string[]>(
+    [],
+  )
   const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([])
   const [deleteRoleIds, setDeleteRoleIds] = useState<string[]>([])
   const { data, isFetching } = useRoleList(query)
   const deleteRole = useDeleteRole()
+  const addRole = useAddRole()
+  const editRole = useEditRole()
+  const { data: menuTree, isFetching: menuTreeLoading } = useQuery({
+    queryKey: ['menu', 'available-tree'],
+    queryFn: getAvailableMenuTreeApi,
+    enabled: Boolean(editingRoleId !== undefined || creatingRole),
+  })
+  const { data: allMenuTree, isFetching: allMenuTreeLoading } = useQuery({
+    queryKey: ['menu', 'tree'],
+    queryFn: getMenuTreeApi,
+    enabled: Boolean(editingRoleId),
+  })
+  const availableMenuNodes = menuTree?.data ?? []
+  const detailRoleId = editingRoleId ?? selectedRoleId
   const { data: detail, isFetching: detailLoading } = useRoleDetail(
-    { id: selectedRoleId ?? '' },
-    Boolean(selectedRoleId),
+    { id: detailRoleId ?? '' },
+    Boolean(detailRoleId),
   )
   const roles = data?.data?.list ?? []
   const total = data?.data?.total ?? 0
@@ -74,6 +125,127 @@ export default function RoleListPage() {
   const allPageRolesSelected
     = roles.length > 0
       && roles.every(role => selectedRoleIds.includes(role.id))
+
+  useEffect(() => {
+    if (
+      !editingRoleId
+      || !detail?.data
+      || detail.data.id !== editingRoleId
+      || !menuTree?.data
+      || !allMenuTree?.data
+    ) {
+      return
+    }
+    const authorizedIds = detail.data.menuIds
+    setForm({
+      roleName: detail.data.roleName,
+      roleCode: detail.data.roleCode,
+      description: detail.data.description ?? '',
+      status: detail.data.status,
+    })
+    const allPageIds = new Set(collectPageIds(allMenuTree.data))
+    const visibleIds = new Set(collectPageIds(menuTree.data))
+    const authorizedPageIds = authorizedIds.filter(id => allPageIds.has(id))
+    setSelectedMenuIds(authorizedPageIds.filter(id => visibleIds.has(id)))
+    setRetainedHiddenMenuIds(
+      authorizedPageIds.filter(id => !visibleIds.has(id)),
+    )
+  }, [editingRoleId, detail?.data, menuTree, allMenuTree])
+
+  const openCreateForm = () => {
+    setForm(EMPTY_ROLE_FORM)
+    setEditingRoleId(undefined)
+    setSelectedMenuIds([])
+    setRetainedHiddenMenuIds([])
+    setCreatingRole(true)
+  }
+
+  const openEditForm = (id: string) => {
+    setEditingRoleId(id)
+    setCreatingRole(false)
+    setForm(EMPTY_ROLE_FORM)
+    setSelectedMenuIds([])
+    setRetainedHiddenMenuIds([])
+  }
+
+  const closeEditor = (open: boolean) => {
+    if (open || addRole.isPending || editRole.isPending)
+      return
+    setCreatingRole(false)
+    setEditingRoleId(undefined)
+  }
+
+  const handleSaveRole = async () => {
+    const params = {
+      ...form,
+      roleName: form.roleName.trim(),
+      roleCode: form.roleCode.trim(),
+      description: form.description?.trim() || undefined,
+      menuIds: [...new Set([...retainedHiddenMenuIds, ...selectedMenuIds])],
+    }
+    if (!params.roleName || !params.roleCode)
+      return
+    try {
+      if (editingRoleId)
+        await editRole.mutateAsync({ ...params, id: editingRoleId })
+      else await addRole.mutateAsync(params)
+      toast.success(t('role.saveSuccess'))
+      setCreatingRole(false)
+      setEditingRoleId(undefined)
+    }
+    catch (error) {
+      const apiMessage
+        = typeof error === 'object' && error !== null && 'msg' in error
+          ? error.msg
+          : undefined
+      toast.error(
+        typeof apiMessage === 'string'
+          ? apiMessage
+          : error instanceof Error && error.message
+            ? error.message
+            : t('role.saveFailed'),
+      )
+    }
+  }
+
+  const togglePageIds = (ids: string[], checked: boolean) => {
+    setSelectedMenuIds(current =>
+      checked
+        ? [...new Set([...current, ...ids])]
+        : current.filter(id => !ids.includes(id)),
+    )
+  }
+
+  const renderMenuNode = (node: Api.Menu.Node, depth = 0) => {
+    const ids = pageIdsBelow(node)
+    const selectedCount = ids.filter(id =>
+      selectedMenuIds.includes(id),
+    ).length
+    const checked = ids.length > 0 && selectedCount === ids.length
+    return (
+      <li key={node.id}>
+        <div
+          className="flex items-center gap-2 py-1"
+          style={{ paddingInlineStart: depth * 20 }}
+        >
+          <Checkbox
+            aria-label={`${node.nameZh} ${node.nameEn}`}
+            checked={checked ? true : selectedCount ? 'indeterminate' : false}
+            disabled={!ids.length}
+            onCheckedChange={value => togglePageIds(ids, value === true)}
+          />
+          <span>
+            {i18n.language.startsWith('zh') ? node.nameZh : node.nameEn}
+          </span>
+        </div>
+        {node.children.length > 0 && (
+          <ul>
+            {node.children.map(child => renderMenuNode(child, depth + 1))}
+          </ul>
+        )}
+      </li>
+    )
+  }
 
   const togglePageSelection = (checked: boolean) => {
     const pageIds = roles.map(role => role.id)
@@ -180,6 +352,7 @@ export default function RoleListPage() {
         <span className="text-sm text-muted-foreground">
           {t('role.selectedCount', { count: selectedRoleIds.length })}
         </span>
+        <Button onClick={openCreateForm}>{t('role.create')}</Button>
         <Button
           variant="destructive"
           disabled={!selectedRoleIds.length || deleteRole.isPending}
@@ -233,6 +406,13 @@ export default function RoleListPage() {
                       onClick={() => setSelectedRoleId(role.id)}
                     >
                       {t('common.view')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openEditForm(role.id)}
+                    >
+                      {t('common.edit')}
                     </Button>
                     <Button
                       variant="destructive"
@@ -323,6 +503,131 @@ export default function RoleListPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog
+        open={creatingRole || Boolean(editingRoleId)}
+        onOpenChange={closeEditor}
+      >
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {t(creatingRole ? 'role.create' : 'role.edit')}
+            </DialogTitle>
+            <DialogDescription>{t('role.formDescription')}</DialogDescription>
+          </DialogHeader>
+          {editingRoleId
+            && (detailLoading || menuTreeLoading || allMenuTreeLoading)
+            ? (
+                <p>{t('common.loadingData')}</p>
+              )
+            : (
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor="role-form-name">
+                      {t('role.name')}
+                    </FieldLabel>
+                    <Input
+                      id="role-form-name"
+                      required
+                      value={form.roleName}
+                      onChange={event =>
+                        setForm(value => ({
+                          ...value,
+                          roleName: event.target.value,
+                        }))}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="role-form-code">
+                      {t('role.code')}
+                    </FieldLabel>
+                    <Input
+                      id="role-form-code"
+                      required
+                      value={form.roleCode}
+                      onChange={event =>
+                        setForm(value => ({
+                          ...value,
+                          roleCode: event.target.value,
+                        }))}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="role-form-description">
+                      {t('role.description')}
+                    </FieldLabel>
+                    <Input
+                      id="role-form-description"
+                      value={form.description ?? ''}
+                      onChange={event =>
+                        setForm(value => ({
+                          ...value,
+                          description: event.target.value,
+                        }))}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="role-form-status">
+                      {t('common.status')}
+                    </FieldLabel>
+                    <Select
+                      value={String(form.status)}
+                      onValueChange={value =>
+                        setForm(current => ({
+                          ...current,
+                          status: Number(value) as 0 | 1,
+                        }))}
+                    >
+                      <SelectTrigger id="role-form-status">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="1">{t('common.enabled')}</SelectItem>
+                          <SelectItem value="0">{t('common.disabled')}</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel>{t('role.authorization')}</FieldLabel>
+                    {menuTreeLoading
+                      ? (
+                          <p>{t('common.loadingData')}</p>
+                        )
+                      : (
+                          <ul>
+                            {availableMenuNodes.map(node => renderMenuNode(node))}
+                          </ul>
+                        )}
+                  </Field>
+                </FieldGroup>
+              )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => closeEditor(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              disabled={
+                !form.roleName.trim()
+                || !form.roleCode.trim()
+                || addRole.isPending
+                || editRole.isPending
+                || menuTreeLoading
+                || Boolean(
+                  editingRoleId
+                  && (detailLoading || menuTreeLoading || allMenuTreeLoading),
+                )
+              }
+              onClick={handleSaveRole}
+            >
+              {addRole.isPending || editRole.isPending
+                ? t('role.saving')
+                : t('common.save')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog
         open={Boolean(selectedRoleId)}

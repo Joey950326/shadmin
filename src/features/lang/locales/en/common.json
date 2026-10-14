@@ -331,6 +331,13 @@
   },
   "role": {
     "title": "Roles",
+    "create": "Create role",
+    "edit": "Edit role",
+    "formDescription": "Enter role details and select the menu pages to authorize.",
+    "authorization": "Menu permissions",
+    "saveSuccess": "Role saved successfully",
+    "saveFailed": "Failed to save role. Please try again.",
+    "saving": "Saving...",
     "filters": "Role filters",
     "name": "Role name",
     "code": "Role code",

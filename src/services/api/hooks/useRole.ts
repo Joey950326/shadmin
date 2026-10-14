@@ -7,8 +7,10 @@ import {
 } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../keys'
 import {
+  roleAddApi,
   roleDeleteApi,
   roleDetailApi,
+  roleEditApi,
   roleListApi,
   roleOptionsApi,
 } from '../modules/role'
@@ -34,6 +36,26 @@ export function useRoleOptions() {
   return useQuery<Api.Role.OptionsResponse>({
     queryKey: QUERY_KEYS.ROLE.OPTIONS,
     queryFn: () => roleOptionsApi(),
+  })
+}
+
+export function useAddRole() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (params: Api.Role.AddParams) => roleAddApi(params),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['role', 'list'] }),
+  })
+}
+
+export function useEditRole() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (params: Api.Role.EditParams) => roleEditApi(params),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['role', 'list'] }),
   })
 }
 

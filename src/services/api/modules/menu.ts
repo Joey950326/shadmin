@@ -6,6 +6,10 @@ export function getMenuTreeApi() {
   return request.post<Api.Menu.TreeResponse>(MENU_URLS.TREE)
 }
 
+export function getAvailableMenuTreeApi() {
+  return request.post<Api.Menu.TreeResponse>(MENU_URLS.AVAILABLE_TREE)
+}
+
 export function addMenuApi(data: Api.Menu.AddParams) {
   return request.post<Api.Menu.MutationResponse>(MENU_URLS.ADD, data)
 }

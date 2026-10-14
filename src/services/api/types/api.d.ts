@@ -211,6 +211,22 @@ declare namespace Api {
       id: string
     }
 
+    interface MutationParams {
+      roleName: string
+      roleCode: string
+      description?: string
+      status: 0 | 1
+      menuIds: string[]
+    }
+
+    interface AddParams extends MutationParams {}
+
+    interface EditParams extends MutationParams {
+      id: string
+    }
+
+    interface MutationResponse extends Base.ResponseData {}
+
     interface DeleteParams {
       id: string[]
     }

@@ -331,6 +331,13 @@
   },
   "role": {
     "title": "角色管理",
+    "create": "新建角色",
+    "edit": "编辑角色",
+    "formDescription": "填写角色基本信息并选择可授权的菜单页面。",
+    "authorization": "菜单权限",
+    "saveSuccess": "角色保存成功",
+    "saveFailed": "角色保存失败，请重试",
+    "saving": "保存中...",
     "filters": "角色筛选",
     "name": "角色名称",
     "code": "角色编码",
