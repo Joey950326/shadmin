@@ -208,6 +208,22 @@
       "addressMax": "地址字数不超过 30 个字符"
     }
   },
+  "userManagement": {
+    "title": "用户管理",
+    "viewUser": "查看用户",
+    "viewDescription": "查看用户基本信息与角色",
+    "username": "用户名",
+    "usernamePlaceholder": "请输入用户名",
+    "phone": "手机号",
+    "phonePlaceholder": "请输入手机号",
+    "gender": "性别",
+    "allGenders": "全部性别",
+    "status": "状态",
+    "allStatuses": "全部状态",
+    "role": "角色",
+    "actions": "操作",
+    "total": "共 {{count}} 条"
+  },
   "home": {
     "welcome": "欢迎来到 Shadmin"
   },

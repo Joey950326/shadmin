@@ -171,6 +171,14 @@ const dynamicRoutes = [
         ],
       },
       {
+        path: 'systemManagement/users',
+        lazy: async () => {
+          const Component = (await import('@/pages/systemManagement/users/index.tsx')).default
+          return { Component }
+        },
+        handle: { title: 'menu:userManage' },
+      },
+      {
         path: 'commonComponent/svgIcons',
         lazy: async () => {
           const Component = (await import('@/pages/commonComponent/svgIcons/index.tsx')).default

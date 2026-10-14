@@ -65,6 +65,10 @@ declare namespace Api {
       page: number
       pageSize: number
       type?: number
+      username?: string
+      phone?: string
+      gender?: number
+      status?: number
     }
 
     interface UserInfo {
@@ -82,6 +86,8 @@ declare namespace Api {
         }
       }
       username: string
+      phone?: string
+      role?: string | { name?: string }
       photo?: Array<{
         name: string
         percentage: number

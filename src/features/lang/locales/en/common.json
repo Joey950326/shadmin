@@ -208,6 +208,22 @@
       "addressMax": "Address cannot exceed 30 characters"
     }
   },
+  "userManagement": {
+    "title": "User Management",
+    "viewUser": "View User",
+    "viewDescription": "View user details and assigned role",
+    "username": "Username",
+    "usernamePlaceholder": "Enter username",
+    "phone": "Phone",
+    "phonePlaceholder": "Enter phone number",
+    "gender": "Gender",
+    "allGenders": "All genders",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "role": "Role",
+    "actions": "Actions",
+    "total": "{{count}} total"
+  },
   "home": {
     "welcome": "Welcome to Shadmin"
   },
