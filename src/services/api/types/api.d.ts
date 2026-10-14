@@ -53,6 +53,25 @@ declare namespace Api {
 
     interface TreeResponse extends Base.ResponseData<Node[]> {}
 
+    interface MutationParams {
+      nameZh: string
+      nameEn: string
+      parentId?: string
+      type: 'directory' | 'page'
+      path?: string
+      icon?: string
+      sort: number
+      status: 0 | 1
+    }
+
+    interface AddParams extends MutationParams {}
+
+    interface EditParams extends MutationParams {
+      id: string
+    }
+
+    interface MutationResponse extends Base.ResponseData {}
+
     interface UserMenusResponse extends Base.ResponseData<{
       menuIds: string[]
     }> {}
