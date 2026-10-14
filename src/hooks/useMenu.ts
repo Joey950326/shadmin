@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { getMenuTreeApi, getUserMenusApi } from '@/services/api/modules/menu'
-import { buildAuthorizedMenu } from './menuNavigation'
+import { buildAuthorizedMenu, isAuthorizedPagePath } from './menuNavigation'
 
 function findActiveMenu(menuData: MenuItem[], pathname: string): MenuItem | null {
   for (const menu of menuData) {
@@ -24,7 +24,7 @@ function findActiveMenu(menuData: MenuItem[], pathname: string): MenuItem | null
 export default function useMenu() {
   const { i18n } = useTranslation()
   const location = useLocation()
-  const { data } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ['authorized-navigation'],
     queryFn: async () => {
       const [treeResponse, userMenusResponse] = await Promise.all([
@@ -50,5 +50,19 @@ export default function useMenu() {
     return findActiveMenu(menuData, location.pathname)
   }, [location.pathname, menuData])
 
-  return { menuData, currentMenu }
+  const currentRouteAuthorized = useMemo(() => {
+    if (!data) {
+      return undefined
+    }
+
+    return isAuthorizedPagePath(data.tree, data.menuIds, location.pathname)
+  }, [data, location.pathname])
+
+  return {
+    menuData,
+    currentMenu,
+    currentRouteAuthorized,
+    isLoading: !data && !isError,
+    hasError: isError,
+  }
 }

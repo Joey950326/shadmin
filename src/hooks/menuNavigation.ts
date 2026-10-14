@@ -1,6 +1,30 @@
 import type { MenuItem } from '@/layout/components/MenuItem'
 import type { Api } from '@/services/api/types/api'
 
+export function isAuthorizedPagePath(
+  tree: Api.Menu.Node[],
+  authorizedPageIds: string[],
+  pathname: string,
+): boolean | undefined {
+  function findPage(nodes: Api.Menu.Node[], ancestorsActive: boolean): boolean | undefined {
+    for (const node of nodes) {
+      const isActive = ancestorsActive && node.status === 1
+      if (node.type === 'page' && node.path === pathname) {
+        return isActive && authorizedPageIds.includes(node.id)
+      }
+
+      const result = findPage(node.children, isActive)
+      if (result !== undefined) {
+        return result
+      }
+    }
+
+    return undefined
+  }
+
+  return findPage(tree, true)
+}
+
 export function buildAuthorizedMenu(
   tree: Api.Menu.Node[],
   authorizedPageIds: string[],

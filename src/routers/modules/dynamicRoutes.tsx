@@ -2,6 +2,7 @@ import type { AppRouteObject } from '@/routers/types'
 import { Navigate } from 'react-router'
 // route titles use translation keys where needed; translate at render time
 import AuthGate from '@/features/router/AuthGate'
+import AuthorizedRouteGate from '@/features/router/AuthorizedRouteGate'
 import Expection404 from '@/pages/404/index.tsx'
 import DevelopingPage from '@/pages/developing/index.tsx'
 
@@ -10,7 +11,7 @@ const dynamicRoutes = [
     path: '/',
     lazy: async () => {
       const Mod = (await import('@/layout/index')).default
-      return { Component: () => <AuthGate><Mod /></AuthGate> }
+      return { Component: () => <AuthGate><AuthorizedRouteGate><Mod /></AuthorizedRouteGate></AuthGate> }
     },
     children: [
       {
