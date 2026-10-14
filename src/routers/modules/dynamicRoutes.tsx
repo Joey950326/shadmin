@@ -1,4 +1,4 @@
-import type { AppRouteObject } from '../types'
+import type { AppRouteObject } from '@/routers/types'
 import { Navigate } from 'react-router'
 // route titles use translation keys where needed; translate at render time
 import AuthGate from '@/features/router/AuthGate'
@@ -191,22 +191,27 @@ const dynamicRoutes = [
       {
         path: 'menuCollapse/subMenu1',
         Component: DevelopingPage,
+        handle: { title: 'menu:subMenu1' },
       },
       {
         path: 'menuCollapse/subMenu2',
         Component: DevelopingPage,
+        handle: { title: 'menu:subMenu2' },
       },
       {
         path: 'menuCollapse/subMenu2/subMenu1',
         Component: DevelopingPage,
+        handle: { title: 'menu:subMenu2-1' },
       },
       {
         path: 'menuCollapse/subMenu2/subMenu2',
         Component: DevelopingPage,
+        handle: { title: 'menu:subMenu2-2' },
       },
       {
         path: 'menuCollapse/subMenu3',
         Component: DevelopingPage,
+        handle: { title: 'menu:subMenu3' },
       },
       {
         path: '*',
