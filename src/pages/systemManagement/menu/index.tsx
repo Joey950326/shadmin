@@ -1,8 +1,18 @@
 import type { Api } from '@/services/api/types/api'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -36,6 +46,7 @@ import {
 import dynamicRoutes from '@/routers/modules/dynamicRoutes'
 import {
   addMenuApi,
+  deleteMenuApi,
   editMenuApi,
   getMenuTreeApi,
 } from '@/services/api/modules/menu'
@@ -410,6 +421,7 @@ function MenuFormDialog({
 
 export default function MenuManagementPage() {
   const { t, i18n } = useTranslation()
+  const queryClient = useQueryClient()
   const [name, setName] = useState('')
   const [type, setType] = useState('all')
   const [status, setStatus] = useState('all')
@@ -417,6 +429,8 @@ export default function MenuManagementPage() {
     node?: Api.Menu.Node
     parentId: string
   } | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Api.Menu.Node | null>(null)
+  const [pendingActionId, setPendingActionId] = useState<string | null>(null)
   const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ['system-menu-tree'],
     queryFn: getMenuTreeApi,
@@ -438,6 +452,57 @@ export default function MenuManagementPage() {
     setName('')
     setType('all')
     setStatus('all')
+  }
+
+  const updateStatus = async (node: Api.Menu.Node) => {
+    setPendingActionId(node.id)
+    try {
+      await editMenuApi({
+        id: node.id,
+        nameZh: node.nameZh,
+        nameEn: node.nameEn,
+        ...(node.parentId !== undefined && { parentId: node.parentId }),
+        type: node.type,
+        ...(node.path !== undefined && { path: node.path }),
+        ...(node.icon !== undefined && { icon: node.icon }),
+        sort: node.sort,
+        status: node.status === 1 ? 0 : 1,
+      })
+      await Promise.all([
+        refetch(),
+        queryClient.invalidateQueries({ queryKey: ['authorized-navigation'] }),
+      ])
+      toast.success(t('menu:system.statusUpdated'))
+    }
+    catch {
+      toast.error(t('menu:system.statusUpdateFailed'))
+    }
+    finally {
+      setPendingActionId(null)
+    }
+  }
+
+  const deleteMenu = async () => {
+    if (!deleteTarget) {
+      return
+    }
+    const target = deleteTarget
+    setPendingActionId(target.id)
+    try {
+      await deleteMenuApi({ id: target.id })
+      await Promise.all([
+        refetch(),
+        queryClient.invalidateQueries({ queryKey: ['authorized-navigation'] }),
+      ])
+      toast.success(t('menu:system.deleteSuccess'))
+      setDeleteTarget(null)
+    }
+    catch {
+      toast.error(t('menu:system.deleteFailed'))
+    }
+    finally {
+      setPendingActionId(null)
+    }
   }
 
   return (
@@ -595,6 +660,25 @@ export default function MenuManagementPage() {
                                   {t('menu:system.addChild')}
                                 </Button>
                               )}
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={pendingActionId !== null}
+                                onClick={() => updateStatus(node)}
+                              >
+                                {pendingActionId === node.id
+                                  ? <Spinner data-icon="inline-start" />
+                                  : null}
+                                {t(node.status === 1 ? 'menu:system.disable' : 'menu:system.enable')}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                disabled={pendingActionId !== null}
+                                onClick={() => setDeleteTarget(node)}
+                              >
+                                {t('menu:system.delete')}
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -604,6 +688,41 @@ export default function MenuManagementPage() {
           </Table>
         </div>
       </CardContent>
+      <AlertDialog
+        open={deleteTarget !== null}
+        onOpenChange={open => !open && pendingActionId === null && setDeleteTarget(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('menu:system.confirmDeleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('menu:system.confirmDeleteDescription', {
+                name: deleteTarget
+                  ? (i18n.resolvedLanguage?.startsWith('zh') || i18n.language.startsWith('zh')
+                      ? deleteTarget.nameZh
+                      : deleteTarget.nameEn)
+                  : '',
+              })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={pendingActionId !== null}>
+              {t('menu:system.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={pendingActionId !== null}
+              onClick={(event) => {
+                event.preventDefault()
+                void deleteMenu()
+              }}
+            >
+              {pendingActionId !== null ? <Spinner data-icon="inline-start" /> : null}
+              {t('menu:system.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {formState && (
         <MenuFormDialog
           key={formState.node?.id ?? `new-${formState.parentId}`}

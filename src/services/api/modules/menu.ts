@@ -14,6 +14,10 @@ export function editMenuApi(data: Api.Menu.EditParams) {
   return request.post<Api.Menu.MutationResponse>(MENU_URLS.EDIT, data)
 }
 
+export function deleteMenuApi(data: Api.Menu.DeleteParams) {
+  return request.post<Api.Menu.MutationResponse>(MENU_URLS.DELETE, data)
+}
+
 export function getUserMenusApi() {
   return request.post<Api.Menu.UserMenusResponse>(MENU_URLS.USER_MENUS)
 }

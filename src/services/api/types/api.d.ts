@@ -70,6 +70,10 @@ declare namespace Api {
       id: string
     }
 
+    interface DeleteParams {
+      id: string
+    }
+
     interface MutationResponse extends Base.ResponseData {}
 
     interface UserMenusResponse extends Base.ResponseData<{
