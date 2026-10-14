@@ -61,7 +61,8 @@
     "sort": "Sort",
     "reset": "Reset",
     "loadFailed": "Failed to load menus. Please try again.",
-    "noMenus": "No menus found."
+    "noMenus": "No menus found.",
+    "roles": "Roles"
   },
   "chart": {
     "title": "Common Charts",
@@ -71,8 +72,5 @@
     "pieChart": "pie chart",
     "radarChart": "radar chart",
     "radialChart": "radial chart"
-  },
-  "system": {
-    "roles": "Roles"
   }
 }

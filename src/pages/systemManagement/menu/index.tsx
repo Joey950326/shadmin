@@ -49,7 +49,7 @@ export default function MenuManagementPage() {
     queryKey: ['system-menu-tree'],
     queryFn: getMenuTreeApi,
   })
-  const nodes = useMemo(() => data?.data?.data ?? [], [data])
+  const nodes = useMemo(() => data?.data ?? [], [data])
   const rows = useMemo(
     () => filterMenuTree(nodes, name, type, status, i18n.resolvedLanguage ?? i18n.language),
     [nodes, name, type, status, i18n.language, i18n.resolvedLanguage],

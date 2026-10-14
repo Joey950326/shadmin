@@ -171,7 +171,7 @@ const dynamicRoutes = [
         ],
       },
       {
-        path: 'systemManagement/users',
+        path: 'systemManage/accountManage',
         lazy: async () => {
           const Component = (await import('@/pages/systemManagement/users/index.tsx')).default
           return { Component }
@@ -206,7 +206,7 @@ const dynamicRoutes = [
         ],
       },
       {
-        path: 'system/roles',
+        path: 'systemManage/roleManage',
         lazy: async () => {
           const Component = (await import('@/pages/system/roles/index.tsx')).default
           return { Component }
@@ -239,7 +239,7 @@ const dynamicRoutes = [
         handle: { title: 'menu:subMenu3' },
       },
       {
-        path: 'system/menu',
+        path: 'systemManage/menuManage',
         lazy: async () => {
           const Component = (await import('@/pages/systemManagement/menu/index.tsx')).default
           return { Component }

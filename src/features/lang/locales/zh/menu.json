@@ -61,7 +61,8 @@
     "sort": "排序",
     "reset": "重置",
     "loadFailed": "菜单加载失败，请重试。",
-    "noMenus": "暂无菜单。"
+    "noMenus": "暂无菜单。",
+    "roles": "角色管理"
   },
   "chart": {
     "title": "常用图表",
@@ -71,8 +72,5 @@
     "pieChart": "饼状图",
     "radarChart": "雷达图",
     "radialChart": "径向图"
-  },
-  "system": {
-    "roles": "角色管理"
   }
 }
