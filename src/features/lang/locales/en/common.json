@@ -25,6 +25,11 @@
   "search": "Search",
   "select": "Please select",
   "noData": "No data available",
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you are looking for doesn't exist.",
+    "backHome": "Back to Home"
+  },
   "loadingData": "Loading",
   "status": "Status",
   "enabled": "Enabled",
