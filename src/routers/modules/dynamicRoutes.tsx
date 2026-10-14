@@ -223,6 +223,14 @@ const dynamicRoutes = [
         handle: { title: 'menu:subMenu3' },
       },
       {
+        path: 'system/menu',
+        lazy: async () => {
+          const Component = (await import('@/pages/systemManagement/menu/index.tsx')).default
+          return { Component }
+        },
+        handle: { title: 'menu:system.menuTree' },
+      },
+      {
         path: '*',
         Component: Expection404,
         handle: { title: '页面未找到' },
