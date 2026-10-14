@@ -3,6 +3,7 @@ import { Navigate } from 'react-router'
 // route titles use translation keys where needed; translate at render time
 import AuthGate from '@/features/router/AuthGate'
 import Expection404 from '@/pages/404/index.tsx'
+import DevelopingPage from '@/pages/developing/index.tsx'
 
 const dynamicRoutes = [
   {
@@ -186,6 +187,26 @@ const dynamicRoutes = [
             handle: { title: '数据可视化' },
           },
         ],
+      },
+      {
+        path: 'menuCollapse/subMenu1',
+        Component: DevelopingPage,
+      },
+      {
+        path: 'menuCollapse/subMenu2',
+        Component: DevelopingPage,
+      },
+      {
+        path: 'menuCollapse/subMenu2/subMenu1',
+        Component: DevelopingPage,
+      },
+      {
+        path: 'menuCollapse/subMenu2/subMenu2',
+        Component: DevelopingPage,
+      },
+      {
+        path: 'menuCollapse/subMenu3',
+        Component: DevelopingPage,
       },
       {
         path: '*',
