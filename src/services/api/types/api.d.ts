@@ -37,6 +37,27 @@ declare namespace Api {
     }> {}
   }
 
+  namespace Menu {
+    interface Node {
+      id: string
+      parentId?: string
+      nameZh: string
+      nameEn: string
+      type: 'directory' | 'page'
+      path?: string
+      icon?: string
+      sort: number
+      status: 0 | 1
+      children: Node[]
+    }
+
+    interface TreeResponse extends Base.ResponseData<Node[]> {}
+
+    interface UserMenusResponse extends Base.ResponseData<{
+      menuIds: string[]
+    }> {}
+  }
+
   namespace User {
     interface ListParams {
       startTime?: string
