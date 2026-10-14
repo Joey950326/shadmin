@@ -108,6 +108,7 @@ declare namespace Api {
       phone?: string
       role?: string | { name?: string }
       roleId?: string
+      roleName?: string
       photo?: Array<{
         name: string
         percentage: number
@@ -128,9 +129,13 @@ declare namespace Api {
       roleId?: string
     }
 
-    interface AddParams {
+    type AddParams = Omit<UserInfo, 'status' | 'user' | 'createTime' | 'id'> | {
       username: string
       password: string
+      gender?: 1 | 2
+      phone?: string
+      email?: string
+      status?: 0 | 1
       roleId: string
     }
 
