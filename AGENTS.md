@@ -27,3 +27,21 @@ No automated test framework or coverage threshold is currently configured. Befor
 ## Commit & Pull Request Guidelines
 
 Commits follow Conventional Commits, enforced by commitlint: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `chore:`, or `revert:`. Subjects may be Chinese or English; keep them brief and imperative, for example `fix: 修复登录布局背景颜色`. Pre-commit hooks run lint-staged and type checking, while pre-push builds the project. Pull requests should describe the change, verification performed, and linked issue; include screenshots or recordings for visible UI changes and call out configuration or translation updates.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked as local Markdown files under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Triage uses the default canonical label vocabulary. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Domain documentation uses a single-context layout. See `docs/agents/domain.md`.
+
+### 补充约束
+
+开发前端页面时，尽量复用shadcn组件库，或者基于现有的shadcn组件进行封装。并参考shadcn/ui这个skill
