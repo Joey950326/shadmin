@@ -195,7 +195,13 @@ declare namespace Api {
       id: string
     }
 
+    interface DeleteParams {
+      id: string[]
+    }
+
     interface DetailResponse extends Base.ResponseData<Info & { menuIds: string[] }> {}
+
+    interface DeleteResponse extends Base.ResponseData {}
 
     interface Option {
       id: string

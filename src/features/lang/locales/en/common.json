@@ -316,6 +316,16 @@
     "total": "Total: {{total}}",
     "detailTitle": "Role details",
     "detailDescription": "Basic role information and authorized menu identifiers.",
-    "authorizedMenuIds": "Authorized page menu IDs"
+    "authorizedMenuIds": "Authorized page menu IDs",
+    "deleteSelected": "Delete selected",
+    "selectedCount": "{{count}} roles selected",
+    "selectPage": "Select roles on this page",
+    "selectRole": "Select role {{name}}",
+    "deleteTitle": "Confirm role deletion",
+    "deleteSinglePrompt": "Are you sure you want to delete this role?",
+    "deleteMultiplePrompt": "Are you sure you want to delete the {{count}} selected roles?",
+    "deleteSuccess": "Roles deleted successfully",
+    "deleteFailed": "Failed to delete roles. Please try again.",
+    "deleting": "Deleting..."
   }
 }

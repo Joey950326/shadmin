@@ -316,6 +316,16 @@
     "total": "共 {{total}} 条",
     "detailTitle": "角色详情",
     "detailDescription": "角色基本信息和已授权菜单标识。",
-    "authorizedMenuIds": "已授权页面菜单 ID"
+    "authorizedMenuIds": "已授权页面菜单 ID",
+    "deleteSelected": "批量删除",
+    "selectedCount": "已选择 {{count}} 个角色",
+    "selectPage": "选择当前页角色",
+    "selectRole": "选择角色 {{name}}",
+    "deleteTitle": "确认删除角色",
+    "deleteSinglePrompt": "确定删除此角色吗？",
+    "deleteMultiplePrompt": "确定删除选中的 {{count}} 个角色吗？",
+    "deleteSuccess": "角色删除成功",
+    "deleteFailed": "角色删除失败，请重试",
+    "deleting": "删除中..."
   }
 }
