@@ -28,3 +28,17 @@ dist-ssr
 docs/*
 !docs/apifox/
 !docs/apifox/**
+!docs/代码质量把控.md
+!docs/代码质量把控实施文档.md
+!docs/国际化搭建文档.md
+!docs/国际化功能实施文档.md
+!docs/主题切换功能文档.md
+!docs/主题切换功能实施文档.md
+!docs/使用axios和tanstack query封装网络请求能力.md
+!docs/前端网络请求能力封装.md
+!docs/shadcn select源码阅读指南.md
+!docs/shadcn buttongroup源码阅读指南.md
+!docs/如何封装shadcn风格的uploader组件.md
+
+.scratch/
+.docs/target/

@@ -3,7 +3,7 @@
   "info": {
     "title": "SHAdmin API",
     "version": "1.0.0",
-    "description": "根据前端 src/services/api 调用链与结果消费逻辑整理，可直接导入 Apifox。所有接口使用业务响应码：code=200 表示成功，code=401 表示登录失效。"
+    "description": "根据前端 src/services/api 调用链与结果消费逻辑整理，可直接导入 Apifox。所有接口使用业务响应码：code=200 表示成功，code=401 表示登录失效。 系统管理接口包含用户、角色、菜单维护及当前用户菜单权限查询。"
   },
   "servers": [
     {
@@ -12,11 +12,32 @@
     }
   ],
   "tags": [
-    { "name": "认证", "description": "登录与退出" },
-    { "name": "用户", "description": "用户查询、维护与文件操作" },
-    { "name": "部门", "description": "部门树查询" }
+    {
+      "name": "认证",
+      "description": "登录与退出"
+    },
+    {
+      "name": "用户",
+      "description": "用户查询、维护与文件操作"
+    },
+    {
+      "name": "部门",
+      "description": "部门树查询"
+    },
+    {
+      "name": "角色",
+      "description": "角色查询、维护与菜单授权"
+    },
+    {
+      "name": "菜单",
+      "description": "菜单树维护与授权菜单查询"
+    }
   ],
-  "security": [{ "AccessToken": [] }],
+  "security": [
+    {
+      "AccessToken": []
+    }
+  ],
   "paths": {
     "/login": {
       "post": {
@@ -28,7 +49,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/LoginRequest" },
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
               "example": {
                 "username": "admin",
                 "password": "e10adc3949ba59abbe56e057f20f883e"
@@ -41,20 +64,29 @@
             "description": "登录结果；前端读取 data.access_token 和 data.userInfo",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LoginResponse" },
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                },
                 "example": {
                   "code": 200,
                   "msg": "登录成功",
                   "data": {
                     "access_token": "mock-access-token-2026",
-                    "userInfo": { "username": "admin", "role": "administrator" }
+                    "userInfo": {
+                      "username": "admin",
+                      "role": "administrator"
+                    }
                   }
                 }
               }
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" },
-          "500": { "$ref": "#/components/responses/ServerError" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
         }
       }
     },
@@ -64,8 +96,12 @@
         "summary": "退出登录",
         "operationId": "logout",
         "responses": {
-          "200": { "$ref": "#/components/responses/MutationSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -79,7 +115,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UserListRequest" },
+              "schema": {
+                "$ref": "#/components/schemas/UserListRequest"
+              },
               "example": {
                 "page": 1,
                 "pageSize": 10,
@@ -100,7 +138,9 @@
             "description": "分页用户数据；表格读取 data.list 与 data.total",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/UserListResponse" },
+                "schema": {
+                  "$ref": "#/components/schemas/SystemUserListResponse"
+                },
                 "examples": {
                   "page1": {
                     "summary": "第 1 页（每页 10 条）",
@@ -122,7 +162,14 @@
                             "idCard": "310101199001011234",
                             "status": 1,
                             "createTime": "2026-01-10 09:30:00",
-                            "user": { "detail": { "age": 36 } }
+                            "user": {
+                              "detail": {
+                                "age": 36
+                              }
+                            },
+                            "phone": "13800001001",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1002",
@@ -134,7 +181,14 @@
                             "idCard": "310101199502021234",
                             "status": 0,
                             "createTime": "2026-01-12 10:15:00",
-                            "user": { "detail": { "age": 31 } }
+                            "user": {
+                              "detail": {
+                                "age": 31
+                              }
+                            },
+                            "phone": "13800001002",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1003",
@@ -146,7 +200,14 @@
                             "idCard": "110101198805051234",
                             "status": 1,
                             "createTime": "2026-01-18 14:20:00",
-                            "user": { "detail": { "age": 38 } }
+                            "user": {
+                              "detail": {
+                                "age": 38
+                              }
+                            },
+                            "phone": "13800001003",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1004",
@@ -158,7 +219,14 @@
                             "idCard": "440301199306061234",
                             "status": 1,
                             "createTime": "2026-01-20 08:45:00",
-                            "user": { "detail": { "age": 33 } }
+                            "user": {
+                              "detail": {
+                                "age": 33
+                              }
+                            },
+                            "phone": "13800001004",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1005",
@@ -170,7 +238,14 @@
                             "idCard": "330101199207071234",
                             "status": 0,
                             "createTime": "2026-01-25 11:00:00",
-                            "user": { "detail": { "age": 34 } }
+                            "user": {
+                              "detail": {
+                                "age": 34
+                              }
+                            },
+                            "phone": "13800001005",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1006",
@@ -182,7 +257,14 @@
                             "idCard": "320101199609091234",
                             "status": 1,
                             "createTime": "2026-02-01 13:30:00",
-                            "user": { "detail": { "age": 30 } }
+                            "user": {
+                              "detail": {
+                                "age": 30
+                              }
+                            },
+                            "phone": "13800001006",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1007",
@@ -194,7 +276,14 @@
                             "idCard": "420101199110101234",
                             "status": 1,
                             "createTime": "2026-02-05 16:40:00",
-                            "user": { "detail": { "age": 35 } }
+                            "user": {
+                              "detail": {
+                                "age": 35
+                              }
+                            },
+                            "phone": "13800001007",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1008",
@@ -206,7 +295,14 @@
                             "idCard": "510101199711111234",
                             "status": 1,
                             "createTime": "2026-02-10 09:05:00",
-                            "user": { "detail": { "age": 29 } }
+                            "user": {
+                              "detail": {
+                                "age": 29
+                              }
+                            },
+                            "phone": "13800001008",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1009",
@@ -218,7 +314,14 @@
                             "idCard": "370201199412121234",
                             "status": 0,
                             "createTime": "2026-02-15 12:10:00",
-                            "user": { "detail": { "age": 32 } }
+                            "user": {
+                              "detail": {
+                                "age": 32
+                              }
+                            },
+                            "phone": "13800001009",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1010",
@@ -230,7 +333,14 @@
                             "idCard": "350201199812131234",
                             "status": 1,
                             "createTime": "2026-02-18 15:25:00",
-                            "user": { "detail": { "age": 28 } }
+                            "user": {
+                              "detail": {
+                                "age": 28
+                              }
+                            },
+                            "phone": "13800001010",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           }
                         ]
                       }
@@ -256,7 +366,14 @@
                             "idCard": "610101198901141234",
                             "status": 1,
                             "createTime": "2026-02-22 10:30:00",
-                            "user": { "detail": { "age": 37 } }
+                            "user": {
+                              "detail": {
+                                "age": 37
+                              }
+                            },
+                            "phone": "13800001011",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1012",
@@ -268,7 +385,14 @@
                             "idCard": "430101199503151234",
                             "status": 1,
                             "createTime": "2026-02-28 14:00:00",
-                            "user": { "detail": { "age": 31 } }
+                            "user": {
+                              "detail": {
+                                "age": 31
+                              }
+                            },
+                            "phone": "13800001012",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1013",
@@ -280,7 +404,14 @@
                             "idCard": "410101199004161234",
                             "status": 0,
                             "createTime": "2026-03-03 08:20:00",
-                            "user": { "detail": { "age": 36 } }
+                            "user": {
+                              "detail": {
+                                "age": 36
+                              }
+                            },
+                            "phone": "13800001013",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1014",
@@ -292,7 +423,14 @@
                             "idCard": "450101199605171234",
                             "status": 1,
                             "createTime": "2026-03-08 09:45:00",
-                            "user": { "detail": { "age": 30 } }
+                            "user": {
+                              "detail": {
+                                "age": 30
+                              }
+                            },
+                            "phone": "13800001014",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1015",
@@ -304,7 +442,14 @@
                             "idCard": "500101199206181234",
                             "status": 1,
                             "createTime": "2026-03-12 11:35:00",
-                            "user": { "detail": { "age": 34 } }
+                            "user": {
+                              "detail": {
+                                "age": 34
+                              }
+                            },
+                            "phone": "13800001015",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1016",
@@ -316,7 +461,14 @@
                             "idCard": "530101199707191234",
                             "status": 0,
                             "createTime": "2026-03-16 13:50:00",
-                            "user": { "detail": { "age": 29 } }
+                            "user": {
+                              "detail": {
+                                "age": 29
+                              }
+                            },
+                            "phone": "13800001016",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1017",
@@ -328,7 +480,14 @@
                             "idCard": "210201199108201234",
                             "status": 1,
                             "createTime": "2026-03-20 17:10:00",
-                            "user": { "detail": { "age": 35 } }
+                            "user": {
+                              "detail": {
+                                "age": 35
+                              }
+                            },
+                            "phone": "13800001017",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1018",
@@ -340,7 +499,14 @@
                             "idCard": "130101199409211234",
                             "status": 1,
                             "createTime": "2026-03-25 08:55:00",
-                            "user": { "detail": { "age": 32 } }
+                            "user": {
+                              "detail": {
+                                "age": 32
+                              }
+                            },
+                            "phone": "13800001018",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1019",
@@ -352,7 +518,14 @@
                             "idCard": "340101199310221234",
                             "status": 0,
                             "createTime": "2026-03-28 12:40:00",
-                            "user": { "detail": { "age": 33 } }
+                            "user": {
+                              "detail": {
+                                "age": 33
+                              }
+                            },
+                            "phone": "13800001019",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1020",
@@ -364,7 +537,14 @@
                             "idCard": "360101199811231234",
                             "status": 1,
                             "createTime": "2026-04-01 16:20:00",
-                            "user": { "detail": { "age": 28 } }
+                            "user": {
+                              "detail": {
+                                "age": 28
+                              }
+                            },
+                            "phone": "13800001020",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           }
                         ]
                       }
@@ -394,7 +574,10 @@
                               "detail": {
                                 "age": 20
                               }
-                            }
+                            },
+                            "phone": "13800001001",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1002",
@@ -410,7 +593,10 @@
                               "detail": {
                                 "age": 21
                               }
-                            }
+                            },
+                            "phone": "13800001002",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1003",
@@ -426,7 +612,10 @@
                               "detail": {
                                 "age": 22
                               }
-                            }
+                            },
+                            "phone": "13800001003",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1004",
@@ -442,7 +631,10 @@
                               "detail": {
                                 "age": 23
                               }
-                            }
+                            },
+                            "phone": "13800001004",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1005",
@@ -458,7 +650,10 @@
                               "detail": {
                                 "age": 24
                               }
-                            }
+                            },
+                            "phone": "13800001005",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1006",
@@ -474,7 +669,10 @@
                               "detail": {
                                 "age": 25
                               }
-                            }
+                            },
+                            "phone": "13800001006",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1007",
@@ -490,7 +688,10 @@
                               "detail": {
                                 "age": 26
                               }
-                            }
+                            },
+                            "phone": "13800001007",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1008",
@@ -506,7 +707,10 @@
                               "detail": {
                                 "age": 27
                               }
-                            }
+                            },
+                            "phone": "13800001008",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1009",
@@ -522,7 +726,10 @@
                               "detail": {
                                 "age": 28
                               }
-                            }
+                            },
+                            "phone": "13800001009",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1010",
@@ -538,7 +745,10 @@
                               "detail": {
                                 "age": 29
                               }
-                            }
+                            },
+                            "phone": "13800001010",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1011",
@@ -554,7 +764,10 @@
                               "detail": {
                                 "age": 30
                               }
-                            }
+                            },
+                            "phone": "13800001011",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1012",
@@ -570,7 +783,10 @@
                               "detail": {
                                 "age": 31
                               }
-                            }
+                            },
+                            "phone": "13800001012",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1013",
@@ -586,7 +802,10 @@
                               "detail": {
                                 "age": 32
                               }
-                            }
+                            },
+                            "phone": "13800001013",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1014",
@@ -602,7 +821,10 @@
                               "detail": {
                                 "age": 33
                               }
-                            }
+                            },
+                            "phone": "13800001014",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1015",
@@ -618,7 +840,10 @@
                               "detail": {
                                 "age": 34
                               }
-                            }
+                            },
+                            "phone": "13800001015",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1016",
@@ -634,7 +859,10 @@
                               "detail": {
                                 "age": 35
                               }
-                            }
+                            },
+                            "phone": "13800001016",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1017",
@@ -650,7 +878,10 @@
                               "detail": {
                                 "age": 36
                               }
-                            }
+                            },
+                            "phone": "13800001017",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1018",
@@ -666,7 +897,10 @@
                               "detail": {
                                 "age": 37
                               }
-                            }
+                            },
+                            "phone": "13800001018",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1019",
@@ -682,7 +916,10 @@
                               "detail": {
                                 "age": 38
                               }
-                            }
+                            },
+                            "phone": "13800001019",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1020",
@@ -698,7 +935,10 @@
                               "detail": {
                                 "age": 39
                               }
-                            }
+                            },
+                            "phone": "13800001020",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1021",
@@ -714,7 +954,10 @@
                               "detail": {
                                 "age": 40
                               }
-                            }
+                            },
+                            "phone": "13800001021",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1022",
@@ -730,7 +973,10 @@
                               "detail": {
                                 "age": 41
                               }
-                            }
+                            },
+                            "phone": "13800001022",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1023",
@@ -746,7 +992,10 @@
                               "detail": {
                                 "age": 42
                               }
-                            }
+                            },
+                            "phone": "13800001023",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1024",
@@ -762,7 +1011,10 @@
                               "detail": {
                                 "age": 43
                               }
-                            }
+                            },
+                            "phone": "13800001024",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1025",
@@ -778,7 +1030,10 @@
                               "detail": {
                                 "age": 44
                               }
-                            }
+                            },
+                            "phone": "13800001025",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1026",
@@ -794,7 +1049,10 @@
                               "detail": {
                                 "age": 45
                               }
-                            }
+                            },
+                            "phone": "13800001026",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1027",
@@ -810,7 +1068,10 @@
                               "detail": {
                                 "age": 46
                               }
-                            }
+                            },
+                            "phone": "13800001027",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1028",
@@ -826,7 +1087,10 @@
                               "detail": {
                                 "age": 47
                               }
-                            }
+                            },
+                            "phone": "13800001028",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1029",
@@ -842,7 +1106,10 @@
                               "detail": {
                                 "age": 48
                               }
-                            }
+                            },
+                            "phone": "13800001029",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1030",
@@ -858,7 +1125,10 @@
                               "detail": {
                                 "age": 49
                               }
-                            }
+                            },
+                            "phone": "13800001030",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1031",
@@ -874,7 +1144,10 @@
                               "detail": {
                                 "age": 20
                               }
-                            }
+                            },
+                            "phone": "13800001031",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1032",
@@ -890,7 +1163,10 @@
                               "detail": {
                                 "age": 21
                               }
-                            }
+                            },
+                            "phone": "13800001032",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1033",
@@ -906,7 +1182,10 @@
                               "detail": {
                                 "age": 22
                               }
-                            }
+                            },
+                            "phone": "13800001033",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1034",
@@ -922,7 +1201,10 @@
                               "detail": {
                                 "age": 23
                               }
-                            }
+                            },
+                            "phone": "13800001034",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1035",
@@ -938,7 +1220,10 @@
                               "detail": {
                                 "age": 24
                               }
-                            }
+                            },
+                            "phone": "13800001035",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1036",
@@ -954,7 +1239,10 @@
                               "detail": {
                                 "age": 25
                               }
-                            }
+                            },
+                            "phone": "13800001036",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1037",
@@ -970,7 +1258,10 @@
                               "detail": {
                                 "age": 26
                               }
-                            }
+                            },
+                            "phone": "13800001037",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1038",
@@ -986,7 +1277,10 @@
                               "detail": {
                                 "age": 27
                               }
-                            }
+                            },
+                            "phone": "13800001038",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1039",
@@ -1002,7 +1296,10 @@
                               "detail": {
                                 "age": 28
                               }
-                            }
+                            },
+                            "phone": "13800001039",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1040",
@@ -1018,7 +1315,10 @@
                               "detail": {
                                 "age": 29
                               }
-                            }
+                            },
+                            "phone": "13800001040",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1041",
@@ -1034,7 +1334,10 @@
                               "detail": {
                                 "age": 30
                               }
-                            }
+                            },
+                            "phone": "13800001041",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1042",
@@ -1050,7 +1353,10 @@
                               "detail": {
                                 "age": 31
                               }
-                            }
+                            },
+                            "phone": "13800001042",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1043",
@@ -1066,7 +1372,10 @@
                               "detail": {
                                 "age": 32
                               }
-                            }
+                            },
+                            "phone": "13800001043",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1044",
@@ -1082,7 +1391,10 @@
                               "detail": {
                                 "age": 33
                               }
-                            }
+                            },
+                            "phone": "13800001044",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1045",
@@ -1098,7 +1410,10 @@
                               "detail": {
                                 "age": 34
                               }
-                            }
+                            },
+                            "phone": "13800001045",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1046",
@@ -1114,7 +1429,10 @@
                               "detail": {
                                 "age": 35
                               }
-                            }
+                            },
+                            "phone": "13800001046",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1047",
@@ -1130,7 +1448,10 @@
                               "detail": {
                                 "age": 36
                               }
-                            }
+                            },
+                            "phone": "13800001047",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1048",
@@ -1146,7 +1467,10 @@
                               "detail": {
                                 "age": 37
                               }
-                            }
+                            },
+                            "phone": "13800001048",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1049",
@@ -1162,7 +1486,10 @@
                               "detail": {
                                 "age": 38
                               }
-                            }
+                            },
+                            "phone": "13800001049",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1050",
@@ -1178,7 +1505,10 @@
                               "detail": {
                                 "age": 39
                               }
-                            }
+                            },
+                            "phone": "13800001050",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1051",
@@ -1194,7 +1524,10 @@
                               "detail": {
                                 "age": 40
                               }
-                            }
+                            },
+                            "phone": "13800001051",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1052",
@@ -1210,7 +1543,10 @@
                               "detail": {
                                 "age": 41
                               }
-                            }
+                            },
+                            "phone": "13800001052",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1053",
@@ -1226,7 +1562,10 @@
                               "detail": {
                                 "age": 42
                               }
-                            }
+                            },
+                            "phone": "13800001053",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1054",
@@ -1242,7 +1581,10 @@
                               "detail": {
                                 "age": 43
                               }
-                            }
+                            },
+                            "phone": "13800001054",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1055",
@@ -1258,7 +1600,10 @@
                               "detail": {
                                 "age": 44
                               }
-                            }
+                            },
+                            "phone": "13800001055",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1056",
@@ -1274,7 +1619,10 @@
                               "detail": {
                                 "age": 45
                               }
-                            }
+                            },
+                            "phone": "13800001056",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1057",
@@ -1290,7 +1638,10 @@
                               "detail": {
                                 "age": 46
                               }
-                            }
+                            },
+                            "phone": "13800001057",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1058",
@@ -1306,7 +1657,10 @@
                               "detail": {
                                 "age": 47
                               }
-                            }
+                            },
+                            "phone": "13800001058",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1059",
@@ -1322,7 +1676,10 @@
                               "detail": {
                                 "age": 48
                               }
-                            }
+                            },
+                            "phone": "13800001059",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1060",
@@ -1338,7 +1695,10 @@
                               "detail": {
                                 "age": 49
                               }
-                            }
+                            },
+                            "phone": "13800001060",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1061",
@@ -1354,7 +1714,10 @@
                               "detail": {
                                 "age": 20
                               }
-                            }
+                            },
+                            "phone": "13800001061",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1062",
@@ -1370,7 +1733,10 @@
                               "detail": {
                                 "age": 21
                               }
-                            }
+                            },
+                            "phone": "13800001062",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1063",
@@ -1386,7 +1752,10 @@
                               "detail": {
                                 "age": 22
                               }
-                            }
+                            },
+                            "phone": "13800001063",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1064",
@@ -1402,7 +1771,10 @@
                               "detail": {
                                 "age": 23
                               }
-                            }
+                            },
+                            "phone": "13800001064",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1065",
@@ -1418,7 +1790,10 @@
                               "detail": {
                                 "age": 24
                               }
-                            }
+                            },
+                            "phone": "13800001065",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1066",
@@ -1434,7 +1809,10 @@
                               "detail": {
                                 "age": 25
                               }
-                            }
+                            },
+                            "phone": "13800001066",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1067",
@@ -1450,7 +1828,10 @@
                               "detail": {
                                 "age": 26
                               }
-                            }
+                            },
+                            "phone": "13800001067",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1068",
@@ -1466,7 +1847,10 @@
                               "detail": {
                                 "age": 27
                               }
-                            }
+                            },
+                            "phone": "13800001068",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1069",
@@ -1482,7 +1866,10 @@
                               "detail": {
                                 "age": 28
                               }
-                            }
+                            },
+                            "phone": "13800001069",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1070",
@@ -1498,7 +1885,10 @@
                               "detail": {
                                 "age": 29
                               }
-                            }
+                            },
+                            "phone": "13800001070",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1071",
@@ -1514,7 +1904,10 @@
                               "detail": {
                                 "age": 30
                               }
-                            }
+                            },
+                            "phone": "13800001071",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1072",
@@ -1530,7 +1923,10 @@
                               "detail": {
                                 "age": 31
                               }
-                            }
+                            },
+                            "phone": "13800001072",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1073",
@@ -1546,7 +1942,10 @@
                               "detail": {
                                 "age": 32
                               }
-                            }
+                            },
+                            "phone": "13800001073",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1074",
@@ -1562,7 +1961,10 @@
                               "detail": {
                                 "age": 33
                               }
-                            }
+                            },
+                            "phone": "13800001074",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1075",
@@ -1578,7 +1980,10 @@
                               "detail": {
                                 "age": 34
                               }
-                            }
+                            },
+                            "phone": "13800001075",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1076",
@@ -1594,7 +1999,10 @@
                               "detail": {
                                 "age": 35
                               }
-                            }
+                            },
+                            "phone": "13800001076",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1077",
@@ -1610,7 +2018,10 @@
                               "detail": {
                                 "age": 36
                               }
-                            }
+                            },
+                            "phone": "13800001077",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1078",
@@ -1626,7 +2037,10 @@
                               "detail": {
                                 "age": 37
                               }
-                            }
+                            },
+                            "phone": "13800001078",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1079",
@@ -1642,7 +2056,10 @@
                               "detail": {
                                 "age": 38
                               }
-                            }
+                            },
+                            "phone": "13800001079",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1080",
@@ -1658,7 +2075,10 @@
                               "detail": {
                                 "age": 39
                               }
-                            }
+                            },
+                            "phone": "13800001080",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1081",
@@ -1674,7 +2094,10 @@
                               "detail": {
                                 "age": 40
                               }
-                            }
+                            },
+                            "phone": "13800001081",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1082",
@@ -1690,7 +2113,10 @@
                               "detail": {
                                 "age": 41
                               }
-                            }
+                            },
+                            "phone": "13800001082",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1083",
@@ -1706,7 +2132,10 @@
                               "detail": {
                                 "age": 42
                               }
-                            }
+                            },
+                            "phone": "13800001083",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1084",
@@ -1722,7 +2151,10 @@
                               "detail": {
                                 "age": 43
                               }
-                            }
+                            },
+                            "phone": "13800001084",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1085",
@@ -1738,7 +2170,10 @@
                               "detail": {
                                 "age": 44
                               }
-                            }
+                            },
+                            "phone": "13800001085",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1086",
@@ -1754,7 +2189,10 @@
                               "detail": {
                                 "age": 45
                               }
-                            }
+                            },
+                            "phone": "13800001086",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1087",
@@ -1770,7 +2208,10 @@
                               "detail": {
                                 "age": 46
                               }
-                            }
+                            },
+                            "phone": "13800001087",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1088",
@@ -1786,7 +2227,10 @@
                               "detail": {
                                 "age": 47
                               }
-                            }
+                            },
+                            "phone": "13800001088",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1089",
@@ -1802,7 +2246,10 @@
                               "detail": {
                                 "age": 48
                               }
-                            }
+                            },
+                            "phone": "13800001089",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1090",
@@ -1818,7 +2265,10 @@
                               "detail": {
                                 "age": 49
                               }
-                            }
+                            },
+                            "phone": "13800001090",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1091",
@@ -1834,7 +2284,10 @@
                               "detail": {
                                 "age": 20
                               }
-                            }
+                            },
+                            "phone": "13800001091",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1092",
@@ -1850,7 +2303,10 @@
                               "detail": {
                                 "age": 21
                               }
-                            }
+                            },
+                            "phone": "13800001092",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1093",
@@ -1866,7 +2322,10 @@
                               "detail": {
                                 "age": 22
                               }
-                            }
+                            },
+                            "phone": "13800001093",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1094",
@@ -1882,7 +2341,10 @@
                               "detail": {
                                 "age": 23
                               }
-                            }
+                            },
+                            "phone": "13800001094",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1095",
@@ -1898,7 +2360,10 @@
                               "detail": {
                                 "age": 24
                               }
-                            }
+                            },
+                            "phone": "13800001095",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1096",
@@ -1914,7 +2379,10 @@
                               "detail": {
                                 "age": 25
                               }
-                            }
+                            },
+                            "phone": "13800001096",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1097",
@@ -1930,7 +2398,10 @@
                               "detail": {
                                 "age": 26
                               }
-                            }
+                            },
+                            "phone": "13800001097",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1098",
@@ -1946,7 +2417,10 @@
                               "detail": {
                                 "age": 27
                               }
-                            }
+                            },
+                            "phone": "13800001098",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1099",
@@ -1962,7 +2436,10 @@
                               "detail": {
                                 "age": 28
                               }
-                            }
+                            },
+                            "phone": "13800001099",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           },
                           {
                             "id": "user-1100",
@@ -1978,7 +2455,10 @@
                               "detail": {
                                 "age": 29
                               }
-                            }
+                            },
+                            "phone": "13800001100",
+                            "roleId": "role-editor",
+                            "roleName": "内容管理员"
                           }
                         ]
                       }
@@ -2001,7 +2481,9 @@
               }
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2014,14 +2496,22 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/DeleteUsersRequest" },
-              "example": { "id": ["user-1001", "user-1002"] }
+              "schema": {
+                "$ref": "#/components/schemas/DeleteUsersRequest"
+              },
+              "example": {
+                "id": ["user-1001", "user-1002"]
+              }
             }
           }
         },
         "responses": {
-          "200": { "$ref": "#/components/responses/MutationSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2034,25 +2524,28 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UserInfo" },
+              "schema": {
+                "$ref": "#/components/schemas/SystemUserUpdateRequest"
+              },
               "example": {
                 "id": "user-1001",
-                "username": "张明",
-                "avatar": "https://example.com/avatar/user-1001.png",
-                "address": "上海市浦东新区世纪大道",
-                "email": "zhangming@example.com",
+                "username": "zhangming",
                 "gender": 1,
-                "idCard": "310101199001011234",
+                "phone": "13800001001",
+                "email": "zhangming@example.com",
                 "status": 1,
-                "createTime": "2026-01-10 09:30:00",
-                "user": { "detail": { "age": 36 } }
+                "roleId": "role-editor"
               }
             }
           }
         },
         "responses": {
-          "200": { "$ref": "#/components/responses/MutationSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2065,21 +2558,27 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/AddUserRequest" },
+              "schema": {
+                "$ref": "#/components/schemas/SystemUserCreateRequest"
+              },
               "example": {
-                "username": "王芳",
-                "avatar": "https://example.com/avatar/new-user.png",
-                "address": "上海市静安区南京西路",
-                "email": "wangfang@example.com",
+                "username": "wangfang",
+                "password": "e10adc3949ba59abbe56e057f20f883e",
                 "gender": 2,
-                "idCard": "310101199808081234"
+                "phone": "13800001001",
+                "email": "wangfang@example.com",
+                "roleId": "role-editor"
               }
             }
           }
         },
         "responses": {
-          "200": { "$ref": "#/components/responses/MutationSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2124,7 +2623,9 @@
               }
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2152,8 +2653,12 @@
           }
         },
         "responses": {
-          "200": { "$ref": "#/components/responses/MutationSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2167,7 +2672,10 @@
           "required": false,
           "content": {
             "application/json": {
-              "schema": { "type": "object", "additionalProperties": false },
+              "schema": {
+                "type": "object",
+                "additionalProperties": false
+              },
               "example": {}
             }
           }
@@ -2177,7 +2685,9 @@
             "description": "可序列化的模板数据",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ExportResponse" },
+                "schema": {
+                  "$ref": "#/components/schemas/ExportResponse"
+                },
                 "example": {
                   "code": 200,
                   "msg": "模板生成成功",
@@ -2205,7 +2715,9 @@
               }
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2218,14 +2730,23 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/ChangeStatusRequest" },
-              "example": { "id": "user-1001", "status": 0 }
+              "schema": {
+                "$ref": "#/components/schemas/ChangeStatusRequest"
+              },
+              "example": {
+                "id": "user-1001",
+                "status": 0
+              }
             }
           }
         },
         "responses": {
-          "200": { "$ref": "#/components/responses/MutationSuccess" },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     },
@@ -2239,7 +2760,9 @@
             "description": "部门树；组件读取 data 并要求节点包含 id、name、children",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/DepartmentResponse" },
+                "schema": {
+                  "$ref": "#/components/schemas/DepartmentResponse"
+                },
                 "example": {
                   "code": 200,
                   "msg": "查询成功",
@@ -2326,7 +2849,11 @@
                           "name": "人力资源部",
                           "children": []
                         },
-                        { "id": "dept-legal", "name": "法务部", "children": [] }
+                        {
+                          "id": "dept-legal",
+                          "name": "法务部",
+                          "children": []
+                        }
                       ]
                     },
                     {
@@ -2376,7 +2903,500 @@
               }
             }
           },
-          "401": { "$ref": "#/components/responses/Unauthorized" }
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/list": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "分页查询角色",
+        "operationId": "listRoles",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleListRequest"
+              },
+              "example": {
+                "page": 1,
+                "pageSize": 10,
+                "roleName": "管理员",
+                "roleCode": "admin",
+                "status": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "分页查询角色成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleListResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": {
+                    "pageNum": 1,
+                    "pageSize": 10,
+                    "total": 1,
+                    "list": [
+                      {
+                        "id": "role-admin",
+                        "roleName": "系统管理员",
+                        "roleCode": "admin",
+                        "description": "系统管理角色",
+                        "status": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/options": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "查询可分配角色",
+        "operationId": "listRoleOptions",
+        "description": "仅返回启用角色，供用户新增和编辑时选择。",
+        "responses": {
+          "200": {
+            "description": "查询可分配角色成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleOptionsResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": [
+                    {
+                      "id": "role-editor",
+                      "roleName": "内容管理员",
+                      "roleCode": "content-admin"
+                    },
+                    {
+                      "id": "role-viewer",
+                      "roleName": "只读用户",
+                      "roleCode": "viewer"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/detail": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "查询角色详情及授权菜单",
+        "operationId": "getRoleDetail",
+        "description": "menuIds 包含已停用但仍保留授权关系的页面菜单 ID。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleDetailRequest"
+              },
+              "example": {
+                "id": "role-admin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "查询角色详情及授权菜单成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleDetailResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": {
+                    "id": "role-admin",
+                    "roleName": "系统管理员",
+                    "roleCode": "admin",
+                    "description": "系统管理角色",
+                    "status": 1,
+                    "menuIds": ["menu-home", "menu-dashboard-data"]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/add": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "新增角色",
+        "operationId": "addRole",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleCreateRequest"
+              },
+              "example": {
+                "roleName": "内容管理员",
+                "roleCode": "content-admin",
+                "description": "内容维护",
+                "status": 1,
+                "menuIds": ["menu-form-basic"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/edit": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "编辑角色及菜单授权",
+        "operationId": "editRole",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleUpdateRequest"
+              },
+              "example": {
+                "id": "role-admin",
+                "roleName": "系统管理员",
+                "roleCode": "admin",
+                "description": "系统管理角色",
+                "status": 1,
+                "menuIds": ["menu-home", "menu-dashboard-data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/delete": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "批量删除角色",
+        "operationId": "deleteRoles",
+        "description": "若角色仍有关联用户，后端拒绝整批删除。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteIdsRequest"
+              },
+              "example": {
+                "id": ["role-test"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/role/change": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "修改角色状态",
+        "operationId": "changeRoleStatus",
+        "description": "停用角色后，关联用户保留角色关系并使用系统默认权限。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeStatusRequest"
+              },
+              "example": {
+                "id": "role-admin",
+                "status": 0
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/menu/tree": {
+      "post": {
+        "tags": ["菜单"],
+        "summary": "查询完整菜单树",
+        "operationId": "getMenuTree",
+        "description": "返回全部菜单，包括停用菜单；用于菜单管理和应用启动时构建完整导航目录。",
+        "responses": {
+          "200": {
+            "description": "查询完整菜单树成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuTreeResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": [
+                    {
+                      "id": "menu-system",
+                      "nameZh": "系统管理",
+                      "nameEn": "System Management",
+                      "type": "directory",
+                      "sort": 90,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-users",
+                          "nameZh": "用户管理",
+                          "nameEn": "User Management",
+                          "parentId": "menu-system",
+                          "type": "page",
+                          "path": "/systemManage/userManage",
+                          "icon": "users",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/menu/available-tree": {
+      "post": {
+        "tags": ["菜单"],
+        "summary": "查询可授权菜单树",
+        "operationId": "getAvailableMenuTree",
+        "description": "仅返回启用菜单；角色授权只保存页面节点 ID。",
+        "responses": {
+          "200": {
+            "description": "查询可授权菜单树成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MenuTreeResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": [
+                    {
+                      "id": "menu-system",
+                      "nameZh": "系统管理",
+                      "nameEn": "System Management",
+                      "type": "directory",
+                      "sort": 90,
+                      "status": 1,
+                      "children": []
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/menu/add": {
+      "post": {
+        "tags": ["菜单"],
+        "summary": "新增菜单",
+        "operationId": "addMenu",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuCreateRequest"
+              },
+              "example": {
+                "nameZh": "用户管理",
+                "nameEn": "User Management",
+                "parentId": "menu-system",
+                "type": "page",
+                "path": "/systemManage/userManage",
+                "icon": "users",
+                "sort": 1,
+                "status": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/menu/edit": {
+      "post": {
+        "tags": ["菜单"],
+        "summary": "编辑菜单",
+        "operationId": "editMenu",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuUpdateRequest"
+              },
+              "example": {
+                "id": "menu-users",
+                "nameZh": "用户管理",
+                "nameEn": "User Management",
+                "parentId": "menu-system",
+                "type": "page",
+                "path": "/systemManage/userManage",
+                "icon": "users",
+                "sort": 1,
+                "status": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/menu/delete": {
+      "post": {
+        "tags": ["菜单"],
+        "summary": "删除单个菜单",
+        "operationId": "deleteMenu",
+        "description": "菜单存在子菜单或已被角色授权时，后端拒绝删除。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMenuRequest"
+              },
+              "example": {
+                "id": "menu-users"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MutationSuccess"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/menus": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "查询当前用户可访问菜单 ID",
+        "operationId": "getCurrentUserMenuIds",
+        "description": "应用启动时调用一次；只返回当前用户有效的页面菜单 ID。目录节点由客户端根据页面菜单补齐。",
+        "responses": {
+          "200": {
+            "description": "查询当前用户可访问菜单 ID成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserMenuIdsResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": {
+                    "menuIds": [
+                      "menu-home",
+                      "menu-dashboard-data",
+                      "menu-form-basic"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
         }
       }
     }
@@ -2395,8 +3415,13 @@
         "description": "操作成功；调用方不读取 data",
         "content": {
           "application/json": {
-            "schema": { "$ref": "#/components/schemas/BaseResponse" },
-            "example": { "code": 200, "msg": "操作成功" }
+            "schema": {
+              "$ref": "#/components/schemas/BaseResponse"
+            },
+            "example": {
+              "code": 200,
+              "msg": "操作成功"
+            }
           }
         }
       },
@@ -2404,8 +3429,13 @@
         "description": "未登录或 Token 已失效",
         "content": {
           "application/json": {
-            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
-            "example": { "code": 401, "msg": "登录状态已过期，请重新登录" }
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "code": 401,
+              "msg": "登录状态已过期，请重新登录"
+            }
           }
         }
       },
@@ -2413,8 +3443,13 @@
         "description": "服务器错误",
         "content": {
           "application/json": {
-            "schema": { "$ref": "#/components/schemas/ErrorResponse" },
-            "example": { "code": 500, "msg": "服务器内部错误" }
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "code": 500,
+              "msg": "服务器内部错误"
+            }
           }
         }
       }
@@ -2424,18 +3459,37 @@
         "type": "object",
         "required": ["code", "msg"],
         "properties": {
-          "code": { "type": "integer", "format": "int32", "example": 200 },
-          "msg": { "type": "string", "example": "操作成功" },
-          "data": { "nullable": true, "description": "调用方未消费该字段" }
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "example": 200
+          },
+          "msg": {
+            "type": "string",
+            "example": "操作成功"
+          },
+          "data": {
+            "nullable": true,
+            "description": "调用方未消费该字段"
+          }
         }
       },
       "ErrorResponse": {
         "type": "object",
         "required": ["code", "msg"],
         "properties": {
-          "code": { "type": "integer", "format": "int32", "example": 400 },
-          "msg": { "type": "string", "example": "请求参数错误" },
-          "data": { "nullable": true }
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "example": 400
+          },
+          "msg": {
+            "type": "string",
+            "example": "请求参数错误"
+          },
+          "data": {
+            "nullable": true
+          }
         }
       },
       "LoginRequest": {
@@ -2443,7 +3497,11 @@
         "required": ["username", "password"],
         "additionalProperties": false,
         "properties": {
-          "username": { "type": "string", "minLength": 1, "example": "admin" },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "example": "admin"
+          },
           "password": {
             "type": "string",
             "minLength": 32,
@@ -2458,17 +3516,29 @@
         "type": "object",
         "required": ["code", "msg", "data"],
         "properties": {
-          "code": { "type": "integer", "enum": [200] },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "required": ["access_token"],
             "properties": {
-              "access_token": { "type": "string", "minLength": 1 },
+              "access_token": {
+                "type": "string",
+                "minLength": 1
+              },
               "userInfo": {
                 "type": "object",
                 "required": ["username"],
-                "properties": { "username": { "type": "string" } },
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  }
+                },
                 "additionalProperties": true
               }
             }
@@ -2479,8 +3549,16 @@
         "type": "object",
         "required": ["page", "pageSize"],
         "properties": {
-          "page": { "type": "integer", "minimum": 1, "example": 1 },
-          "pageSize": { "type": "integer", "minimum": 1, "example": 10 },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 10
+          },
           "type": {
             "type": "integer",
             "description": "调用方固定传 1；代码未定义业务含义",
@@ -2496,8 +3574,12 @@
             "description": "调用格式 YYYY-MM-DD HH:mm:ss",
             "example": "2026-12-31 23:59:59"
           },
-          "username": { "type": "string" },
-          "idCard": { "type": "string" },
+          "username": {
+            "type": "string"
+          },
+          "idCard": {
+            "type": "string"
+          },
           "minAge": {
             "type": "string",
             "description": "当前页面从输入框以字符串发送"
@@ -2516,27 +3598,62 @@
             "enum": [1, 2],
             "description": "1=男，2=女"
           },
-          "departmentId": { "type": "array", "items": { "type": "string" } },
-          "userStatus": { "type": "array", "items": { "type": "integer" } },
-          "userRole": { "type": "array", "items": { "type": "string" } }
+          "departmentId": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userStatus": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "userRole": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号包含匹配"
+          }
         }
       },
       "UserListResponse": {
         "type": "object",
         "required": ["code", "msg", "data"],
         "properties": {
-          "code": { "type": "integer", "enum": [200] },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "required": ["pageNum", "pageSize", "total", "list"],
             "properties": {
-              "pageNum": { "type": "integer", "minimum": 1 },
-              "pageSize": { "type": "integer", "minimum": 1 },
-              "total": { "type": "integer", "minimum": 0 },
+              "pageNum": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "pageSize": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
               "list": {
                 "type": "array",
-                "items": { "$ref": "#/components/schemas/UserInfo" }
+                "items": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
               }
             }
           }
@@ -2557,11 +3674,27 @@
           "user"
         ],
         "properties": {
-          "id": { "type": "string" },
-          "username": { "type": "string", "minLength": 2, "maxLength": 20 },
-          "avatar": { "type": "string", "format": "uri" },
-          "address": { "type": "string", "minLength": 4, "maxLength": 30 },
-          "email": { "type": "string", "format": "email" },
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 20
+          },
+          "avatar": {
+            "type": "string",
+            "format": "uri"
+          },
+          "address": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 30
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
           "gender": {
             "type": "integer",
             "enum": [1, 2],
@@ -2587,13 +3720,33 @@
               "detail": {
                 "type": "object",
                 "required": ["age"],
-                "properties": { "age": { "type": "integer", "minimum": 0 } }
+                "properties": {
+                  "age": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
               }
             }
           },
           "photo": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/PhotoFile" }
+            "items": {
+              "$ref": "#/components/schemas/PhotoFile"
+            }
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^1[3-9]\\d{9}$",
+            "description": "手机号，可选"
+          },
+          "roleId": {
+            "type": "string",
+            "description": "关联的唯一角色 ID"
+          },
+          "roleName": {
+            "type": "string",
+            "description": "关联角色名称，列表展示用"
           }
         }
       },
@@ -2609,17 +3762,34 @@
           "url"
         ],
         "properties": {
-          "name": { "type": "string" },
-          "percentage": { "type": "number" },
+          "name": {
+            "type": "string"
+          },
+          "percentage": {
+            "type": "number"
+          },
           "raw": {
             "type": "object",
             "required": ["uid"],
-            "properties": { "uid": { "type": "string" } }
+            "properties": {
+              "uid": {
+                "type": "string"
+              }
+            }
           },
-          "size": { "type": "integer" },
-          "status": { "type": "string" },
-          "uid": { "type": "integer" },
-          "url": { "type": "string", "format": "uri" }
+          "size": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "uid": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
         }
       },
       "AddUserRequest": {
@@ -2634,10 +3804,24 @@
         ],
         "additionalProperties": false,
         "properties": {
-          "username": { "type": "string", "minLength": 2, "maxLength": 20 },
-          "avatar": { "type": "string", "format": "uri" },
-          "address": { "type": "string", "minLength": 4, "maxLength": 30 },
-          "email": { "type": "string", "format": "email" },
+          "username": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 20
+          },
+          "avatar": {
+            "type": "string",
+            "format": "uri"
+          },
+          "address": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 30
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
           "gender": {
             "type": "integer",
             "enum": [1, 2],
@@ -2649,7 +3833,9 @@
           },
           "photo": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/PhotoFile" }
+            "items": {
+              "$ref": "#/components/schemas/PhotoFile"
+            }
           }
         }
       },
@@ -2662,7 +3848,9 @@
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2671,7 +3859,9 @@
         "required": ["id", "status"],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
           "status": {
             "type": "integer",
             "enum": [0, 1],
@@ -2683,12 +3873,22 @@
         "type": "object",
         "required": ["code", "msg", "data"],
         "properties": {
-          "code": { "type": "integer", "enum": [200] },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "required": ["fileUrl"],
-            "properties": { "fileUrl": { "type": "string", "format": "uri" } }
+            "properties": {
+              "fileUrl": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
           }
         }
       },
@@ -2696,16 +3896,28 @@
         "type": "object",
         "required": ["code", "msg", "data"],
         "properties": {
-          "code": { "type": "integer", "enum": [200] },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "object",
             "required": ["columns", "rows"],
             "properties": {
-              "columns": { "type": "array", "items": { "type": "string" } },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
               "rows": {
                 "type": "array",
-                "items": { "$ref": "#/components/schemas/AddUserRequest" }
+                "items": {
+                  "$ref": "#/components/schemas/AddUserRequest"
+                }
               }
             }
           }
@@ -2715,11 +3927,17 @@
         "type": "object",
         "required": ["id", "name"],
         "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
           "children": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/DepartmentNode" }
+            "items": {
+              "$ref": "#/components/schemas/DepartmentNode"
+            }
           }
         }
       },
@@ -2727,11 +3945,545 @@
         "type": "object",
         "required": ["code", "msg", "data"],
         "properties": {
-          "code": { "type": "integer", "enum": [200] },
-          "msg": { "type": "string" },
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
           "data": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/DepartmentNode" }
+            "items": {
+              "$ref": "#/components/schemas/DepartmentNode"
+            }
+          }
+        }
+      },
+      "SystemUserCreateRequest": {
+        "type": "object",
+        "required": ["username", "password", "roleId"],
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "唯一登录账号"
+          },
+          "password": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{32}$",
+            "description": "固定初始密码 123456 的 MD5 值。示例：e10adc3949ba59abbe56e057f20f883e。"
+          },
+          "gender": {
+            "type": "integer",
+            "enum": [1, 2],
+            "description": "1=男，2=女；可选"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^1[3-9]\\d{9}$"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "roleId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 1
+          }
+        }
+      },
+      "SystemUserUpdateRequest": {
+        "type": "object",
+        "required": ["id", "username", "roleId", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "gender": {
+            "type": "integer",
+            "enum": [1, 2]
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^1[3-9]\\d{9}$"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "roleId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1]
+          }
+        }
+      },
+      "SystemUserInfo": {
+        "type": "object",
+        "required": ["id", "username", "status", "roleId", "roleName"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "integer",
+            "enum": [1, 2],
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1]
+          },
+          "roleId": {
+            "type": "string"
+          },
+          "roleName": {
+            "type": "string"
+          }
+        }
+      },
+      "SystemUserListResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "required": ["pageNum", "pageSize", "total", "list"],
+            "properties": {
+              "pageNum": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SystemUserInfo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RoleListRequest": {
+        "type": "object",
+        "required": ["page", "pageSize"],
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "roleName": {
+            "type": "string",
+            "description": "包含匹配"
+          },
+          "roleCode": {
+            "type": "string",
+            "description": "包含匹配"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1]
+          }
+        }
+      },
+      "RoleInfo": {
+        "type": "object",
+        "required": ["id", "roleName", "roleCode", "status"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "roleName": {
+            "type": "string"
+          },
+          "roleCode": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1]
+          }
+        }
+      },
+      "RoleListResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "required": ["pageNum", "pageSize", "total", "list"],
+            "properties": {
+              "pageNum": {
+                "type": "integer"
+              },
+              "pageSize": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "list": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RoleInfo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RoleCreateRequest": {
+        "type": "object",
+        "required": ["roleName", "roleCode", "menuIds"],
+        "additionalProperties": false,
+        "properties": {
+          "roleName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "roleCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1],
+            "default": 1
+          },
+          "menuIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "页面菜单 ID；不包含目录节点"
+          }
+        }
+      },
+      "RoleUpdateRequest": {
+        "type": "object",
+        "required": ["id", "roleName", "roleCode", "status", "menuIds"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "roleName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "roleCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1]
+          },
+          "menuIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "页面菜单 ID，需保留未显示的停用菜单授权"
+          }
+        }
+      },
+      "RoleDetailRequest": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "RoleDetailResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RoleInfo"
+              },
+              {
+                "type": "object",
+                "required": ["menuIds"],
+                "properties": {
+                  "menuIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "RoleOptionsResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "roleName", "roleCode"],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "roleName": {
+                  "type": "string"
+                },
+                "roleCode": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DeleteIdsRequest": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MenuNode": {
+        "type": "object",
+        "required": [
+          "id",
+          "nameZh",
+          "nameEn",
+          "type",
+          "sort",
+          "status",
+          "children"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "nameZh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["directory", "page"]
+          },
+          "path": {
+            "type": "string",
+            "description": "页面节点必须指向已注册的前端路由"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1]
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MenuNode"
+            }
+          }
+        }
+      },
+      "MenuTreeResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MenuNode"
+            }
+          }
+        }
+      },
+      "MenuCreateRequest": {
+        "type": "object",
+        "required": ["nameZh", "nameEn", "type", "sort", "status"],
+        "properties": {
+          "nameZh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["directory", "page"]
+          },
+          "path": {
+            "type": "string",
+            "description": "页面类型必填，且必须匹配已注册路由"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [0, 1]
+          }
+        }
+      },
+      "MenuUpdateRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MenuCreateRequest"
+          },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "DeleteMenuRequest": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "UserMenuIdsResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "required": ["menuIds"],
+            "properties": {
+              "menuIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "当前用户有效的页面菜单 ID；目录由客户端补齐"
+              }
+            }
           }
         }
       }

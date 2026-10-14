@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import TreeItem from './TreeItem'
-import { useTreeSelector } from './treeSelectorContext'
+import { useTreeSelector } from './TreeSelectorContext'
 
 interface TreeListProps {
   className?: string

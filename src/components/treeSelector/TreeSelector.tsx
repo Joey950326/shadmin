@@ -1,8 +1,8 @@
-import type { TreeSelectorContextValue } from './treeSelectorContext'
+import type { TreeSelectorContextValue } from './TreeSelectorContext'
 import type { TreeItemValue, TreeSelectorProps } from './types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
-import { TreeSelectorContext } from './treeSelectorContext'
+import { TreeSelectorContext } from './TreeSelectorContext'
 import { filterTree, getAllDescendantIds, isIndeterminate } from './utils'
 
 function TreeSelector({

@@ -90,7 +90,7 @@ export default function VisitorBar({ chartData, className }: VisitorBarProps) {
         </div>
         <div className="grid grid-cols-4 gap-2 p-2 md:p-4">
           {sourceArray.map((key) => {
-            const chart = key as keyof typeof chartConfig
+            const chart = key
             return (
               <Button
                 variant="ghost"

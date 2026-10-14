@@ -29,6 +29,9 @@ function buildUser(index) {
     address: MockJs.mock('@county(true)'),
     email: `user${pad(number, 4)}@example.com`,
     gender: (index % 2) + 1,
+    phone: `138${pad(number, 8)}`,
+    roleId: index % 2 === 0 ? 'role-editor' : 'role-viewer',
+    roleName: index % 2 === 0 ? '内容管理员' : '只读用户',
     idCard: `31010119900101${pad(number, 4)}`,
     status: index % 3 === 0 ? 0 : 1,
     createTime: `2026-${month}-${day} 09:30:00`,
@@ -43,8 +46,21 @@ function buildUser(index) {
 const allUsers = Array.from({ length: total }, (_, index) => {
   return buildUser(index)
 })
+
+const usernameFilter = String($$.mockRequest.getParam('username') || '').toLowerCase()
+const phoneFilter = String($$.mockRequest.getParam('phone') || '')
+const genderFilter = $$.mockRequest.getParam('gender')
+const statusFilter = $$.mockRequest.getParam('status')
+const filteredUsers = allUsers.filter((user) => {
+  return (!usernameFilter || user.username.toLowerCase().includes(usernameFilter))
+    && (!phoneFilter || user.phone.includes(phoneFilter))
+    && (genderFilter === undefined || genderFilter === null || genderFilter === '' || user.gender === Number(genderFilter))
+    && (statusFilter === undefined || statusFilter === null || statusFilter === '' || user.status === Number(statusFilter))
+})
+
+const filteredTotal = filteredUsers.length
 const startIndex = (page - 1) * pageSize
-const list = allUsers.slice(startIndex, startIndex + pageSize)
+const list = filteredUsers.slice(startIndex, startIndex + pageSize)
 
 $$.mockResponse.setBody({
   code: 200,
@@ -52,7 +68,7 @@ $$.mockResponse.setBody({
   data: {
     pageNum: page,
     pageSize,
-    total,
+    total: filteredTotal,
     list,
   },
 })

@@ -21,7 +21,7 @@ const HttpConfig = {
 
 const REQUEST_TRY_COUNT = 1
 
-function shouldRetry(error: unknown, failureCount: number) {
+function shouldRetry(failureCount: number, error: unknown) {
   if (failureCount >= REQUEST_TRY_COUNT) {
     return false
   }

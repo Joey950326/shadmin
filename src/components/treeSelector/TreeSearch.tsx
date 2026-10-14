@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input } from '@/components/ui/input'
-import { useTreeSelector } from './treeSelectorContext'
+import { useTreeSelector } from './TreeSelectorContext'
 
 interface TreeSearchProps {
   placeholder?: string

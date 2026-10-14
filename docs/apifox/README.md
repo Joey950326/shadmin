@@ -2,7 +2,7 @@
 
 ## 文件说明
 
-- `openapi.json`：OpenAPI 3.0.3 定义，包含 `auth.ts` 中全部 11 个接口。
+- `openapi.json`：OpenAPI 3.0.3 定义，包含现有认证、用户、部门接口及 13 个系统管理接口，共 24 个接口。
 - 接口路径不包含 `/api`；本地服务地址已配置为 `http://localhost:5173/api`。Vite 会把 `/api` 请求代理到 `.env.development` 的 `VITE_PROXY`，并移除 `/api` 前缀。
 - 请求与响应结构来自 `modules/`、`hooks/`、类型声明和页面消费逻辑。示例用户、Token、URL 和部门数据仅用于 Apifox 调试与 Mock。
 
@@ -11,8 +11,33 @@
 1. 登录 [Apifox](https://app.apifox.com/)，新建或进入目标项目。
 2. 打开项目设置中的“导入数据”，选择“手动导入”。
 3. 选择 OpenAPI/Swagger，上传本目录的 `openapi.json`。
-4. 预览 11 个接口及数据模型；可开启“自动生成接口用例”和“导入 Servers 为环境”，然后确认导入。
+4. 预览 24 个接口及数据模型；可开启“自动生成接口用例”和“导入 Servers 为环境”，然后确认导入。
 5. 再次导入更新后的文件时，建议按 `operationId` 智能合并，避免产生重复接口。
+
+## 系统管理接口与 Mock 部署
+
+`openapi.json` 已包含用户、角色和菜单管理接口。当前接口分组如下：
+
+- 用户：现有 `/user/list`、`/user/add`、`/user/edit`、`/user/delete`、`/user/change`，以及应用启动时读取权限菜单的 `/user/menus`。
+- 角色：`/role/list`、`/role/options`、`/role/detail`、`/role/add`、`/role/edit`、`/role/delete`、`/role/change`。
+- 菜单：`/menu/tree`、`/menu/available-tree`、`/menu/add`、`/menu/edit`、`/menu/delete`。
+
+所有系统管理接口均使用 POST、JSON 请求体和现有 `{ code, msg, data }` 响应结构；除登录外需要 `x-access-token: Bearer <access_token>`。列表分页使用 `page`、`pageSize`；用户及角色批量删除使用 `{ "id": ["..."] }`，菜单删除使用 `{ "id": "..." }`。
+
+### 将接口导入 Apifox
+
+1. 在 Apifox 项目中选择“导入数据”→“手动导入”→“OpenAPI/Swagger”。
+2. 上传仓库中的 `docs/apifox/openapi.json`。若已有这份 API，选择按 `operationId` 智能合并，避免重复创建。
+3. 检查“用户”“角色”“菜单”分组，以及 `/user/menus`、`/menu/available-tree` 等新接口已出现，再确认导入。
+4. 在 Mock 环境为接口生成 Mock 响应；写操作当前以接口调用和统一成功响应为目标，Mock 不实现真实数据持久化或权限规则。
+
+### 配置本地前端访问 Apifox Mock
+
+仓库的 `vite.config.ts` 会将 `/api/*` 请求转发到 `.env.development` 的 `VITE_PROXY`，并移除 `/api` 前缀。请在 Apifox 的 Mock 服务中发布／启用已导入 API 的 Mock，并将 `VITE_PROXY` 设置为 Apifox 提供的 Mock 基础 URL（不要在这里附加 `/api`；具体路径前缀以 Apifox 生成的 URL 为准）。保存后重启 `pnpm dev`，确认浏览器请求会访问 `/api/role/list`、`/api/menu/tree` 等路径，并在 Apifox Mock 日志中看到对应调用。
+
+若使用本地后端而非 Apifox Mock，将 `VITE_PROXY` 改为本地后端地址。前端请求路径仍使用 `/api/<接口路径>`，由 Vite 代理剥除 `/api` 后转发。修改环境变量后必须重启 Vite。
+
+> 初始密码 `123456` 的 MD5 示例只用于已确认的当前契约及 Mock；所有新用户共用该初始密码，按需求本期不强制首次登录修改，不应直接用于真实生产账号。
 
 详细选项参见 Apifox 官方的 [导入 OpenAPI/Swagger](https://docs.apifox.com/import-openapi-swagger) 与 [手动导入](https://docs.apifox.com/manual-import) 文档。
 

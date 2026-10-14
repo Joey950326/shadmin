@@ -7,7 +7,7 @@ import { memo, useCallback, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
-import { useTreeSelector } from './treeSelectorContext'
+import { useTreeSelector } from './TreeSelectorContext'
 
 interface TreeItemProps {
   node: TreeItemValue
