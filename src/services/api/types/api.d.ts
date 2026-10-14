@@ -107,6 +107,7 @@ declare namespace Api {
       username: string
       phone?: string
       role?: string | { name?: string }
+      roleId?: string
       photo?: Array<{
         name: string
         percentage: number
@@ -122,10 +123,16 @@ declare namespace Api {
       id: Array<string>
     }
 
-    interface EditParams extends UserInfo {}
+    interface EditParams extends UserInfo {
+      password?: string
+      roleId?: string
+    }
 
-    // interface AddParams extends Omit<UserInfo, 'status | user | createTime | id'> {}
-    type AddParams = Omit<UserInfo, 'status' | 'user' | 'createTime' | 'id'>
+    interface AddParams {
+      username: string
+      password: string
+      roleId: string
+    }
 
     interface AvatarUploadParams {
       file: File

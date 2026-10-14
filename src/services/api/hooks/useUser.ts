@@ -1,5 +1,5 @@
 import type { Api } from '../types/api'
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../keys'
 import { userAddApi, userAvatarUpload, userDeleteApi, userDownload, userEditApi, userListApi, userStatusChange } from '../modules/user'
 
@@ -21,15 +21,19 @@ export function useDeleteUser() {
 
 /** 编辑用户 */
 export function useEditUser() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: Api.User.EditParams): Promise<Api.User.EditResponse> => userEditApi(params),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user', 'list'] }),
   })
 }
 
 /** 新增用户 */
 export function useAddtUser() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (params: Api.User.AddParams): Promise<Api.User.AddResponse> => userAddApi(params),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user', 'list'] }),
   })
 }
 

@@ -29,6 +29,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useUserList } from '@/services/api/hooks/useUser'
+import UserFormDialog from './UserFormDialog'
 
 interface UserFilters {
   username: string
@@ -127,7 +128,10 @@ export default function UserManagementPage() {
 
   return (
     <main className="flex flex-col gap-4 p-4">
-      <h1 className="text-2xl font-semibold">{t('userManagement.title')}</h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold">{t('userManagement.title')}</h1>
+        <UserFormDialog />
+      </div>
       <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Field>
           <FieldLabel htmlFor="filter-username">
@@ -227,7 +231,10 @@ export default function UserManagementPage() {
                     : (user.role?.name ?? '—')}
                 </TableCell>
                 <TableCell>
-                  <UserDetails user={user} />
+                  <div className="flex items-center gap-2">
+                    <UserDetails user={user} />
+                    <UserFormDialog key={user.id} user={user} />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
