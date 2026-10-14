@@ -30,6 +30,11 @@
     "description": "Sorry, the page you are looking for doesn't exist.",
     "backHome": "Back to Home"
   },
+  "developing": {
+    "title": "Coming Soon",
+    "description": "This feature is under development. Please check back soon.",
+    "backHome": "Back to Home"
+  },
   "loadingData": "Loading",
   "status": "Status",
   "enabled": "Enabled",
