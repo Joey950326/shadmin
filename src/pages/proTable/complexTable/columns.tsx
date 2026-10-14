@@ -390,7 +390,7 @@ export function createColumns(t: TFunction): ColumnDef<Api.User.UserInfo>[] {
           if (typeof onStatusChange === 'function') {
             const params = {
               id: row.original.id,
-              status: newVal ? 0 : 1,
+              status: (newVal ? 0 : 1) as 0 | 1,
             }
             onStatusChange(params)
           }
