@@ -556,120 +556,122 @@ export default function RoleListPage() {
         open={creatingRole || Boolean(editingRoleId)}
         onOpenChange={closeEditor}
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader>
+        <DialogContent className="flex max-h-[90vh] min-h-0 flex-col overflow-hidden sm:max-w-2xl">
+          <DialogHeader className="shrink-0">
             <DialogTitle>
               {t(creatingRole ? 'role.create' : 'role.edit')}
             </DialogTitle>
             <DialogDescription>{t('role.formDescription')}</DialogDescription>
           </DialogHeader>
-          {editingRoleId
-            && (detailLoading || menuTreeLoading || allMenuTreeLoading)
-            ? (
-                <p>{t('loadingData')}</p>
-              )
-            : editingRoleId && detailError
+          <ScrollArea className="min-h-0 flex-1">
+            {editingRoleId
+              && (detailLoading || menuTreeLoading || allMenuTreeLoading)
               ? (
-                  <p role="alert" className="text-sm text-destructive">
-                    {t('role.detailLoadFailed')}
-                  </p>
+                  <p>{t('loadingData')}</p>
                 )
-              : (
-                  <FieldGroup>
-                    <Field>
-                      <FieldLabel htmlFor="role-form-name">
-                        {t('role.name')}
-                      </FieldLabel>
-                      <Input
-                        id="role-form-name"
-                        required
-                        value={form.roleName}
-                        onChange={event =>
-                          setForm(value => ({
-                            ...value,
-                            roleName: event.target.value,
-                          }))}
-                      />
-                    </Field>
-                    <Field>
-                      <FieldLabel htmlFor="role-form-code">
-                        {t('role.code')}
-                      </FieldLabel>
-                      <Input
-                        id="role-form-code"
-                        required
-                        value={form.roleCode}
-                        onChange={event =>
-                          setForm(value => ({
-                            ...value,
-                            roleCode: event.target.value,
-                          }))}
-                      />
-                    </Field>
-                    <Field>
-                      <FieldLabel htmlFor="role-form-description">
-                        {t('role.description')}
-                      </FieldLabel>
-                      <Input
-                        id="role-form-description"
-                        value={form.description ?? ''}
-                        onChange={event =>
-                          setForm(value => ({
-                            ...value,
-                            description: event.target.value,
-                          }))}
-                      />
-                    </Field>
-                    <Field>
-                      <FieldLabel htmlFor="role-form-status">
-                        {t('status')}
-                      </FieldLabel>
-                      <Select
-                        value={String(form.status)}
-                        onValueChange={value =>
-                          setForm(current => ({
-                            ...current,
-                            status: Number(value) as 0 | 1,
-                          }))}
-                      >
-                        <SelectTrigger id="role-form-status">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem value="1">{t('enabled')}</SelectItem>
-                            <SelectItem value="0">{t('disabled')}</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                    <Field>
-                      <FieldLabel>{t('role.authorization')}</FieldLabel>
-                      {menuTreeLoading
-                        ? (
-                            <p>{t('loadingData')}</p>
-                          )
-                        : menuTreeError || (editingRoleId && allMenuTreeError)
+              : editingRoleId && detailError
+                ? (
+                    <p role="alert" className="text-sm text-destructive">
+                      {t('role.detailLoadFailed')}
+                    </p>
+                  )
+                : (
+                    <FieldGroup>
+                      <Field>
+                        <FieldLabel htmlFor="role-form-name">
+                          {t('role.name')}
+                        </FieldLabel>
+                        <Input
+                          id="role-form-name"
+                          required
+                          value={form.roleName}
+                          onChange={event =>
+                            setForm(value => ({
+                              ...value,
+                              roleName: event.target.value,
+                            }))}
+                        />
+                      </Field>
+                      <Field>
+                        <FieldLabel htmlFor="role-form-code">
+                          {t('role.code')}
+                        </FieldLabel>
+                        <Input
+                          id="role-form-code"
+                          required
+                          value={form.roleCode}
+                          onChange={event =>
+                            setForm(value => ({
+                              ...value,
+                              roleCode: event.target.value,
+                            }))}
+                        />
+                      </Field>
+                      <Field>
+                        <FieldLabel htmlFor="role-form-description">
+                          {t('role.description')}
+                        </FieldLabel>
+                        <Input
+                          id="role-form-description"
+                          value={form.description ?? ''}
+                          onChange={event =>
+                            setForm(value => ({
+                              ...value,
+                              description: event.target.value,
+                            }))}
+                        />
+                      </Field>
+                      <Field>
+                        <FieldLabel htmlFor="role-form-status">
+                          {t('status')}
+                        </FieldLabel>
+                        <Select
+                          value={String(form.status)}
+                          onValueChange={value =>
+                            setForm(current => ({
+                              ...current,
+                              status: Number(value) as 0 | 1,
+                            }))}
+                        >
+                          <SelectTrigger id="role-form-status">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="1">{t('enabled')}</SelectItem>
+                              <SelectItem value="0">{t('disabled')}</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </Field>
+                      <Field>
+                        <FieldLabel>{t('role.authorization')}</FieldLabel>
+                        {menuTreeLoading
                           ? (
-                              <p role="alert" className="text-sm text-destructive">
-                                {t('role.authorizationLoadFailed')}
-                              </p>
+                              <p>{t('loadingData')}</p>
                             )
-                          : availableMenuNodes.length
+                          : menuTreeError || (editingRoleId && allMenuTreeError)
                             ? (
-                                <ul>
-                                  {availableMenuNodes.map(node => renderMenuNode(node))}
-                                </ul>
-                              )
-                            : (
-                                <p className="text-sm text-muted-foreground">
-                                  {t('role.noAvailableMenus')}
+                                <p role="alert" className="text-sm text-destructive">
+                                  {t('role.authorizationLoadFailed')}
                                 </p>
-                              )}
-                    </Field>
-                  </FieldGroup>
-                )}
-          <DialogFooter>
+                              )
+                            : availableMenuNodes.length
+                              ? (
+                                  <ul>
+                                    {availableMenuNodes.map(node => renderMenuNode(node))}
+                                  </ul>
+                                )
+                              : (
+                                  <p className="text-sm text-muted-foreground">
+                                    {t('role.noAvailableMenus')}
+                                  </p>
+                                )}
+                      </Field>
+                    </FieldGroup>
+                  )}
+          </ScrollArea>
+          <DialogFooter className="shrink-0">
             <Button variant="outline" onClick={() => closeEditor(false)}>
               {t('cancel')}
             </Button>
