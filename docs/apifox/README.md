@@ -36,7 +36,7 @@
 如需在 Apifox Mock 中使用 `user` 演示受限菜单权限：
 
 1. 打开 `POST /login` 的“Mock”设置，启用 Mock 脚本，将 `login.mock.js` 的完整内容粘贴并保存。
-2. 打开 `POST /user/menus` 的“Mock”设置，启用 Mock 脚本，将 `user-menus.mock.js` 的完整内容粘贴并保存。
+2. 打开 `POST /user/menus` 的“Mock”设置，启用 Mock 脚本，将 `user-menus.mock.js` 的完整内容粘贴并保存。脚本用 Apifox 支持的 `$$.mockRequest.headers.get('x-access-token')` 读取鉴权头。
 3. 使用 `user` / `123456` 登录。登录请求中的密码会由前端转换为 MD5；脚本同时保留 `admin` / `123456`。
 4. 脚本分别返回不同的演示 token。`user` 的菜单仅包含首页、仪表盘、超级表格、表单和图表，不包含“系统管理”“常用组件”或“菜单嵌套”；`admin` 保留全部菜单权限。
 

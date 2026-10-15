@@ -1,5 +1,5 @@
 const authorization = String(
-  $$.mockRequest.getHeader('x-access-token') || '',
+  $$.mockRequest.headers.get('x-access-token') || '',
 ).replace(/^Bearer\s+/i, '')
 
 const userMenuIds = [
