@@ -209,9 +209,9 @@ export default function UserManagementPage() {
   }
 
   return (
-    <Card className="m-4 gap-4 p-4">
+    <Card className="h-full min-h-0 gap-4 p-4">
       <h1 className="sr-only">{t('userManagement.title')}</h1>
-      <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <FieldGroup className="grid shrink-0 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Field>
           <Input
             id="filter-username"
@@ -271,7 +271,7 @@ export default function UserManagementPage() {
           </Select>
         </Field>
       </FieldGroup>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
         <span className="text-sm text-muted-foreground">
           {t('userManagement.selectedCount', { count: selectedUserIds.length })}
         </span>
@@ -286,9 +286,9 @@ export default function UserManagementPage() {
           </Button>
         </div>
       </div>
-      <div className="overflow-x-auto rounded-md border">
-        <Table className="table-auto">
-          <TableHeader className="[&_th]:text-center">
+      <div className="min-h-0 flex-1 overflow-auto rounded-md border">
+        <Table containerClassName="overflow-visible" className="table-auto">
+          <TableHeader className="sticky top-0 z-10 bg-muted shadow-xs [&_th]:text-center">
             <TableRow>
               <TableHead>
                 <Checkbox
@@ -428,7 +428,7 @@ export default function UserManagementPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex shrink-0 items-center justify-end gap-3">
         <span className="text-sm text-muted-foreground">
           {t('userManagement.total', { count: total })}
         </span>
