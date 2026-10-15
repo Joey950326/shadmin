@@ -10,7 +10,7 @@ const script = fs.readFileSync(path.join(__dirname, 'permission-catalog.mock.js'
 function runCatalogMock() {
   let response
   vm.runInNewContext(script, {
-    $$: { mockResponse: { setBody: body => { response = JSON.parse(JSON.stringify(body)) } } },
+    $$: { mockResponse: { setBody: (body) => { response = JSON.parse(JSON.stringify(body)) } } },
   })
   return response
 }

@@ -26,7 +26,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
@@ -58,6 +64,7 @@ import {
   getAvailableMenuTreeApi,
   getMenuTreeApi,
 } from '@/services/api/modules/menu'
+import { mapRoleDetailToForm, mapRoleMutationPayload } from './roleFormMapping.mjs'
 
 const PAGE_SIZE = 10
 
@@ -166,13 +173,7 @@ export default function RoleListPage() {
       return
     }
     const authorizedIds = detail.data.menuIds
-    setForm({
-      roleName: detail.data.roleName,
-      roleCode: detail.data.roleCode,
-      description: detail.data.description ?? '',
-      status: detail.data.status,
-      permissionCodes: detail.data.permissionCodes ?? [],
-    })
+    setForm(mapRoleDetailToForm(detail.data))
     const allPageIds = new Set(collectPageIds(allMenuTree.data))
     const visibleIds = new Set(collectPageIds(menuTree.data))
     const authorizedPageIds = authorizedIds.filter(id => allPageIds.has(id))
@@ -206,14 +207,11 @@ export default function RoleListPage() {
   }
 
   const handleSaveRole = async () => {
-    const params = {
-      ...form,
-      roleName: form.roleName.trim(),
-      roleCode: form.roleCode.trim(),
-      description: form.description?.trim() || undefined,
-      menuIds: [...new Set([...retainedHiddenMenuIds, ...selectedMenuIds])],
-      permissionCodes: form.permissionCodes,
-    }
+    const params = mapRoleMutationPayload(
+      form,
+      selectedMenuIds,
+      retainedHiddenMenuIds,
+    )
     if (!params.roleName || !params.roleCode)
       return
     try {
@@ -664,8 +662,8 @@ export default function RoleListPage() {
                           </SelectContent>
                         </Select>
                       </Field>
-                      <Field>
-                        <FieldLabel>{t('role.operationPermissions')}</FieldLabel>
+                      <FieldSet>
+                        <FieldLegend variant="label">{t('role.operationPermissions')}</FieldLegend>
                         {permissionCatalogLoading
                           ? <p>{t('loadingData')}</p>
                           : permissionCatalogError
@@ -701,7 +699,7 @@ export default function RoleListPage() {
                                   </ul>
                                 )
                               : <p className="text-sm text-muted-foreground">{t('role.noOperationPermissions')}</p>}
-                      </Field>
+                      </FieldSet>
                       <Field>
                         <FieldLabel>{t('role.authorization')}</FieldLabel>
                         {menuTreeLoading
