@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
@@ -313,8 +314,8 @@ export default function RoleListPage() {
   }
 
   return (
-    <main className="flex flex-col gap-4 p-6">
-      <h1 className="text-2xl font-semibold">{t('role.title')}</h1>
+    <Card className="m-6 gap-4 p-6">
+      <h1 className="sr-only">{t('role.title')}</h1>
       <section aria-label={t('role.filters')}>
         <FieldGroup className="grid gap-3 sm:grid-cols-3">
           <Field>
@@ -740,6 +741,6 @@ export default function RoleListPage() {
                 )}
         </DialogContent>
       </Dialog>
-    </main>
+    </Card>
   )
 }

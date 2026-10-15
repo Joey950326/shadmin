@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
@@ -208,42 +209,34 @@ export default function UserManagementPage() {
   }
 
   return (
-    <main className="flex flex-col gap-4 p-4">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">{t('userManagement.title')}</h1>
-        <UserFormDialog />
-      </div>
+    <Card className="m-4 gap-4 p-4">
+      <h1 className="sr-only">{t('userManagement.title')}</h1>
       <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Field>
-          <FieldLabel htmlFor="filter-username">
-            {t('userManagement.username')}
-          </FieldLabel>
           <Input
             id="filter-username"
+            aria-label={t('userManagement.username')}
             value={filters.username}
             placeholder={t('userManagement.usernamePlaceholder')}
             onChange={event => updateFilter('username', event.target.value)}
           />
         </Field>
         <Field>
-          <FieldLabel htmlFor="filter-phone">
-            {t('userManagement.phone')}
-          </FieldLabel>
           <Input
             id="filter-phone"
+            aria-label={t('userManagement.phone')}
             value={filters.phone}
             placeholder={t('userManagement.phonePlaceholder')}
             onChange={event => updateFilter('phone', event.target.value)}
           />
         </Field>
         <Field>
-          <FieldLabel>{t('userManagement.gender')}</FieldLabel>
           <Select
             value={filters.gender || 'all'}
             onValueChange={value =>
               updateFilter('gender', value === 'all' ? '' : value)}
           >
-            <SelectTrigger>
+            <SelectTrigger aria-label={t('userManagement.gender')}>
               <SelectValue placeholder={t('userManagement.allGenders')} />
             </SelectTrigger>
             <SelectContent>
@@ -258,13 +251,12 @@ export default function UserManagementPage() {
           </Select>
         </Field>
         <Field>
-          <FieldLabel>{t('userManagement.status')}</FieldLabel>
           <Select
             value={filters.status || 'all'}
             onValueChange={value =>
               updateFilter('status', value === 'all' ? '' : value)}
           >
-            <SelectTrigger>
+            <SelectTrigger aria-label={t('userManagement.status')}>
               <SelectValue placeholder={t('userManagement.allStatuses')} />
             </SelectTrigger>
             <SelectContent>
@@ -279,17 +271,20 @@ export default function UserManagementPage() {
           </Select>
         </Field>
       </FieldGroup>
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="text-sm text-muted-foreground">
           {t('userManagement.selectedCount', { count: selectedUserIds.length })}
         </span>
-        <Button
-          variant="destructive"
-          disabled={!selectedUserIds.length || deleteUser.isPending}
-          onClick={() => setDeleteUserIds(selectedUserIds)}
-        >
-          {t('userManagement.deleteSelected')}
-        </Button>
+        <div className="flex items-center gap-3">
+          <UserFormDialog />
+          <Button
+            variant="destructive"
+            disabled={!selectedUserIds.length || deleteUser.isPending}
+            onClick={() => setDeleteUserIds(selectedUserIds)}
+          >
+            {t('userManagement.deleteSelected')}
+          </Button>
+        </div>
       </div>
       <div className="overflow-x-auto rounded-md border">
         <Table className="table-auto">
@@ -458,6 +453,6 @@ export default function UserManagementPage() {
           {t('pagination.next')}
         </Button>
       </div>
-    </main>
+    </Card>
   )
 }

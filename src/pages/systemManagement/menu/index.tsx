@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -496,22 +496,20 @@ export default function MenuManagementPage() {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between gap-4">
-          <CardTitle>{t('menu:system.menuTree')}</CardTitle>
-          <div className="flex gap-2">
-            <Button onClick={() => setFormState({ parentId: '' })}>
-              {t('menu:system.addMenu')}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => refetch()}
-              disabled={isFetching}
-            >
-              {isFetching ? <Spinner data-icon="inline-start" /> : null}
-              {t('menu:system.refresh')}
-            </Button>
-          </div>
+      <CardHeader className="flex flex-row items-center justify-end">
+        <h1 className="sr-only">{t('menu:system.menuTree')}</h1>
+        <div className="flex gap-2">
+          <Button onClick={() => setFormState({ parentId: '' })}>
+            {t('menu:system.addMenu')}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => refetch()}
+            disabled={isFetching}
+          >
+            {isFetching ? <Spinner data-icon="inline-start" /> : null}
+            {t('menu:system.refresh')}
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
