@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -35,6 +34,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { Switch } from '@/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -583,13 +583,12 @@ export default function MenuManagementPage() {
                           <TableCell>{node.path || '—'}</TableCell>
                           <TableCell>{node.sort}</TableCell>
                           <TableCell>
-                            <Badge
-                              variant={node.status === 1 ? 'secondary' : 'outline'}
-                            >
-                              {node.status === 1
-                                ? t('menu:system.enabled')
-                                : t('menu:system.disabled')}
-                            </Badge>
+                            <Switch
+                              checked={node.status === 1}
+                              aria-label={`${i18n.resolvedLanguage?.startsWith('zh') || i18n.language.startsWith('zh') ? node.nameZh : node.nameEn} ${t('menu:system.status')}`}
+                              disabled={pendingActionId !== null}
+                              onCheckedChange={() => updateStatus(node)}
+                            />
                           </TableCell>
                           <TableCell>
                             <div className="flex gap-2">
@@ -609,17 +608,6 @@ export default function MenuManagementPage() {
                                   {t('menu:system.addChild')}
                                 </Button>
                               )}
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                disabled={pendingActionId !== null}
-                                onClick={() => updateStatus(node)}
-                              >
-                                {pendingActionId === node.id
-                                  ? <Spinner data-icon="inline-start" />
-                                  : null}
-                                {t(node.status === 1 ? 'menu:system.disable' : 'menu:system.enable')}
-                              </Button>
                               <Button
                                 size="sm"
                                 variant="destructive"
