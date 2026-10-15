@@ -2945,13 +2945,20 @@
                   "data": {
                     "pageNum": 1,
                     "pageSize": 10,
-                    "total": 1,
+                    "total": 2,
                     "list": [
                       {
                         "id": "role-admin",
                         "roleName": "系统管理员",
                         "roleCode": "admin",
-                        "description": "系统管理角色",
+                        "description": "全部菜单权限",
+                        "status": 1
+                      },
+                      {
+                        "id": "role-user",
+                        "roleName": "普通用户",
+                        "roleCode": "user",
+                        "description": "首页、仪表盘和表单权限",
                         "status": 1
                       }
                     ]
@@ -2984,6 +2991,11 @@
                   "code": 200,
                   "msg": "查询成功",
                   "data": [
+                    {
+                      "id": "role-user",
+                      "roleName": "普通用户",
+                      "roleCode": "user"
+                    },
                     {
                       "id": "role-editor",
                       "roleName": "内容管理员",
@@ -3039,11 +3051,31 @@
                     "id": "role-admin",
                     "roleName": "系统管理员",
                     "roleCode": "admin",
-                    "description": "系统管理角色",
+                    "description": "全部菜单权限",
                     "status": 1,
                     "menuIds": [
                       "menu-home",
                       "menu-dashboard-data",
+                      "menu-table-basic",
+                      "menu-table-complex",
+                      "menu-table-tree",
+                      "menu-form-basic",
+                      "menu-form-complex",
+                      "menu-form-dynamic",
+                      "menu-chart-bar",
+                      "menu-chart-line",
+                      "menu-chart-area",
+                      "menu-chart-pie",
+                      "menu-chart-radar",
+                      "menu-chart-radial",
+                      "menu-users",
+                      "menu-system-roles",
+                      "menu-system-menu",
+                      "menu-svg-icons",
+                      "menu-collapse-sub1",
+                      "menu-collapse-sub2-1",
+                      "menu-collapse-sub2-2",
+                      "menu-collapse-sub3",
                       "menu-exception-403",
                       "menu-exception-404",
                       "menu-exception-500"
@@ -3072,11 +3104,15 @@
                 "$ref": "#/components/schemas/RoleCreateRequest"
               },
               "example": {
-                "roleName": "内容管理员",
-                "roleCode": "content-admin",
-                "description": "内容维护",
+                "roleName": "普通用户",
+                "roleCode": "user",
+                "description": "首页、仪表盘和表单权限",
                 "status": 1,
-                "menuIds": ["menu-form-basic"]
+                "menuIds": [
+                  "menu-home",
+                  "menu-dashboard-data",
+                  "menu-form-basic"
+                ]
               }
             }
           }
@@ -3107,11 +3143,31 @@
                 "id": "role-admin",
                 "roleName": "系统管理员",
                 "roleCode": "admin",
-                "description": "系统管理角色",
+                "description": "全部菜单权限",
                 "status": 1,
                 "menuIds": [
                   "menu-home",
                   "menu-dashboard-data",
+                  "menu-table-basic",
+                  "menu-table-complex",
+                  "menu-table-tree",
+                  "menu-form-basic",
+                  "menu-form-complex",
+                  "menu-form-dynamic",
+                  "menu-chart-bar",
+                  "menu-chart-line",
+                  "menu-chart-area",
+                  "menu-chart-pie",
+                  "menu-chart-radar",
+                  "menu-chart-radial",
+                  "menu-users",
+                  "menu-system-roles",
+                  "menu-system-menu",
+                  "menu-svg-icons",
+                  "menu-collapse-sub1",
+                  "menu-collapse-sub2-1",
+                  "menu-collapse-sub2-2",
+                  "menu-collapse-sub3",
                   "menu-exception-403",
                   "menu-exception-404",
                   "menu-exception-500"
@@ -3208,6 +3264,213 @@
                   "msg": "查询成功",
                   "data": [
                     {
+                      "id": "menu-home",
+                      "nameZh": "首页",
+                      "nameEn": "Home",
+                      "type": "page",
+                      "path": "/home/index",
+                      "icon": "home",
+                      "sort": 1,
+                      "status": 1,
+                      "children": []
+                    },
+                    {
+                      "id": "menu-dashboard",
+                      "nameZh": "仪表盘",
+                      "nameEn": "Dashboard",
+                      "type": "directory",
+                      "sort": 10,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-dashboard-data",
+                          "nameZh": "数据可视化",
+                          "nameEn": "Data Visualization",
+                          "parentId": "menu-dashboard",
+                          "type": "page",
+                          "path": "/dashboard/dataVisualization",
+                          "icon": "dataVisualization",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-table",
+                      "nameZh": "超级表格",
+                      "nameEn": "Super Table",
+                      "type": "directory",
+                      "sort": 20,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-table-basic",
+                          "nameZh": "基础表格",
+                          "nameEn": "Basic Table",
+                          "parentId": "menu-table",
+                          "type": "page",
+                          "path": "/proTable/basicTable",
+                          "icon": "basicTable",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-table-complex",
+                          "nameZh": "复杂表格",
+                          "nameEn": "Complex Table",
+                          "parentId": "menu-table",
+                          "type": "page",
+                          "path": "/proTable/complexTable",
+                          "icon": "complexTable",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-table-tree",
+                          "nameZh": "树形表格",
+                          "nameEn": "Tree Table",
+                          "parentId": "menu-table",
+                          "type": "page",
+                          "path": "/proTable/treeFilter",
+                          "icon": "treeTable",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-form",
+                      "nameZh": "表单",
+                      "nameEn": "Form",
+                      "type": "directory",
+                      "sort": 30,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-form-basic",
+                          "nameZh": "基础表单",
+                          "nameEn": "Basic Form",
+                          "parentId": "menu-form",
+                          "type": "page",
+                          "path": "/form/basicForm",
+                          "icon": "basicForm",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-form-complex",
+                          "nameZh": "复杂表单",
+                          "nameEn": "Complex Form",
+                          "parentId": "menu-form",
+                          "type": "page",
+                          "path": "/form/complexForm",
+                          "icon": "complexForm",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-form-dynamic",
+                          "nameZh": "动态表单",
+                          "nameEn": "Dynamic Form",
+                          "parentId": "menu-form",
+                          "type": "page",
+                          "path": "/form/dynamicForm",
+                          "icon": "dynamicForm",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-chart",
+                      "nameZh": "图表",
+                      "nameEn": "Charts",
+                      "type": "directory",
+                      "sort": 40,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-chart-bar",
+                          "nameZh": "柱状图",
+                          "nameEn": "Bar Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/barChart",
+                          "icon": "barChart",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-line",
+                          "nameZh": "折线图",
+                          "nameEn": "Line Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/lineChart",
+                          "icon": "lineChart",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-area",
+                          "nameZh": "面积图",
+                          "nameEn": "Area Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/areaChart",
+                          "icon": "areaChart",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-pie",
+                          "nameZh": "饼图",
+                          "nameEn": "Pie Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/pieChart",
+                          "icon": "pieChart",
+                          "sort": 4,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-radar",
+                          "nameZh": "雷达图",
+                          "nameEn": "Radar Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/radarChart",
+                          "icon": "radarChart",
+                          "sort": 5,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-radial",
+                          "nameZh": "径向图",
+                          "nameEn": "Radial Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/radialChart",
+                          "icon": "radialChart",
+                          "sort": 6,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
                       "id": "menu-system",
                       "nameZh": "系统管理",
                       "nameEn": "System Management",
@@ -3224,6 +3487,121 @@
                           "path": "/systemManage/userManage",
                           "icon": "users",
                           "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-system-roles",
+                          "nameZh": "角色管理",
+                          "nameEn": "Role Management",
+                          "parentId": "menu-system",
+                          "type": "page",
+                          "path": "/systemManage/roleManage",
+                          "icon": "right-manage",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-system-menu",
+                          "nameZh": "菜单管理",
+                          "nameEn": "Menu Management",
+                          "parentId": "menu-system",
+                          "type": "page",
+                          "path": "/systemManage/menuManage",
+                          "icon": "system-manage",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-common",
+                      "nameZh": "常用组件",
+                      "nameEn": "Common Components",
+                      "type": "directory",
+                      "sort": 100,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-svg-icons",
+                          "nameZh": "SVG 图标",
+                          "nameEn": "SVG Icons",
+                          "parentId": "menu-common",
+                          "type": "page",
+                          "path": "/commonComponent/svgIcons",
+                          "icon": "common-component",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-collapse",
+                      "nameZh": "菜单嵌套",
+                      "nameEn": "Nested Menus",
+                      "type": "directory",
+                      "sort": 110,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-collapse-sub1",
+                          "nameZh": "子菜单一",
+                          "nameEn": "Sub Menu 1",
+                          "parentId": "menu-collapse",
+                          "type": "page",
+                          "path": "/menuCollapse/subMenu1",
+                          "icon": "menu-collapse",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-collapse-sub2",
+                          "nameZh": "子菜单二",
+                          "nameEn": "Sub Menu 2",
+                          "parentId": "menu-collapse",
+                          "type": "directory",
+                          "sort": 2,
+                          "status": 1,
+                          "children": [
+                            {
+                              "id": "menu-collapse-sub2-1",
+                              "nameZh": "子菜单二-一",
+                              "nameEn": "Sub Menu 2-1",
+                              "parentId": "menu-collapse-sub2",
+                              "type": "page",
+                              "path": "/menuCollapse/subMenu2/subMenu1",
+                              "icon": "menu-collapse",
+                              "sort": 1,
+                              "status": 1,
+                              "children": []
+                            },
+                            {
+                              "id": "menu-collapse-sub2-2",
+                              "nameZh": "子菜单二-二",
+                              "nameEn": "Sub Menu 2-2",
+                              "parentId": "menu-collapse-sub2",
+                              "type": "page",
+                              "path": "/menuCollapse/subMenu2/subMenu2",
+                              "icon": "menu-collapse",
+                              "sort": 2,
+                              "status": 1,
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "id": "menu-collapse-sub3",
+                          "nameZh": "子菜单三",
+                          "nameEn": "Sub Menu 3",
+                          "parentId": "menu-collapse",
+                          "type": "page",
+                          "path": "/menuCollapse/subMenu3",
+                          "icon": "menu-collapse",
+                          "sort": 3,
                           "status": 1,
                           "children": []
                         }
@@ -3302,13 +3680,348 @@
                   "msg": "查询成功",
                   "data": [
                     {
+                      "id": "menu-home",
+                      "nameZh": "首页",
+                      "nameEn": "Home",
+                      "type": "page",
+                      "path": "/home/index",
+                      "icon": "home",
+                      "sort": 1,
+                      "status": 1,
+                      "children": []
+                    },
+                    {
+                      "id": "menu-dashboard",
+                      "nameZh": "仪表盘",
+                      "nameEn": "Dashboard",
+                      "type": "directory",
+                      "sort": 10,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-dashboard-data",
+                          "nameZh": "数据可视化",
+                          "nameEn": "Data Visualization",
+                          "parentId": "menu-dashboard",
+                          "type": "page",
+                          "path": "/dashboard/dataVisualization",
+                          "icon": "dataVisualization",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-table",
+                      "nameZh": "超级表格",
+                      "nameEn": "Super Table",
+                      "type": "directory",
+                      "sort": 20,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-table-basic",
+                          "nameZh": "基础表格",
+                          "nameEn": "Basic Table",
+                          "parentId": "menu-table",
+                          "type": "page",
+                          "path": "/proTable/basicTable",
+                          "icon": "basicTable",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-table-complex",
+                          "nameZh": "复杂表格",
+                          "nameEn": "Complex Table",
+                          "parentId": "menu-table",
+                          "type": "page",
+                          "path": "/proTable/complexTable",
+                          "icon": "complexTable",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-table-tree",
+                          "nameZh": "树形表格",
+                          "nameEn": "Tree Table",
+                          "parentId": "menu-table",
+                          "type": "page",
+                          "path": "/proTable/treeFilter",
+                          "icon": "treeTable",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-form",
+                      "nameZh": "表单",
+                      "nameEn": "Form",
+                      "type": "directory",
+                      "sort": 30,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-form-basic",
+                          "nameZh": "基础表单",
+                          "nameEn": "Basic Form",
+                          "parentId": "menu-form",
+                          "type": "page",
+                          "path": "/form/basicForm",
+                          "icon": "basicForm",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-form-complex",
+                          "nameZh": "复杂表单",
+                          "nameEn": "Complex Form",
+                          "parentId": "menu-form",
+                          "type": "page",
+                          "path": "/form/complexForm",
+                          "icon": "complexForm",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-form-dynamic",
+                          "nameZh": "动态表单",
+                          "nameEn": "Dynamic Form",
+                          "parentId": "menu-form",
+                          "type": "page",
+                          "path": "/form/dynamicForm",
+                          "icon": "dynamicForm",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-chart",
+                      "nameZh": "图表",
+                      "nameEn": "Charts",
+                      "type": "directory",
+                      "sort": 40,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-chart-bar",
+                          "nameZh": "柱状图",
+                          "nameEn": "Bar Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/barChart",
+                          "icon": "barChart",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-line",
+                          "nameZh": "折线图",
+                          "nameEn": "Line Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/lineChart",
+                          "icon": "lineChart",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-area",
+                          "nameZh": "面积图",
+                          "nameEn": "Area Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/areaChart",
+                          "icon": "areaChart",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-pie",
+                          "nameZh": "饼图",
+                          "nameEn": "Pie Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/pieChart",
+                          "icon": "pieChart",
+                          "sort": 4,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-radar",
+                          "nameZh": "雷达图",
+                          "nameEn": "Radar Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/radarChart",
+                          "icon": "radarChart",
+                          "sort": 5,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-chart-radial",
+                          "nameZh": "径向图",
+                          "nameEn": "Radial Chart",
+                          "parentId": "menu-chart",
+                          "type": "page",
+                          "path": "/chart/radialChart",
+                          "icon": "radialChart",
+                          "sort": 6,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
                       "id": "menu-system",
                       "nameZh": "系统管理",
                       "nameEn": "System Management",
                       "type": "directory",
                       "sort": 90,
                       "status": 1,
-                      "children": []
+                      "children": [
+                        {
+                          "id": "menu-users",
+                          "nameZh": "用户管理",
+                          "nameEn": "User Management",
+                          "parentId": "menu-system",
+                          "type": "page",
+                          "path": "/systemManage/userManage",
+                          "icon": "users",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-system-roles",
+                          "nameZh": "角色管理",
+                          "nameEn": "Role Management",
+                          "parentId": "menu-system",
+                          "type": "page",
+                          "path": "/systemManage/roleManage",
+                          "icon": "right-manage",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-system-menu",
+                          "nameZh": "菜单管理",
+                          "nameEn": "Menu Management",
+                          "parentId": "menu-system",
+                          "type": "page",
+                          "path": "/systemManage/menuManage",
+                          "icon": "system-manage",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-common",
+                      "nameZh": "常用组件",
+                      "nameEn": "Common Components",
+                      "type": "directory",
+                      "sort": 100,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-svg-icons",
+                          "nameZh": "SVG 图标",
+                          "nameEn": "SVG Icons",
+                          "parentId": "menu-common",
+                          "type": "page",
+                          "path": "/commonComponent/svgIcons",
+                          "icon": "common-component",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "menu-collapse",
+                      "nameZh": "菜单嵌套",
+                      "nameEn": "Nested Menus",
+                      "type": "directory",
+                      "sort": 110,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-collapse-sub1",
+                          "nameZh": "子菜单一",
+                          "nameEn": "Sub Menu 1",
+                          "parentId": "menu-collapse",
+                          "type": "page",
+                          "path": "/menuCollapse/subMenu1",
+                          "icon": "menu-collapse",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-collapse-sub2",
+                          "nameZh": "子菜单二",
+                          "nameEn": "Sub Menu 2",
+                          "parentId": "menu-collapse",
+                          "type": "directory",
+                          "sort": 2,
+                          "status": 1,
+                          "children": [
+                            {
+                              "id": "menu-collapse-sub2-1",
+                              "nameZh": "子菜单二-一",
+                              "nameEn": "Sub Menu 2-1",
+                              "parentId": "menu-collapse-sub2",
+                              "type": "page",
+                              "path": "/menuCollapse/subMenu2/subMenu1",
+                              "icon": "menu-collapse",
+                              "sort": 1,
+                              "status": 1,
+                              "children": []
+                            },
+                            {
+                              "id": "menu-collapse-sub2-2",
+                              "nameZh": "子菜单二-二",
+                              "nameEn": "Sub Menu 2-2",
+                              "parentId": "menu-collapse-sub2",
+                              "type": "page",
+                              "path": "/menuCollapse/subMenu2/subMenu2",
+                              "icon": "menu-collapse",
+                              "sort": 2,
+                              "status": 1,
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "id": "menu-collapse-sub3",
+                          "nameZh": "子菜单三",
+                          "nameEn": "Sub Menu 3",
+                          "parentId": "menu-collapse",
+                          "type": "page",
+                          "path": "/menuCollapse/subMenu3",
+                          "icon": "menu-collapse",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
                     },
                     {
                       "id": "menu-exception",
@@ -3469,7 +4182,7 @@
         "tags": ["用户"],
         "summary": "查询当前用户可访问菜单 ID",
         "operationId": "getCurrentUserMenuIds",
-        "description": "应用启动时调用一次；只返回当前用户有效的页面菜单 ID。目录节点由客户端根据页面菜单补齐。",
+        "description": "应用启动时调用一次；只返回当前用户有效的页面菜单 ID。admin 返回全部页面菜单，user 返回首页、仪表盘、表格、表单、图表及异常页面；目录节点由客户端根据页面菜单补齐。",
         "responses": {
           "200": {
             "description": "查询当前用户可访问菜单 ID成功",
@@ -3485,7 +4198,26 @@
                     "menuIds": [
                       "menu-home",
                       "menu-dashboard-data",
+                      "menu-table-basic",
+                      "menu-table-complex",
+                      "menu-table-tree",
                       "menu-form-basic",
+                      "menu-form-complex",
+                      "menu-form-dynamic",
+                      "menu-chart-bar",
+                      "menu-chart-line",
+                      "menu-chart-area",
+                      "menu-chart-pie",
+                      "menu-chart-radar",
+                      "menu-chart-radial",
+                      "menu-users",
+                      "menu-system-roles",
+                      "menu-system-menu",
+                      "menu-svg-icons",
+                      "menu-collapse-sub1",
+                      "menu-collapse-sub2-1",
+                      "menu-collapse-sub2-2",
+                      "menu-collapse-sub3",
                       "menu-exception-403",
                       "menu-exception-404",
                       "menu-exception-500"

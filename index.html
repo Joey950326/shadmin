@@ -8,27 +8,25 @@
     <title>shadmin</title>
     <script>
       try {
-        const app = window.localStorage.getItem('persist:shadmin-app')
-        if (app) {
-          const parsedApp = JSON.parse(app)
-          if (parsedApp.themeMode.includes('dark')) {
-            document.documentElement.classList.add('dark')
-          } else if (parsedApp.themeMode.includes('light')) {
-            document.documentElement.classList.remove('dark')
-          } else if (parsedApp.themeMode.includes('system')) {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              document.documentElement.classList.add('dark')
-            } else {
-              document.documentElement.classList.remove('dark')
-            }
-          }
-        } else {
-          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark')
+        const persistedApp = window.localStorage.getItem('persist:shadmin-app')
+        const parsedApp = persistedApp ? JSON.parse(persistedApp) : null
+        const persistedThemeMode = parsedApp?.themeMode
+        let themeMode = 'system'
+
+        if (typeof persistedThemeMode === 'string') {
+          try {
+            themeMode = JSON.parse(persistedThemeMode)
+          } catch {
+            themeMode = persistedThemeMode
           }
         }
-      } catch (error) {
-        console.error('Error parsing theme from localStorage:', error)
+
+        const isDark = themeMode === 'dark'
+          || (themeMode === 'system'
+            && window.matchMedia?.('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', isDark)
+      } catch {
+        // 读取失败时使用 CSS 默认亮色。
       }
     </script>
   </head>

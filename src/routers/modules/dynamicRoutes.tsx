@@ -172,7 +172,7 @@ const dynamicRoutes = [
         ],
       },
       {
-        path: 'systemManage/accountManage',
+        path: 'systemManage/userManage',
         lazy: async () => {
           const Component = (await import('@/pages/systemManagement/users/index.tsx')).default
           return { Component }

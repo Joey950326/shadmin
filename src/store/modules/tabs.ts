@@ -14,7 +14,7 @@ const initialState: TabsState = {
 }
 
 const tabsPersistConfig = {
-  key: 'shadmin-app',
+  key: 'shadmin-tabs',
   storage, // 使用 localStorage 进行持久化
   version: 1, // 版本号，默认为1
 }

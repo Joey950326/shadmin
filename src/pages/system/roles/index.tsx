@@ -556,7 +556,7 @@ export default function RoleListPage() {
         open={creatingRole || Boolean(editingRoleId)}
         onOpenChange={closeEditor}
       >
-        <DialogContent className="flex max-h-[90vh] min-h-0 flex-col overflow-hidden sm:max-w-2xl">
+        <DialogContent className="flex h-[90vh] max-h-[90vh] min-h-0 flex-col overflow-hidden sm:max-w-2xl">
           <DialogHeader className="shrink-0">
             <DialogTitle>
               {t(creatingRole ? 'role.create' : 'role.edit')}
