@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -424,7 +424,7 @@ export default function MenuManagementPage() {
   } | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Api.Menu.Node | null>(null)
   const [pendingActionId, setPendingActionId] = useState<string | null>(null)
-  const { data, isLoading, isError, refetch, isFetching } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['system-menu-tree'],
     queryFn: getMenuTreeApi,
   })
@@ -496,38 +496,25 @@ export default function MenuManagementPage() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-end">
-        <h1 className="sr-only">{t('menu:system.menuTree')}</h1>
-        <div className="flex gap-2">
-          <Button onClick={() => setFormState({ parentId: '' })}>
-            {t('menu:system.addMenu')}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => refetch()}
-            disabled={isFetching}
-          >
-            {isFetching ? <Spinner data-icon="inline-start" /> : null}
-            {t('menu:system.refresh')}
-          </Button>
-        </div>
-      </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-end gap-3">
-          <div className="flex min-w-48 flex-col gap-2">
-            <label htmlFor="menu-name-filter" className="text-sm font-medium">
-              {t('menu:system.menuName')}
-            </label>
-            <Input
-              id="menu-name-filter"
-              value={name}
-              onChange={event => setName(event.target.value)}
-              placeholder={t('menu:system.searchName')}
-            />
+        <h1 className="sr-only">{t('menu:system.menuTree')}</h1>
+        <div className="flex items-center gap-3">
+          <Input
+            id="menu-name-filter"
+            aria-label={t('menu:system.menuName')}
+            className="min-w-0 flex-1"
+            value={name}
+            onChange={event => setName(event.target.value)}
+            placeholder={t('menu:system.searchName')}
+          />
+          <div className="flex shrink-0 gap-2">
+            <Button variant="outline" onClick={resetFilters}>
+              {t('menu:system.reset')}
+            </Button>
+            <Button onClick={() => setFormState({ parentId: '' })}>
+              {t('menu:system.addMenu')}
+            </Button>
           </div>
-          <Button variant="outline" onClick={resetFilters}>
-            {t('menu:system.reset')}
-          </Button>
         </div>
         {isError && (
           <p role="alert" className="text-sm text-destructive">
