@@ -104,10 +104,10 @@ export default function PermissionSwitchPage() {
           </div>
           {switchAvailable && (
             <div className="flex flex-wrap gap-2">
-              <Button disabled={switching} onClick={() => void switchAccount('user')}>
+              <Button disabled={switching || userInfo?.username === 'user'} onClick={() => void switchAccount('user')}>
                 {t('permissionDemo.switchUser')}
               </Button>
-              <Button disabled={switching} variant="outline" onClick={() => void switchAccount('admin')}>
+              <Button disabled={switching || userInfo?.username === 'admin'} variant="outline" onClick={() => void switchAccount('admin')}>
                 {t('permissionDemo.switchAdmin')}
               </Button>
             </div>
