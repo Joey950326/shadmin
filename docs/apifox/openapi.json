@@ -3017,12 +3017,72 @@
         }
       }
     },
+    "/permission/catalog": {
+      "post": {
+        "tags": ["角色"],
+        "summary": "查询可分配的操作权限目录",
+        "operationId": "getPermissionCatalog",
+        "description": "返回角色管理可分配的稳定操作权限码及中英文名称、说明。角色写操作的 Apifox Mock 不承诺持久化。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": false },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "查询操作权限目录成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionCatalogResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "msg": "查询成功",
+                  "data": [
+                    {
+                      "code": "demo:view",
+                      "nameZh": "查看演示内容",
+                      "nameEn": "View demo content",
+                      "description": "查看权限演示页面内容"
+                    },
+                    {
+                      "code": "user:create",
+                      "nameZh": "新增用户",
+                      "nameEn": "Create user",
+                      "description": "创建用户账号"
+                    },
+                    {
+                      "code": "role:edit",
+                      "nameZh": "编辑角色",
+                      "nameEn": "Edit role",
+                      "description": "修改角色信息及授权"
+                    },
+                    {
+                      "code": "menu:change-status",
+                      "nameZh": "修改菜单状态",
+                      "nameEn": "Change menu status",
+                      "description": "启用或停用菜单"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
     "/role/detail": {
       "post": {
         "tags": ["角色"],
-        "summary": "查询角色详情及授权菜单",
+        "summary": "查询角色详情及页面菜单与操作权限",
         "operationId": "getRoleDetail",
-        "description": "menuIds 包含已停用但仍保留授权关系的页面菜单 ID。",
+        "description": "menuIds 包含已停用但仍保留授权关系的页面菜单 ID；permissionCodes 为独立的操作权限码。",
         "requestBody": {
           "required": true,
           "content": {
@@ -3080,6 +3140,12 @@
                       "menu-permission-switch",
                       "menu-exception-404",
                       "menu-exception-500"
+                    ],
+                    "permissionCodes": [
+                      "user:create",
+                      "user:edit",
+                      "role:edit",
+                      "menu:change-status"
                     ]
                   }
                 }
@@ -3113,7 +3179,8 @@
                   "menu-home",
                   "menu-dashboard-data",
                   "menu-form-basic"
-                ]
+                ],
+                "permissionCodes": ["demo:view", "user:create", "role:edit"]
               }
             }
           }
@@ -3172,7 +3239,8 @@
                   "menu-exception-403",
                   "menu-exception-404",
                   "menu-exception-500"
-                ]
+                ],
+                "permissionCodes": ["demo:view", "user:create", "role:edit"]
               }
             }
           }
@@ -5116,7 +5184,7 @@
       },
       "RoleCreateRequest": {
         "type": "object",
-        "required": ["roleName", "roleCode", "menuIds"],
+        "required": ["roleName", "roleCode", "menuIds", "permissionCodes"],
         "additionalProperties": false,
         "properties": {
           "roleName": {
@@ -5141,12 +5209,24 @@
               "type": "string"
             },
             "description": "页面菜单 ID；不包含目录节点"
+          },
+          "permissionCodes": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "操作权限码，与页面菜单授权 menuIds 相互独立"
           }
         }
       },
       "RoleUpdateRequest": {
         "type": "object",
-        "required": ["id", "roleName", "roleCode", "status", "menuIds"],
+        "required": [
+          "id",
+          "roleName",
+          "roleCode",
+          "status",
+          "menuIds",
+          "permissionCodes"
+        ],
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5173,6 +5253,11 @@
               "type": "string"
             },
             "description": "页面菜单 ID，需保留未显示的停用菜单授权"
+          },
+          "permissionCodes": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "操作权限码，与页面菜单授权 menuIds 相互独立"
           }
         }
       },
@@ -5203,17 +5288,60 @@
               },
               {
                 "type": "object",
-                "required": ["menuIds"],
+                "required": ["menuIds", "permissionCodes"],
                 "properties": {
                   "menuIds": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "permissionCodes": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "角色已授权的操作权限码"
                   }
                 }
               }
             ]
+          }
+        }
+      },
+      "PermissionCatalogItem": {
+        "type": "object",
+        "required": ["code", "nameZh", "nameEn", "description"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "稳定权限码，使用资源:操作格式",
+            "example": "role:edit"
+          },
+          "nameZh": {
+            "type": "string",
+            "description": "中文名称",
+            "example": "编辑角色"
+          },
+          "nameEn": {
+            "type": "string",
+            "description": "英文名称",
+            "example": "Edit role"
+          },
+          "description": {
+            "type": "string",
+            "description": "权限用途说明",
+            "example": "修改角色信息及授权"
+          }
+        }
+      },
+      "PermissionCatalogResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": { "type": "integer", "enum": [200] },
+          "msg": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PermissionCatalogItem" }
           }
         }
       },

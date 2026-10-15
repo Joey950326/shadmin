@@ -189,6 +189,17 @@ declare namespace Api {
 
   }
 
+  namespace Permission {
+    interface CatalogItem {
+      code: string
+      nameZh: string
+      nameEn: string
+      description: string
+    }
+
+    interface CatalogResponse extends Base.ResponseData<CatalogItem[]> {}
+  }
+
   namespace Role {
     interface Info {
       id: string
@@ -223,6 +234,7 @@ declare namespace Api {
       description?: string
       status: 0 | 1
       menuIds: string[]
+      permissionCodes: string[]
     }
 
     interface AddParams extends MutationParams {}
@@ -242,7 +254,9 @@ declare namespace Api {
       status: 0 | 1
     }
 
-    interface DetailResponse extends Base.ResponseData<Info & { menuIds: string[] }> {}
+    interface DetailResponse extends Base.ResponseData<
+      Info & { menuIds: string[], permissionCodes: string[] }
+    > {}
 
     interface DeleteResponse extends Base.ResponseData {}
 

@@ -1,6 +1,7 @@
 import { API_BASE_URL } from './base'
 
 export const ROLE_URLS = {
+  PERMISSION_CATALOG: `${API_BASE_URL}/permission/catalog`,
   LIST: `${API_BASE_URL}/role/list`,
   OPTIONS: `${API_BASE_URL}/role/options`,
   DETAIL: `${API_BASE_URL}/role/detail`,

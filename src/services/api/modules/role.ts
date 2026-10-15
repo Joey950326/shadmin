@@ -2,6 +2,14 @@ import type { Api } from '../types/api'
 import request from '../request'
 import { ROLE_URLS } from '../urls/role'
 
+export function permissionCatalogApi(options?: Api.Base.RequestOptions) {
+  return request.post<Api.Permission.CatalogResponse>(
+    ROLE_URLS.PERMISSION_CATALOG,
+    {},
+    options,
+  )
+}
+
 export function roleListApi(
   data: Api.Role.ListParams,
   options?: Api.Base.RequestOptions,

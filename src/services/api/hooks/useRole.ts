@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 import { QUERY_KEYS } from '../keys'
 import {
+  permissionCatalogApi,
   roleAddApi,
   roleDeleteApi,
   roleDetailApi,
@@ -15,6 +16,13 @@ import {
   roleOptionsApi,
   roleStatusChangeApi,
 } from '../modules/role'
+
+export function usePermissionCatalog() {
+  return useQuery<Api.Permission.CatalogResponse>({
+    queryKey: ['permission', 'catalog'],
+    queryFn: () => permissionCatalogApi(),
+  })
+}
 
 export function useRoleList(params: Api.Role.ListParams) {
   return useQuery<Api.Role.ListResponse>({

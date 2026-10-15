@@ -11,7 +11,7 @@
 1. 登录 [Apifox](https://app.apifox.com/)，新建或进入目标项目。
 2. 打开项目设置中的“导入数据”，选择“手动导入”。
 3. 选择 OpenAPI/Swagger，上传本目录的 `openapi.json`。
-4. 预览 24 个接口及数据模型；可开启“自动生成接口用例”和“导入 Servers 为环境”，然后确认导入。
+4. 预览 25 个接口及数据模型；可开启“自动生成接口用例”和“导入 Servers 为环境”，然后确认导入。
 5. 再次导入更新后的文件时，建议按 `operationId` 智能合并，避免产生重复接口。
 
 ## 系统管理接口与 Mock 部署
@@ -19,7 +19,7 @@
 `openapi.json` 已包含用户、角色和菜单管理接口。当前接口分组如下：
 
 - 用户：现有 `/user/list`、`/user/add`、`/user/edit`、`/user/delete`、`/user/change`，以及应用启动时读取权限菜单的 `/user/menus`。
-- 角色：`/role/list`、`/role/options`、`/role/detail`、`/role/add`、`/role/edit`、`/role/delete`、`/role/change`。
+- 角色：`/role/list`、`/role/options`、`/role/detail`、`/role/add`、`/role/edit`、`/role/delete`、`/role/change`；`/permission/catalog` 提供可分配的稳定权限码、中英文名称及说明。
 - 菜单：`/menu/tree`、`/menu/available-tree`、`/menu/add`、`/menu/edit`、`/menu/delete`。
 
 所有系统管理接口均使用 POST、JSON 请求体和现有 `{ code, msg, data }` 响应结构；除登录外需要 `x-access-token: Bearer <access_token>`。列表分页使用 `page`、`pageSize`；用户及角色批量删除使用 `{ "id": ["..."] }`，菜单删除使用 `{ "id": "..." }`。
@@ -29,7 +29,8 @@
 1. 在 Apifox 项目中选择“导入数据”→“手动导入”→“OpenAPI/Swagger”。
 2. 上传仓库中的 `docs/apifox/openapi.json`。若已有这份 API，选择按 `operationId` 智能合并，避免重复创建。
 3. 检查“用户”“角色”“菜单”分组，以及 `/user/menus`、`/menu/available-tree` 等新接口已出现，再确认导入。
-4. 在 Mock 环境为接口生成 Mock 响应；写操作当前以接口调用和统一成功响应为目标，Mock 不实现真实数据持久化或权限规则。
+4. 为 `POST /permission/catalog` 配置 Mock 脚本，将 `permission-catalog.mock.js` 完整内容粘贴到脚本设置中。目录包含演示页及用户、角色、菜单管理操作权限，角色表单必须从该目录选择，不接受自由输入权限码。
+5. 在 Mock 环境为接口生成 Mock 响应；角色新增、编辑等写操作仅返回成功结构，不承诺持久化，重新查询时不保证反映刚才的写入，也不实现服务端权限规则。
 
 ### 配置演示登录账号及菜单权限
 
@@ -39,9 +40,9 @@
 2. 打开 `POST /user/menus` 的“Mock”设置，启用 Mock 脚本，将 `user-menus.mock.js` 的完整内容粘贴并保存。脚本用 Apifox 支持的 `$$.mockRequest.headers.get('x-access-token')` 读取鉴权头。
 3. 打开 `POST /user/permissions` 的“Mock”设置，启用 Mock 脚本，将 `user-permissions.mock.js` 的完整内容粘贴并保存。普通用户返回 `demo:view`，管理员返回 `demo:view`、`demo:edit` 和 `demo:delete`；未知或缺失 Token 返回 401。
 4. 使用 `user` / `123456` 登录。登录请求中的密码会由前端转换为 MD5；脚本同时保留 `admin` / `123456`。
-5. 脚本分别返回不同的演示 token。`user` 的菜单包含首页、仪表盘、超级表格、表单和图表，并额外允许访问“系统功能／切换权限”；不包含“系统管理”“常用组件”或“菜单嵌套”；`admin` 保留全部菜单权限。
+5. 脚本分别返回不同的演示 token。`user` 的菜单包含首页、仪表盘、超级表格、表单和图表，并额外允许访问“系统功能／切换权限”；不包含“系统管理”“常用组件”或“菜单嵌套”；`admin` 保留全部菜单权限。角色权限目录脚本返回 `code`、`nameZh`、`nameEn` 和 `description`；角色详情及新增／编辑契约分别以 `permissionCodes` 表达操作授权、以原有 `menuIds` 表达页面授权，两者相互独立。Mock 角色写操作不持久化，目录仅供选项展示。
 
-这两个脚本只模拟登录响应和菜单授权，不创建真实用户记录，也不持久化数据。若还希望 `user` 出现在用户管理列表中，需要另外配置 `/user/list` 的 Mock 数据；不能通过这两个脚本创建可供真实后端使用的账号。
+登录、菜单及当前用户权限脚本只模拟对应响应，不创建真实用户记录，也不持久化数据。`permission-catalog.mock.js` 仅返回静态目录；角色新增／编辑等 Mock 写操作同样不承诺持久化。若还希望 `user` 出现在用户管理列表中，需要另外配置 `/user/list` 的 Mock 数据；不能通过这两个脚本创建可供真实后端使用的账号。
 
 ### 配置本地前端访问 Apifox Mock
 

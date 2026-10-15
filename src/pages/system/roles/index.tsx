@@ -48,6 +48,7 @@ import {
   useAddRole,
   useDeleteRole,
   useEditRole,
+  usePermissionCatalog,
   useRoleDetail,
   useRoleList,
   useRoleStatusChange,
@@ -61,7 +62,7 @@ const PAGE_SIZE = 10
 
 type RoleForm = Pick<
   Api.Role.MutationParams,
-  'roleName' | 'roleCode' | 'description' | 'status'
+  'roleName' | 'roleCode' | 'description' | 'status' | 'permissionCodes'
 >
 
 const EMPTY_ROLE_FORM: RoleForm = {
@@ -69,6 +70,7 @@ const EMPTY_ROLE_FORM: RoleForm = {
   roleCode: '',
   description: '',
   status: 1,
+  permissionCodes: [],
 }
 
 function pageIdsBelow(node: Api.Menu.Node): string[] {
@@ -112,6 +114,11 @@ export default function RoleListPage() {
   const addRole = useAddRole()
   const editRole = useEditRole()
   const changeRoleStatus = useRoleStatusChange()
+  const {
+    data: permissionCatalog,
+    isFetching: permissionCatalogLoading,
+    isError: permissionCatalogError,
+  } = usePermissionCatalog()
   const {
     data: menuTree,
     isFetching: menuTreeLoading,
@@ -163,6 +170,7 @@ export default function RoleListPage() {
       roleCode: detail.data.roleCode,
       description: detail.data.description ?? '',
       status: detail.data.status,
+      permissionCodes: detail.data.permissionCodes ?? [],
     })
     const allPageIds = new Set(collectPageIds(allMenuTree.data))
     const visibleIds = new Set(collectPageIds(menuTree.data))
@@ -203,6 +211,7 @@ export default function RoleListPage() {
       roleCode: form.roleCode.trim(),
       description: form.description?.trim() || undefined,
       menuIds: [...new Set([...retainedHiddenMenuIds, ...selectedMenuIds])],
+      permissionCodes: form.permissionCodes,
     }
     if (!params.roleName || !params.roleCode)
       return
@@ -645,6 +654,44 @@ export default function RoleListPage() {
                         </Select>
                       </Field>
                       <Field>
+                        <FieldLabel>{t('role.operationPermissions')}</FieldLabel>
+                        {permissionCatalogLoading
+                          ? <p>{t('loadingData')}</p>
+                          : permissionCatalogError
+                            ? <p role="alert" className="text-sm text-destructive">{t('role.permissionCatalogLoadFailed')}</p>
+                            : permissionCatalog?.data?.length
+                              ? (
+                                  <ul className="flex flex-col gap-1">
+                                    {permissionCatalog.data.map(permission => (
+                                      <li key={permission.code}>
+                                        <label className="flex items-start gap-2 py-1">
+                                          <Checkbox
+                                            aria-label={`${isChinese ? permission.nameZh : permission.nameEn} (${permission.code})`}
+                                            checked={form.permissionCodes.includes(permission.code)}
+                                            onCheckedChange={checked =>
+                                              setForm(current => ({
+                                                ...current,
+                                                permissionCodes: checked
+                                                  ? [...new Set([...current.permissionCodes, permission.code])]
+                                                  : current.permissionCodes.filter(code => code !== permission.code),
+                                              }))}
+                                          />
+                                          <span>
+                                            <span className="font-medium">{isChinese ? permission.nameZh : permission.nameEn}</span>
+                                            <span className="ml-2 text-muted-foreground">
+                                              {permission.code}
+                                              {' — '}
+                                              {permission.description}
+                                            </span>
+                                          </span>
+                                        </label>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )
+                              : <p className="text-sm text-muted-foreground">{t('role.noOperationPermissions')}</p>}
+                      </Field>
+                      <Field>
                         <FieldLabel>{t('role.authorization')}</FieldLabel>
                         {menuTreeLoading
                           ? (
@@ -683,6 +730,8 @@ export default function RoleListPage() {
                 || editRole.isPending
                 || menuTreeLoading
                 || menuTreeError
+                || permissionCatalogLoading
+                || permissionCatalogError
                 || allMenuTreeError
                 || detailError
                 || Boolean(
@@ -736,6 +785,8 @@ export default function RoleListPage() {
                             : 'disabled',
                         )}
                       </dd>
+                      <dt className="font-medium">{t('role.authorizedPermissionCodes')}</dt>
+                      <dd>{detail.data.permissionCodes?.length ? detail.data.permissionCodes.join(', ') : t('noData')}</dd>
                       <dt className="font-medium">{t('role.authorizedMenuIds')}</dt>
                       <dd>
                         {detail.data.menuIds.length
