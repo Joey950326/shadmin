@@ -5,7 +5,13 @@ import { toast } from 'sonner'
 import Can from '@/components/Can'
 import FullScreenLoader from '@/components/LoadingScreen'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { useLogin } from '@/services/api/hooks/auth'
 import { QUERY_KEYS } from '@/services/api/keys'
 import { getMenuTreeApi, getUserMenusApi } from '@/services/api/modules/menu'
@@ -89,28 +95,76 @@ export default function PermissionSwitchPage() {
       <Card>
         <CardHeader>
           <CardTitle>{t('permissionDemo.title')}</CardTitle>
+          <CardDescription>{t('permissionDemo.description')}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
-          <div className="flex flex-wrap gap-2">
-            <Can permission="demo:view">
-              <Button>{t('permissionDemo.view')}</Button>
-            </Can>
-            <Can permission="demo:edit">
-              <Button variant="outline">{t('permissionDemo.edit')}</Button>
-            </Can>
-            <Can permission="demo:delete">
-              <Button variant="destructive">{t('permissionDemo.delete')}</Button>
-            </Can>
-          </div>
-          {switchAvailable && (
+          <section
+            aria-labelledby="permission-demo-instructions"
+            className="flex flex-col gap-2"
+          >
+            <h2
+              id="permission-demo-instructions"
+              className="text-sm font-medium"
+            >
+              {t('permissionDemo.instructionsTitle')}
+            </h2>
+            <ol className="flex list-decimal flex-col gap-2 pl-5 text-sm text-muted-foreground">
+              {switchAvailable && (
+                <li>{t('permissionDemo.instructionSwitchAccount')}</li>
+              )}
+              <li>{t('permissionDemo.instructionPermissionCodes')}</li>
+              <li>{t('permissionDemo.instructionNoRealAction')}</li>
+              <li>{t('permissionDemo.instructionMenuAndOperation')}</li>
+            </ol>
+          </section>
+          <section
+            aria-labelledby="permission-demo-examples"
+            className="flex flex-col gap-2"
+          >
+            <h2 id="permission-demo-examples" className="text-sm font-medium">
+              {t('permissionDemo.examplesTitle')}
+            </h2>
             <div className="flex flex-wrap gap-2">
-              <Button disabled={switching || userInfo?.username === 'user'} onClick={() => void switchAccount('user')}>
-                {t('permissionDemo.switchUser')}
-              </Button>
-              <Button disabled={switching || userInfo?.username === 'admin'} variant="outline" onClick={() => void switchAccount('admin')}>
-                {t('permissionDemo.switchAdmin')}
-              </Button>
+              <Can permission="demo:view">
+                <Button>{t('permissionDemo.view')}</Button>
+              </Can>
+              <Can permission="demo:edit">
+                <Button variant="outline">{t('permissionDemo.edit')}</Button>
+              </Can>
+              <Can permission="demo:delete">
+                <Button variant="destructive">
+                  {t('permissionDemo.delete')}
+                </Button>
+              </Can>
             </div>
+          </section>
+          {switchAvailable && (
+            <section
+              aria-labelledby="permission-demo-account-switch"
+              className="flex flex-col gap-2"
+            >
+              <h2
+                id="permission-demo-account-switch"
+                className="text-sm font-medium"
+              >
+                {t('permissionDemo.switchAccountTitle')}
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  disabled={switching || userInfo?.username === 'user'}
+                  onClick={() => void switchAccount('user')}
+                >
+                  {t('permissionDemo.switchUser')}
+                </Button>
+                <Button
+                  disabled={switching || userInfo?.username === 'admin'}
+                  variant="outline"
+                  onClick={() => void switchAccount('admin')}
+                >
+                  {t('permissionDemo.switchAdmin')}
+                </Button>
+              </div>
+            </section>
           )}
         </CardContent>
       </Card>
