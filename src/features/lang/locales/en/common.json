@@ -30,6 +30,17 @@
     "description": "Sorry, the page you are looking for doesn't exist.",
     "backHome": "Back to Home"
   },
+  "forbidden": {
+    "title": "Access Denied",
+    "description": "Sorry, you don't have permission to access this page. Contact an administrator for access.",
+    "backHome": "Back to Home"
+  },
+  "serverError": {
+    "title": "Something went wrong",
+    "description": "The server ran into a problem. Please try again in a moment.",
+    "retry": "Try again",
+    "backHome": "Back to Home"
+  },
   "developing": {
     "title": "Coming Soon",
     "description": "This feature is under development. Please check back soon.",
