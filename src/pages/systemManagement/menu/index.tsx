@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import Can from '@/components/Can'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -404,10 +405,12 @@ function MenuFormDialog({
             >
               {t('menu:system.cancel')}
             </Button>
-            <Button type="submit" disabled={submitting}>
-              {submitting ? <Spinner data-icon="inline-start" /> : null}
-              {t('menu:system.save')}
-            </Button>
+            <Can permission={node ? 'menu:edit' : 'menu:create'}>
+              <Button type="submit" disabled={submitting}>
+                {submitting ? <Spinner data-icon="inline-start" /> : null}
+                {t('menu:system.save')}
+              </Button>
+            </Can>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -519,9 +522,11 @@ export default function MenuManagementPage() {
             <Button variant="outline" onClick={resetFilters}>
               {t('menu:system.reset')}
             </Button>
-            <Button onClick={() => setFormState({ parentId: '' })}>
-              {t('menu:system.addMenu')}
-            </Button>
+            <Can permission="menu:create">
+              <Button onClick={() => setFormState({ parentId: '' })}>
+                {t('menu:system.addMenu')}
+              </Button>
+            </Can>
           </div>
         </div>
         {isError && (
@@ -584,39 +589,47 @@ export default function MenuManagementPage() {
                             </TableCell>
                             <TableCell>{node.sort}</TableCell>
                             <TableCell>
-                              <Switch
-                                checked={node.status === 1}
-                                aria-label={`${i18n.resolvedLanguage?.startsWith('zh') || i18n.language.startsWith('zh') ? node.nameZh : node.nameEn} ${t('menu:system.status')}`}
-                                disabled={pendingActionId !== null}
-                                onCheckedChange={() => updateStatus(node)}
-                              />
+                              <Can permission="menu:change-status">
+                                <Switch
+                                  checked={node.status === 1}
+                                  aria-label={`${i18n.resolvedLanguage?.startsWith('zh') || i18n.language.startsWith('zh') ? node.nameZh : node.nameEn} ${t('menu:system.status')}`}
+                                  disabled={pendingActionId !== null}
+                                  onCheckedChange={() => updateStatus(node)}
+                                />
+                              </Can>
                             </TableCell>
                             <TableCell>
                               <div className="flex flex-wrap gap-2">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => setFormState({ node, parentId: '' })}
-                                >
-                                  {t('menu:system.editMenu')}
-                                </Button>
-                                {node.type === 'directory' && (
+                                <Can permission="menu:edit">
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => setFormState({ parentId: node.id })}
+                                    onClick={() => setFormState({ node, parentId: '' })}
                                   >
-                                    {t('menu:system.addChild')}
+                                    {t('menu:system.editMenu')}
                                   </Button>
+                                </Can>
+                                {node.type === 'directory' && (
+                                  <Can permission="menu:create">
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => setFormState({ parentId: node.id })}
+                                    >
+                                      {t('menu:system.addChild')}
+                                    </Button>
+                                  </Can>
                                 )}
-                                <Button
-                                  size="sm"
-                                  variant="destructive"
-                                  disabled={pendingActionId !== null}
-                                  onClick={() => setDeleteTarget(node)}
-                                >
-                                  {t('menu:system.delete')}
-                                </Button>
+                                <Can permission="menu:delete">
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    disabled={pendingActionId !== null}
+                                    onClick={() => setDeleteTarget(node)}
+                                  >
+                                    {t('menu:system.delete')}
+                                  </Button>
+                                </Can>
                               </div>
                             </TableCell>
                           </TableRow>
@@ -649,17 +662,19 @@ export default function MenuManagementPage() {
             <AlertDialogCancel disabled={pendingActionId !== null}>
               {t('menu:system.cancel')}
             </AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              disabled={pendingActionId !== null}
-              onClick={(event) => {
-                event.preventDefault()
-                void deleteMenu()
-              }}
-            >
-              {pendingActionId !== null ? <Spinner data-icon="inline-start" /> : null}
-              {t('menu:system.delete')}
-            </AlertDialogAction>
+            <Can permission="menu:delete">
+              <AlertDialogAction
+                variant="destructive"
+                disabled={pendingActionId !== null}
+                onClick={(event) => {
+                  event.preventDefault()
+                  void deleteMenu()
+                }}
+              >
+                {pendingActionId !== null ? <Spinner data-icon="inline-start" /> : null}
+                {t('menu:system.delete')}
+              </AlertDialogAction>
+            </Can>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
