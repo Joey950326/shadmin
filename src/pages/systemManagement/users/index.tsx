@@ -3,6 +3,7 @@ import type { Api } from '@/services/api/types/api'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import Can from '@/components/Can'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -293,13 +294,15 @@ export default function UserManagementPage() {
             {t('reset')}
           </Button>
           <UserFormDialog />
-          <Button
-            variant="destructive"
-            disabled={!selectedUserIds.length || deleteUser.isPending}
-            onClick={() => setDeleteUserIds(selectedUserIds)}
-          >
-            {t('userManagement.deleteSelected')}
-          </Button>
+          <Can permission="user:delete">
+            <Button
+              variant="destructive"
+              disabled={!selectedUserIds.length || deleteUser.isPending}
+              onClick={() => setDeleteUserIds(selectedUserIds)}
+            >
+              {t('userManagement.deleteSelected')}
+            </Button>
+          </Can>
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-hidden rounded-md border">
@@ -366,15 +369,17 @@ export default function UserManagementPage() {
                         : '—'}
                   </TableCell>
                   <TableCell>
-                    <Switch
-                      aria-label={t('userManagement.toggleStatus', {
-                        name: user.username,
-                      })}
-                      checked={user.status === 1}
-                      disabled={statusChange.isPending}
-                      onCheckedChange={checked =>
-                        handleStatusChange(user, checked)}
-                    />
+                    <Can permission="user:change-status">
+                      <Switch
+                        aria-label={t('userManagement.toggleStatus', {
+                          name: user.username,
+                        })}
+                        checked={user.status === 1}
+                        disabled={statusChange.isPending}
+                        onCheckedChange={checked =>
+                          handleStatusChange(user, checked)}
+                      />
+                    </Can>
                     <span className="sr-only">
                       {user.status === 1 ? t('enabled') : t('disabled')}
                     </span>
@@ -393,14 +398,16 @@ export default function UserManagementPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <UserDetails user={user} />
                       <UserFormDialog key={user.id} user={user} />
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        disabled={deleteUser.isPending}
-                        onClick={() => setDeleteUserIds([user.id])}
-                      >
-                        {t('delete')}
-                      </Button>
+                      <Can permission="user:delete">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          disabled={deleteUser.isPending}
+                          onClick={() => setDeleteUserIds([user.id])}
+                        >
+                          {t('delete')}
+                        </Button>
+                      </Can>
                     </div>
                   </TableCell>
                 </TableRow>
