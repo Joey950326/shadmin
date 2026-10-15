@@ -95,6 +95,12 @@ export default function PermissionSwitchPage() {
             <Can permission="demo:view">
               <Button>{t('permissionDemo.view')}</Button>
             </Can>
+            <Can permission="demo:edit">
+              <Button variant="outline">{t('permissionDemo.edit')}</Button>
+            </Can>
+            <Can permission="demo:delete">
+              <Button variant="destructive">{t('permissionDemo.delete')}</Button>
+            </Can>
           </div>
           {switchAvailable && (
             <div className="flex flex-wrap gap-2">

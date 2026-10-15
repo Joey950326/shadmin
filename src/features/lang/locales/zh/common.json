@@ -344,6 +344,8 @@
   "permissionDemo": {
     "title": "操作权限演示",
     "view": "查看",
+    "edit": "编辑",
+    "delete": "删除",
     "switchUser": "切换为普通用户",
     "switchAdmin": "切换为管理员",
     "switching": "正在切换账号并加载权限...",

@@ -344,6 +344,8 @@
   "permissionDemo": {
     "title": "Operation permission demo",
     "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
     "switchUser": "Switch to regular user",
     "switchAdmin": "Switch to administrator",
     "switching": "Switching account and loading permissions...",
