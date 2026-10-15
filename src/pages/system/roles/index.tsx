@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/dialog'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Select,
   SelectContent,
@@ -314,9 +315,9 @@ export default function RoleListPage() {
   }
 
   return (
-    <Card className="m-6 gap-4 p-6">
+    <Card className="h-full min-h-0 gap-4 p-4">
       <h1 className="sr-only">{t('role.title')}</h1>
-      <section aria-label={t('role.filters')}>
+      <section aria-label={t('role.filters')} className="shrink-0">
         <FieldGroup className="grid gap-3 sm:grid-cols-3">
           <Field>
             <FieldLabel htmlFor="role-name">{t('role.name')}</FieldLabel>
@@ -363,7 +364,7 @@ export default function RoleListPage() {
         </FieldGroup>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
         <span className="text-sm text-muted-foreground">
           {t('role.selectedCount', { count: selectedRoleIds.length })}
         </span>
@@ -383,109 +384,112 @@ export default function RoleListPage() {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-md border">
-        <Table className="table-auto">
-          <TableHeader className="[&_th]:text-center">
-            <TableRow>
-              <TableHead>
-                <Checkbox
-                  aria-label={t('role.selectPage')}
-                  checked={allPageRolesSelected}
-                  onCheckedChange={checked =>
-                    togglePageSelection(checked === true)}
-                />
-              </TableHead>
-              <TableHead>{t('role.name')}</TableHead>
-              <TableHead>{t('role.code')}</TableHead>
-              <TableHead>{t('role.description')}</TableHead>
-              <TableHead>{t('status')}</TableHead>
-              <TableHead>{t('role.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
-            {roles.map(role => (
-              <TableRow key={role.id}>
-                <TableCell>
-                  <Checkbox
-                    aria-label={t('role.selectRole', { name: role.roleName })}
-                    checked={selectedRoleIds.includes(role.id)}
-                    onCheckedChange={checked =>
-                      toggleRoleSelection(role.id, checked === true)}
-                  />
-                </TableCell>
-                <TableCell>{role.roleName}</TableCell>
-                <TableCell>{role.roleCode}</TableCell>
-                <TableCell>
-                  <span
-                    className="block max-w-64 truncate"
-                    title={role.description || undefined}
-                  >
-                    {role.description || '—'}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {t(role.status === 1 ? 'enabled' : 'disabled')}
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedRoleId(role.id)}
-                    >
-                      {t('view')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openEditForm(role.id)}
-                    >
-                      {t('edit')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={changeRoleStatus.isPending}
-                      onClick={() => handleRoleStatusChange(role)}
-                    >
-                      {t(
-                        role.status === 1
-                          ? 'role.disable'
-                          : 'role.enable',
-                      )}
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      disabled={deleteRole.isPending}
-                      onClick={() => setDeleteRoleIds([role.id])}
-                    >
-                      {t('delete')}
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-            {!roles.length && (
+      <div className="min-h-0 flex-1 overflow-hidden rounded-md border">
+        <ScrollArea className="size-full">
+          <Table containerClassName="overflow-visible" className="table-auto">
+            <TableHeader className="sticky top-0 z-10 bg-muted shadow-xs [&_th]:text-center">
               <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center text-muted-foreground"
-                >
-                  {isFetching
-                    ? t('loadingData')
-                    : roleListError
-                      ? t('role.listLoadFailed')
-                      : t('noData')}
-                </TableCell>
+                <TableHead>
+                  <Checkbox
+                    aria-label={t('role.selectPage')}
+                    checked={allPageRolesSelected}
+                    onCheckedChange={checked =>
+                      togglePageSelection(checked === true)}
+                  />
+                </TableHead>
+                <TableHead>{t('role.name')}</TableHead>
+                <TableHead>{t('role.code')}</TableHead>
+                <TableHead>{t('role.description')}</TableHead>
+                <TableHead>{t('status')}</TableHead>
+                <TableHead>{t('role.actions')}</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
+              {roles.map(role => (
+                <TableRow key={role.id}>
+                  <TableCell>
+                    <Checkbox
+                      aria-label={t('role.selectRole', { name: role.roleName })}
+                      checked={selectedRoleIds.includes(role.id)}
+                      onCheckedChange={checked =>
+                        toggleRoleSelection(role.id, checked === true)}
+                    />
+                  </TableCell>
+                  <TableCell>{role.roleName}</TableCell>
+                  <TableCell>{role.roleCode}</TableCell>
+                  <TableCell>
+                    <span
+                      className="block max-w-64 truncate"
+                      title={role.description || undefined}
+                    >
+                      {role.description || '—'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {t(role.status === 1 ? 'enabled' : 'disabled')}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedRoleId(role.id)}
+                      >
+                        {t('view')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditForm(role.id)}
+                      >
+                        {t('edit')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={changeRoleStatus.isPending}
+                        onClick={() => handleRoleStatusChange(role)}
+                      >
+                        {t(
+                          role.status === 1
+                            ? 'role.disable'
+                            : 'role.enable',
+                        )}
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={deleteRole.isPending}
+                        onClick={() => setDeleteRoleIds([role.id])}
+                      >
+                        {t('delete')}
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {!roles.length && (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="text-center text-muted-foreground"
+                  >
+                    {isFetching
+                      ? t('loadingData')
+                      : roleListError
+                        ? t('role.listLoadFailed')
+                        : t('noData')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
       <nav
         aria-label={t('role.pagination')}
-        className="flex items-center justify-end gap-3"
+        className="flex shrink-0 items-center justify-end gap-3"
       >
         <span className="text-sm text-muted-foreground">
           {t('role.total', { total })}
