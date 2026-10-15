@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/dialog'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Select,
   SelectContent,
@@ -286,117 +287,120 @@ export default function UserManagementPage() {
           </Button>
         </div>
       </div>
-      <div className="min-h-0 flex-1 overflow-auto rounded-md border">
-        <Table containerClassName="overflow-visible" className="table-auto">
-          <TableHeader className="sticky top-0 z-10 bg-muted shadow-xs [&_th]:text-center">
-            <TableRow>
-              <TableHead>
-                <Checkbox
-                  aria-label={t('userManagement.selectPage')}
-                  checked={allPageUsersSelected}
-                  onCheckedChange={checked =>
-                    togglePageSelection(checked === true)}
-                />
-              </TableHead>
-              <TableHead>{t('userManagement.username')}</TableHead>
-              <TableHead>{t('userManagement.email')}</TableHead>
-              <TableHead>{t('userManagement.phone')}</TableHead>
-              <TableHead>{t('userManagement.gender')}</TableHead>
-              <TableHead>{t('userManagement.status')}</TableHead>
-              <TableHead>{t('userManagement.role')}</TableHead>
-              <TableHead>{t('userManagement.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
-            {rows.map(user => (
-              <TableRow key={user.id}>
-                <TableCell>
-                  <Checkbox
-                    aria-label={t('userManagement.selectUser', {
-                      name: user.username,
-                    })}
-                    checked={selectedUserIds.includes(user.id)}
-                    onCheckedChange={checked =>
-                      toggleUserSelection(user.id, checked === true)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <span className="block max-w-40 truncate" title={user.username}>
-                    {user.username}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span
-                    className="block max-w-52 truncate"
-                    title={user.email ?? undefined}
-                  >
-                    {user.email ?? '—'}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span
-                    className="block max-w-36 truncate"
-                    title={user.phone ?? undefined}
-                  >
-                    {user.phone ?? '—'}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {user.gender === 1
-                    ? t('male')
-                    : user.gender === 2
-                      ? t('female')
-                      : '—'}
-                </TableCell>
-                <TableCell>
-                  <Switch
-                    aria-label={t('userManagement.toggleStatus', {
-                      name: user.username,
-                    })}
-                    checked={user.status === 1}
-                    disabled={statusChange.isPending}
-                    onCheckedChange={checked =>
-                      handleStatusChange(user, checked)}
-                  />
-                  <span className="sr-only">
-                    {user.status === 1 ? t('enabled') : t('disabled')}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span
-                    className="block max-w-40 truncate"
-                    title={typeof user.role === 'string' ? user.role : user.role?.name ?? undefined}
-                  >
-                    {typeof user.role === 'string'
-                      ? user.role
-                      : (user.role?.name ?? '—')}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <UserDetails user={user} />
-                    <UserFormDialog key={user.id} user={user} />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      disabled={deleteUser.isPending}
-                      onClick={() => setDeleteUserIds([user.id])}
-                    >
-                      {t('delete')}
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-            {!rows.length && (
+      <div className="min-h-0 flex-1 overflow-hidden rounded-md border">
+        <ScrollArea className="size-full">
+          <Table containerClassName="overflow-visible" className="table-auto">
+            <TableHeader className="sticky top-0 z-10 bg-muted shadow-xs [&_th]:text-center">
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
-                  {isFetching ? t('loading') : t('noData')}
-                </TableCell>
+                <TableHead>
+                  <Checkbox
+                    aria-label={t('userManagement.selectPage')}
+                    checked={allPageUsersSelected}
+                    onCheckedChange={checked =>
+                      togglePageSelection(checked === true)}
+                  />
+                </TableHead>
+                <TableHead>{t('userManagement.username')}</TableHead>
+                <TableHead>{t('userManagement.email')}</TableHead>
+                <TableHead>{t('userManagement.phone')}</TableHead>
+                <TableHead>{t('userManagement.gender')}</TableHead>
+                <TableHead>{t('userManagement.status')}</TableHead>
+                <TableHead>{t('userManagement.role')}</TableHead>
+                <TableHead>{t('userManagement.actions')}</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
+              {rows.map(user => (
+                <TableRow key={user.id}>
+                  <TableCell>
+                    <Checkbox
+                      aria-label={t('userManagement.selectUser', {
+                        name: user.username,
+                      })}
+                      checked={selectedUserIds.includes(user.id)}
+                      onCheckedChange={checked =>
+                        toggleUserSelection(user.id, checked === true)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <span className="block max-w-40 truncate" title={user.username}>
+                      {user.username}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className="block max-w-52 truncate"
+                      title={user.email ?? undefined}
+                    >
+                      {user.email ?? '—'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className="block max-w-36 truncate"
+                      title={user.phone ?? undefined}
+                    >
+                      {user.phone ?? '—'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {user.gender === 1
+                      ? t('male')
+                      : user.gender === 2
+                        ? t('female')
+                        : '—'}
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      aria-label={t('userManagement.toggleStatus', {
+                        name: user.username,
+                      })}
+                      checked={user.status === 1}
+                      disabled={statusChange.isPending}
+                      onCheckedChange={checked =>
+                        handleStatusChange(user, checked)}
+                    />
+                    <span className="sr-only">
+                      {user.status === 1 ? t('enabled') : t('disabled')}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className="block max-w-40 truncate"
+                      title={typeof user.role === 'string' ? user.role : user.role?.name ?? undefined}
+                    >
+                      {typeof user.role === 'string'
+                        ? user.role
+                        : (user.role?.name ?? '—')}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <UserDetails user={user} />
+                      <UserFormDialog key={user.id} user={user} />
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={deleteUser.isPending}
+                        onClick={() => setDeleteUserIds([user.id])}
+                      >
+                        {t('delete')}
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {!rows.length && (
+                <TableRow>
+                  <TableCell colSpan={8} className="h-24 text-center">
+                    {isFetching ? t('loading') : t('noData')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
       <AlertDialog
         open={deleteUserIds.length > 0}
