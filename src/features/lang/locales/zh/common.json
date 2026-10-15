@@ -343,7 +343,11 @@
   },
   "permissionDemo": {
     "title": "操作权限演示",
-    "view": "查看"
+    "view": "查看",
+    "switchUser": "切换为普通用户",
+    "switchAdmin": "切换为管理员",
+    "switching": "正在切换账号并加载权限...",
+    "switchFailed": "账号切换失败，已保留当前登录状态。"
   },
   "role": {
     "title": "角色管理",

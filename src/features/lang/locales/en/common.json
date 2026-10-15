@@ -343,7 +343,11 @@
   },
   "permissionDemo": {
     "title": "Operation permission demo",
-    "view": "View"
+    "view": "View",
+    "switchUser": "Switch to regular user",
+    "switchAdmin": "Switch to administrator",
+    "switching": "Switching account and loading permissions...",
+    "switchFailed": "Account switch failed. Your current login was preserved."
   },
   "role": {
     "title": "Roles",

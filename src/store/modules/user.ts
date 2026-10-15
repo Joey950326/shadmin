@@ -34,6 +34,11 @@ const userSlice = createSlice({
   initialState,
   // 接收action对象，更新状态
   reducers: {
+    setCredentials(state, action: PayloadAction<{ token: string | null, userInfo: UserInfo | null }>) {
+      state.token = action.payload.token
+      state.userInfo = action.payload.userInfo
+    },
+
     // 设置token
     setToken(state, action: PayloadAction<string>) {
       state.token = action.payload
@@ -65,7 +70,7 @@ const userSlice = createSlice({
   },
 })
 
-export const { setToken, setUserInfo, setManualLogin, setManualLogout } = userSlice.actions
+export const { setCredentials, setToken, setUserInfo, setManualLogin, setManualLogout } = userSlice.actions
 export const { selectToken, selectUserInfo, selectIsManualLogin, selectIsManualLogout } = userSlice.selectors
 
 // 使用 persistReducer 包装 userSlice.reducer，使其支持持久化
