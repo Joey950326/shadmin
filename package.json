@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test:role-i18n": "node scripts/check-role-translations.mjs",
     "test:request-auth": "node scripts/check-request-auth-token.mjs",
+    "test:menu-cache": "node scripts/check-menu-cache-on-account-switch.mjs",
     "preview": "vite preview",
     "prepare": "husky",
     "diceui:add": "pnpm dlx shadcn@latest add --path src/components/diceui"

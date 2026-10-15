@@ -3,7 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { QUERY_KEYS } from '@/services/api/keys'
 import { getMenuTreeApi, getUserMenusApi } from '@/services/api/modules/menu'
+import { useAppSelector } from '@/store/hooks'
+import { selectUserInfo } from '@/store/modules/user'
 import { buildAuthorizedMenu, isAuthorizedPagePath } from './menuNavigation'
 
 function findActiveMenu(menuData: MenuItem[], pathname: string): MenuItem | null {
@@ -24,8 +27,9 @@ function findActiveMenu(menuData: MenuItem[], pathname: string): MenuItem | null
 export default function useMenu() {
   const { i18n } = useTranslation()
   const location = useLocation()
+  const userInfo = useAppSelector(selectUserInfo)
   const { data, isError } = useQuery({
-    queryKey: ['authorized-navigation'],
+    queryKey: QUERY_KEYS.MENU.AUTHORIZED_NAVIGATION(userInfo?.username ?? null),
     queryFn: async () => {
       const [treeResponse, userMenusResponse] = await Promise.all([
         getMenuTreeApi(),
@@ -36,6 +40,7 @@ export default function useMenu() {
         menuIds: userMenusResponse.data?.menuIds ?? [],
       }
     },
+    enabled: Boolean(userInfo?.username),
     staleTime: Infinity,
     gcTime: Infinity,
     retry: false,

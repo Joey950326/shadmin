@@ -17,6 +17,9 @@ export const QUERY_KEYS = {
     DETAIL: (params: Api.Role.DetailParams) => ['role', 'detail', params] as const,
     OPTIONS: ['role', 'options'] as const,
   },
+  MENU: {
+    AUTHORIZED_NAVIGATION: (username: string | null) => ['authorized-navigation', username] as const,
+  },
 }
 
 export const MUTATION_KEYS = {
