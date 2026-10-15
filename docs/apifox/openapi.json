@@ -3041,7 +3041,13 @@
                     "roleCode": "admin",
                     "description": "系统管理角色",
                     "status": 1,
-                    "menuIds": ["menu-home", "menu-dashboard-data"]
+                    "menuIds": [
+                      "menu-home",
+                      "menu-dashboard-data",
+                      "menu-exception-403",
+                      "menu-exception-404",
+                      "menu-exception-500"
+                    ]
                   }
                 }
               }
@@ -3103,7 +3109,13 @@
                 "roleCode": "admin",
                 "description": "系统管理角色",
                 "status": 1,
-                "menuIds": ["menu-home", "menu-dashboard-data"]
+                "menuIds": [
+                  "menu-home",
+                  "menu-dashboard-data",
+                  "menu-exception-403",
+                  "menu-exception-404",
+                  "menu-exception-500"
+                ]
               }
             }
           }
@@ -3216,6 +3228,49 @@
                           "children": []
                         }
                       ]
+                    },
+                    {
+                      "id": "menu-exception",
+                      "nameZh": "异常页",
+                      "nameEn": "Error Pages",
+                      "type": "directory",
+                      "sort": 120,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-exception-403",
+                          "nameZh": "403",
+                          "nameEn": "403",
+                          "parentId": "menu-exception",
+                          "type": "page",
+                          "path": "/exception/403",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-exception-404",
+                          "nameZh": "404",
+                          "nameEn": "404",
+                          "parentId": "menu-exception",
+                          "type": "page",
+                          "path": "/exception/404",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-exception-500",
+                          "nameZh": "500",
+                          "nameEn": "500",
+                          "parentId": "menu-exception",
+                          "type": "page",
+                          "path": "/exception/500",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3254,6 +3309,49 @@
                       "sort": 90,
                       "status": 1,
                       "children": []
+                    },
+                    {
+                      "id": "menu-exception",
+                      "nameZh": "异常页",
+                      "nameEn": "Error Pages",
+                      "type": "directory",
+                      "sort": 120,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-exception-403",
+                          "nameZh": "403",
+                          "nameEn": "403",
+                          "parentId": "menu-exception",
+                          "type": "page",
+                          "path": "/exception/403",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-exception-404",
+                          "nameZh": "404",
+                          "nameEn": "404",
+                          "parentId": "menu-exception",
+                          "type": "page",
+                          "path": "/exception/404",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
+                        },
+                        {
+                          "id": "menu-exception-500",
+                          "nameZh": "500",
+                          "nameEn": "500",
+                          "parentId": "menu-exception",
+                          "type": "page",
+                          "path": "/exception/500",
+                          "sort": 3,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3387,7 +3485,10 @@
                     "menuIds": [
                       "menu-home",
                       "menu-dashboard-data",
-                      "menu-form-basic"
+                      "menu-form-basic",
+                      "menu-exception-403",
+                      "menu-exception-404",
+                      "menu-exception-500"
                     ]
                   }
                 }

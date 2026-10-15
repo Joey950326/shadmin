@@ -89,6 +89,12 @@
     "saveSuccess": "Menu saved successfully.",
     "saveFailed": "Failed to save menu. Please try again."
   },
+  "exception": {
+    "title": "Error Pages",
+    "forbidden": "403",
+    "notFound": "404",
+    "serverError": "500"
+  },
   "chart": {
     "title": "Common Charts",
     "barChart": "bar chart",

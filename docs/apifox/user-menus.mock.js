@@ -17,6 +17,9 @@ const userMenuIds = [
   'menu-chart-pie',
   'menu-chart-radar',
   'menu-chart-radial',
+  'menu-exception-403',
+  'menu-exception-404',
+  'menu-exception-500',
 ]
 
 const adminMenuIds = [

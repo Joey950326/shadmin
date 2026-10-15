@@ -3,6 +3,7 @@ import { Navigate } from 'react-router'
 // route titles use translation keys where needed; translate at render time
 import AuthGate from '@/features/router/AuthGate'
 import AuthorizedRouteGate from '@/features/router/AuthorizedRouteGate'
+import Exception403 from '@/pages/403/index.tsx'
 import Expection404 from '@/pages/404/index.tsx'
 import DevelopingPage from '@/pages/developing/index.tsx'
 
@@ -237,6 +238,30 @@ const dynamicRoutes = [
         path: 'menuCollapse/subMenu3',
         Component: DevelopingPage,
         handle: { title: 'menu:subMenu3' },
+      },
+      {
+        path: 'exception',
+        handle: { title: 'menu:exception.title' },
+        children: [
+          {
+            path: '403',
+            Component: Exception403,
+            handle: { title: 'menu:exception.forbidden' },
+          },
+          {
+            path: '404',
+            Component: Expection404,
+            handle: { title: 'menu:exception.notFound' },
+          },
+          {
+            path: '500',
+            lazy: async () => {
+              const Component = (await import('@/pages/500/index.tsx')).default
+              return { Component }
+            },
+            handle: { title: 'menu:exception.serverError' },
+          },
+        ],
       },
       {
         path: 'systemManage/menuManage',

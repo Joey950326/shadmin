@@ -89,6 +89,12 @@
     "saveSuccess": "菜单保存成功。",
     "saveFailed": "菜单保存失败，请重试。"
   },
+  "exception": {
+    "title": "异常页",
+    "forbidden": "403",
+    "notFound": "404",
+    "serverError": "500"
+  },
   "chart": {
     "title": "常用图表",
     "barChart": "柱状图",
