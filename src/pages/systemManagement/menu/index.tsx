@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dialog'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Select,
   SelectContent,
@@ -417,7 +418,8 @@ function MenuFormDialog({
 export default function MenuManagementPage() {
   const { t, i18n } = useTranslation()
   const queryClient = useQueryClient()
-  const [name, setName] = useState('')
+  const [draftName, setDraftName] = useState('')
+  const [appliedName, setAppliedName] = useState('')
   const [formState, setFormState] = useState<{
     node?: Api.Menu.Node
     parentId: string
@@ -433,14 +435,19 @@ export default function MenuManagementPage() {
     () =>
       filterMenuTree(
         nodes,
-        name,
+        appliedName,
         i18n.resolvedLanguage ?? i18n.language,
       ),
-    [nodes, name, i18n.language, i18n.resolvedLanguage],
+    [nodes, appliedName, i18n.language, i18n.resolvedLanguage],
   )
 
+  const handleSearch = () => {
+    setAppliedName(draftName)
+  }
+
   const resetFilters = () => {
-    setName('')
+    setDraftName('')
+    setAppliedName('')
   }
 
   const updateStatus = async (node: Api.Menu.Node) => {
@@ -495,19 +502,20 @@ export default function MenuManagementPage() {
   }
 
   return (
-    <Card>
-      <CardContent className="flex flex-col gap-4">
+    <Card className="h-full min-h-0 gap-4 p-4">
+      <CardContent className="flex min-h-0 flex-1 flex-col gap-4 p-0">
         <h1 className="sr-only">{t('menu:system.menuTree')}</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <Input
             id="menu-name-filter"
             aria-label={t('menu:system.menuName')}
-            className="min-w-0 flex-1"
-            value={name}
-            onChange={event => setName(event.target.value)}
+            className="w-full max-w-64"
+            value={draftName}
+            onChange={event => setDraftName(event.target.value)}
             placeholder={t('menu:system.searchName')}
           />
-          <div className="flex shrink-0 gap-2">
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <Button onClick={handleSearch}>{t('search')}</Button>
             <Button variant="outline" onClick={resetFilters}>
               {t('menu:system.reset')}
             </Button>
@@ -517,104 +525,107 @@ export default function MenuManagementPage() {
           </div>
         </div>
         {isError && (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="shrink-0 text-sm text-destructive">
             {t('menu:system.loadFailed')}
           </p>
         )}
-        <div className="overflow-x-auto rounded-md border">
-          <Table className="table-auto">
-            <TableHeader className="[&_th]:text-center">
-              <TableRow>
-                <TableHead>{t('menu:system.menuName')}</TableHead>
-                <TableHead>{t('menu:system.menuType')}</TableHead>
-                <TableHead>{t('menu:system.path')}</TableHead>
-                <TableHead>{t('menu:system.sort')}</TableHead>
-                <TableHead>{t('menu:system.status')}</TableHead>
-                <TableHead>{t('menu:system.actions')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
-              {isLoading
-                ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center">
-                        <Spinner className="mx-auto" />
-                      </TableCell>
-                    </TableRow>
-                  )
-                : rows.length === 0
+        <div className="min-h-0 flex-1 overflow-hidden rounded-md border">
+          <ScrollArea className="size-full">
+            <Table containerClassName="overflow-visible" className="table-auto">
+              <TableHeader className="sticky top-0 z-10 bg-muted shadow-xs [&_th]:text-center">
+                <TableRow>
+                  <TableHead>{t('menu:system.menuName')}</TableHead>
+                  <TableHead>{t('menu:system.menuType')}</TableHead>
+                  <TableHead>{t('menu:system.path')}</TableHead>
+                  <TableHead>{t('menu:system.sort')}</TableHead>
+                  <TableHead>{t('menu:system.status')}</TableHead>
+                  <TableHead>{t('menu:system.actions')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
+                {isLoading
                   ? (
                       <TableRow>
-                        <TableCell
-                          colSpan={6}
-                          className="h-24 text-center text-muted-foreground"
-                        >
-                          {t('menu:system.noMenus')}
+                        <TableCell colSpan={6} className="h-24 text-center">
+                          <Spinner className="mx-auto" />
                         </TableCell>
                       </TableRow>
                     )
-                  : (
-                      rows.map(({ node, depth }) => (
-                        <TableRow key={node.id}>
-                          <TableCell>
-                            <span
-                              className="block max-w-64 truncate"
-                              style={{ paddingInlineStart: `${depth * 1.5}rem` }}
-                            >
-                              {i18n.resolvedLanguage?.startsWith('zh')
-                                || i18n.language.startsWith('zh')
-                                ? node.nameZh
-                                : node.nameEn}
-                            </span>
+                  : rows.length === 0
+                    ? (
+                        <TableRow>
+                          <TableCell
+                            colSpan={6}
+                            className="h-24 text-center text-muted-foreground"
+                          >
+                            {t('menu:system.noMenus')}
                           </TableCell>
-                          <TableCell>{t(`menu:system.${node.type}`)}</TableCell>
-                          <TableCell>
-                            <span className="block max-w-48 truncate">
-                              {node.path || '—'}
-                            </span>
-                          </TableCell>
-                          <TableCell>{node.sort}</TableCell>
-                          <TableCell>
-                            <Switch
-                              checked={node.status === 1}
-                              aria-label={`${i18n.resolvedLanguage?.startsWith('zh') || i18n.language.startsWith('zh') ? node.nameZh : node.nameEn} ${t('menu:system.status')}`}
-                              disabled={pendingActionId !== null}
-                              onCheckedChange={() => updateStatus(node)}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-wrap gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setFormState({ node, parentId: '' })}
+                        </TableRow>
+                      )
+                    : (
+                        rows.map(({ node, depth }) => (
+                          <TableRow key={node.id}>
+                            <TableCell>
+                              <span
+                                className="block max-w-64 truncate"
+                                style={{ paddingInlineStart: `${depth * 1.5}rem` }}
                               >
-                                {t('menu:system.editMenu')}
-                              </Button>
-                              {node.type === 'directory' && (
+                                {i18n.resolvedLanguage?.startsWith('zh')
+                                  || i18n.language.startsWith('zh')
+                                  ? node.nameZh
+                                  : node.nameEn}
+                              </span>
+                            </TableCell>
+                            <TableCell>{t(`menu:system.${node.type}`)}</TableCell>
+                            <TableCell>
+                              <span className="block max-w-48 truncate">
+                                {node.path || '—'}
+                              </span>
+                            </TableCell>
+                            <TableCell>{node.sort}</TableCell>
+                            <TableCell>
+                              <Switch
+                                checked={node.status === 1}
+                                aria-label={`${i18n.resolvedLanguage?.startsWith('zh') || i18n.language.startsWith('zh') ? node.nameZh : node.nameEn} ${t('menu:system.status')}`}
+                                disabled={pendingActionId !== null}
+                                onCheckedChange={() => updateStatus(node)}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-2">
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => setFormState({ parentId: node.id })}
+                                  onClick={() => setFormState({ node, parentId: '' })}
                                 >
-                                  {t('menu:system.addChild')}
+                                  {t('menu:system.editMenu')}
                                 </Button>
-                              )}
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                disabled={pendingActionId !== null}
-                                onClick={() => setDeleteTarget(node)}
-                              >
-                                {t('menu:system.delete')}
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-            </TableBody>
-          </Table>
+                                {node.type === 'directory' && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => setFormState({ parentId: node.id })}
+                                  >
+                                    {t('menu:system.addChild')}
+                                  </Button>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  disabled={pendingActionId !== null}
+                                  onClick={() => setDeleteTarget(node)}
+                                >
+                                  {t('menu:system.delete')}
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+              </TableBody>
+            </Table>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
       </CardContent>
       <AlertDialog
