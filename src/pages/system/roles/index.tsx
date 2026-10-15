@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import Can from '@/components/Can'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -382,14 +383,18 @@ export default function RoleListPage() {
           <Button variant="outline" onClick={handleReset}>
             {t('reset')}
           </Button>
-          <Button
-            variant="destructive"
-            disabled={!selectedRoleIds.length || deleteRole.isPending}
-            onClick={() => setDeleteRoleIds(selectedRoleIds)}
-          >
-            {t('role.deleteSelected')}
-          </Button>
-          <Button onClick={openCreateForm}>{t('role.create')}</Button>
+          <Can permission="role:delete">
+            <Button
+              variant="destructive"
+              disabled={!selectedRoleIds.length || deleteRole.isPending}
+              onClick={() => setDeleteRoleIds(selectedRoleIds)}
+            >
+              {t('role.deleteSelected')}
+            </Button>
+          </Can>
+          <Can permission="role:create">
+            <Button onClick={openCreateForm}>{t('role.create')}</Button>
+          </Can>
         </div>
       </div>
 
@@ -446,33 +451,39 @@ export default function RoleListPage() {
                       >
                         {t('view')}
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => openEditForm(role.id)}
-                      >
-                        {t('edit')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={changeRoleStatus.isPending}
-                        onClick={() => handleRoleStatusChange(role)}
-                      >
-                        {t(
-                          role.status === 1
-                            ? 'role.disable'
-                            : 'role.enable',
-                        )}
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        disabled={deleteRole.isPending}
-                        onClick={() => setDeleteRoleIds([role.id])}
-                      >
-                        {t('delete')}
-                      </Button>
+                      <Can permission="role:edit">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openEditForm(role.id)}
+                        >
+                          {t('edit')}
+                        </Button>
+                      </Can>
+                      <Can permission="role:change-status">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={changeRoleStatus.isPending}
+                          onClick={() => handleRoleStatusChange(role)}
+                        >
+                          {t(
+                            role.status === 1
+                              ? 'role.disable'
+                              : 'role.enable',
+                          )}
+                        </Button>
+                      </Can>
+                      <Can permission="role:delete">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          disabled={deleteRole.isPending}
+                          onClick={() => setDeleteRoleIds([role.id])}
+                        >
+                          {t('delete')}
+                        </Button>
+                      </Can>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -722,29 +733,31 @@ export default function RoleListPage() {
             <Button variant="outline" onClick={() => closeEditor(false)}>
               {t('cancel')}
             </Button>
-            <Button
-              disabled={
-                !form.roleName.trim()
-                || !form.roleCode.trim()
-                || addRole.isPending
-                || editRole.isPending
-                || menuTreeLoading
-                || menuTreeError
-                || permissionCatalogLoading
-                || permissionCatalogError
-                || allMenuTreeError
-                || detailError
-                || Boolean(
-                  editingRoleId
-                  && (detailLoading || menuTreeLoading || allMenuTreeLoading),
-                )
-              }
-              onClick={handleSaveRole}
-            >
-              {addRole.isPending || editRole.isPending
-                ? t('role.saving')
-                : t('save')}
-            </Button>
+            <Can permission={editingRoleId ? 'role:edit' : 'role:create'}>
+              <Button
+                disabled={
+                  !form.roleName.trim()
+                  || !form.roleCode.trim()
+                  || addRole.isPending
+                  || editRole.isPending
+                  || menuTreeLoading
+                  || menuTreeError
+                  || permissionCatalogLoading
+                  || permissionCatalogError
+                  || allMenuTreeError
+                  || detailError
+                  || Boolean(
+                    editingRoleId
+                    && (detailLoading || menuTreeLoading || allMenuTreeLoading),
+                  )
+                }
+                onClick={handleSaveRole}
+              >
+                {addRole.isPending || editRole.isPending
+                  ? t('role.saving')
+                  : t('save')}
+              </Button>
+            </Can>
           </DialogFooter>
         </DialogContent>
       </Dialog>
