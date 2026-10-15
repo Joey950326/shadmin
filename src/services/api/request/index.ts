@@ -1,6 +1,7 @@
 import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import type { Api } from '../types/api'
 import axios from 'axios'
+import { store } from '@/store'
 import httpConfig from '../config'
 import axiosCancel from './axiosCancel'
 
@@ -59,7 +60,7 @@ class Request {
 
       // 自动注入 Token
       if (mergedConfig.withToken) {
-        const token = localStorage.getItem('accessToken')
+        const token = store.getState().user.token
         if (token) {
           config.headers = config.headers || {}
           config.headers.set('x-access-token', `Bearer ${token}`)
