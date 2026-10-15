@@ -537,8 +537,8 @@ export default function MenuManagementPage() {
           </p>
         )}
         <div className="overflow-x-auto rounded-md border">
-          <Table>
-            <TableHeader>
+          <Table className="table-auto">
+            <TableHeader className="[&_th]:text-center">
               <TableRow>
                 <TableHead>{t('menu:system.menuName')}</TableHead>
                 <TableHead>{t('menu:system.menuType')}</TableHead>
@@ -548,7 +548,7 @@ export default function MenuManagementPage() {
                 <TableHead>{t('menu:system.actions')}</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
               {isLoading
                 ? (
                     <TableRow>
@@ -572,7 +572,10 @@ export default function MenuManagementPage() {
                       rows.map(({ node, depth }) => (
                         <TableRow key={node.id}>
                           <TableCell>
-                            <span style={{ paddingInlineStart: `${depth * 1.5}rem` }}>
+                            <span
+                              className="block max-w-64 truncate"
+                              style={{ paddingInlineStart: `${depth * 1.5}rem` }}
+                            >
                               {i18n.resolvedLanguage?.startsWith('zh')
                                 || i18n.language.startsWith('zh')
                                 ? node.nameZh
@@ -580,7 +583,11 @@ export default function MenuManagementPage() {
                             </span>
                           </TableCell>
                           <TableCell>{t(`menu:system.${node.type}`)}</TableCell>
-                          <TableCell>{node.path || '—'}</TableCell>
+                          <TableCell>
+                            <span className="block max-w-48 truncate">
+                              {node.path || '—'}
+                            </span>
+                          </TableCell>
                           <TableCell>{node.sort}</TableCell>
                           <TableCell>
                             <Switch
@@ -591,7 +598,7 @@ export default function MenuManagementPage() {
                             />
                           </TableCell>
                           <TableCell>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                               <Button
                                 size="sm"
                                 variant="outline"

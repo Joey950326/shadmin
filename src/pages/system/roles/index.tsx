@@ -81,6 +81,11 @@ function collectPageIds(nodes: Api.Menu.Node[]): string[] {
 
 export default function RoleListPage() {
   const { t, i18n } = useTranslation()
+  const isChinese = (i18n.resolvedLanguage ?? i18n.language).startsWith('zh')
+  const getMenuName = (node: Api.Menu.Node) =>
+    isChinese
+      ? node.nameZh || node.nameEn
+      : node.nameEn || node.nameZh
   const [filters, setFilters] = useState({
     roleName: '',
     roleCode: '',
@@ -100,24 +105,36 @@ export default function RoleListPage() {
   )
   const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([])
   const [deleteRoleIds, setDeleteRoleIds] = useState<string[]>([])
-  const { data, isFetching } = useRoleList(query)
+  const { data, isFetching, isError: roleListError } = useRoleList(query)
   const deleteRole = useDeleteRole()
   const addRole = useAddRole()
   const editRole = useEditRole()
   const changeRoleStatus = useRoleStatusChange()
-  const { data: menuTree, isFetching: menuTreeLoading } = useQuery({
+  const {
+    data: menuTree,
+    isFetching: menuTreeLoading,
+    isError: menuTreeError,
+  } = useQuery({
     queryKey: ['menu', 'available-tree'],
     queryFn: getAvailableMenuTreeApi,
     enabled: Boolean(editingRoleId !== undefined || creatingRole),
   })
-  const { data: allMenuTree, isFetching: allMenuTreeLoading } = useQuery({
+  const {
+    data: allMenuTree,
+    isFetching: allMenuTreeLoading,
+    isError: allMenuTreeError,
+  } = useQuery({
     queryKey: ['menu', 'tree'],
     queryFn: getMenuTreeApi,
     enabled: Boolean(editingRoleId),
   })
   const availableMenuNodes = menuTree?.data ?? []
   const detailRoleId = editingRoleId ?? selectedRoleId
-  const { data: detail, isFetching: detailLoading } = useRoleDetail(
+  const {
+    data: detail,
+    isFetching: detailLoading,
+    isError: detailError,
+  } = useRoleDetail(
     { id: detailRoleId ?? '' },
     Boolean(detailRoleId),
   )
@@ -195,18 +212,8 @@ export default function RoleListPage() {
       setCreatingRole(false)
       setEditingRoleId(undefined)
     }
-    catch (error) {
-      const apiMessage
-        = typeof error === 'object' && error !== null && 'msg' in error
-          ? error.msg
-          : undefined
-      toast.error(
-        typeof apiMessage === 'string'
-          ? apiMessage
-          : error instanceof Error && error.message
-            ? error.message
-            : t('role.saveFailed'),
-      )
+    catch {
+      toast.error(t('role.saveFailed'))
     }
   }
 
@@ -231,14 +238,12 @@ export default function RoleListPage() {
           style={{ paddingInlineStart: depth * 20 }}
         >
           <Checkbox
-            aria-label={`${node.nameZh} ${node.nameEn}`}
+            aria-label={getMenuName(node)}
             checked={checked ? true : selectedCount ? 'indeterminate' : false}
             disabled={!ids.length}
             onCheckedChange={value => togglePageIds(ids, value === true)}
           />
-          <span>
-            {i18n.language.startsWith('zh') ? node.nameZh : node.nameEn}
-          </span>
+          <span>{getMenuName(node)}</span>
         </div>
         {node.children.length > 0 && (
           <ul>
@@ -287,18 +292,8 @@ export default function RoleListPage() {
       await changeRoleStatus.mutateAsync({ id: role.id, status })
       toast.success(t('role.statusChangeSuccess'))
     }
-    catch (error) {
-      const apiMessage
-        = typeof error === 'object' && error !== null && 'msg' in error
-          ? error.msg
-          : undefined
-      toast.error(
-        typeof apiMessage === 'string'
-          ? apiMessage
-          : error instanceof Error && error.message
-            ? error.message
-            : t('role.statusChangeFailed'),
-      )
+    catch {
+      toast.error(t('role.statusChangeFailed'))
     }
   }
 
@@ -321,7 +316,7 @@ export default function RoleListPage() {
     <main className="flex flex-col gap-4 p-6">
       <h1 className="text-2xl font-semibold">{t('role.title')}</h1>
       <section aria-label={t('role.filters')}>
-        <FieldGroup className="flex flex-wrap items-end gap-3">
+        <FieldGroup className="grid gap-3 sm:grid-cols-3">
           <Field>
             <FieldLabel htmlFor="role-name">{t('role.name')}</FieldLabel>
             <Input
@@ -364,30 +359,32 @@ export default function RoleListPage() {
               </SelectContent>
             </Select>
           </Field>
+        </FieldGroup>
+      </section>
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <span className="text-sm text-muted-foreground">
+          {t('role.selectedCount', { count: selectedRoleIds.length })}
+        </span>
+        <div className="flex flex-wrap items-center gap-2">
           <Button onClick={handleSearch}>{t('common.search')}</Button>
           <Button variant="outline" onClick={handleReset}>
             {t('common.reset')}
           </Button>
-        </FieldGroup>
-      </section>
-
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-sm text-muted-foreground">
-          {t('role.selectedCount', { count: selectedRoleIds.length })}
-        </span>
-        <Button onClick={openCreateForm}>{t('role.create')}</Button>
-        <Button
-          variant="destructive"
-          disabled={!selectedRoleIds.length || deleteRole.isPending}
-          onClick={() => setDeleteRoleIds(selectedRoleIds)}
-        >
-          {t('role.deleteSelected')}
-        </Button>
+          <Button
+            variant="destructive"
+            disabled={!selectedRoleIds.length || deleteRole.isPending}
+            onClick={() => setDeleteRoleIds(selectedRoleIds)}
+          >
+            {t('role.deleteSelected')}
+          </Button>
+          <Button onClick={openCreateForm}>{t('role.create')}</Button>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-md border">
-        <Table>
-          <TableHeader>
+        <Table className="table-auto">
+          <TableHeader className="[&_th]:text-center">
             <TableRow>
               <TableHead>
                 <Checkbox
@@ -404,7 +401,7 @@ export default function RoleListPage() {
               <TableHead>{t('role.actions')}</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
             {roles.map(role => (
               <TableRow key={role.id}>
                 <TableCell>
@@ -417,12 +414,19 @@ export default function RoleListPage() {
                 </TableCell>
                 <TableCell>{role.roleName}</TableCell>
                 <TableCell>{role.roleCode}</TableCell>
-                <TableCell>{role.description}</TableCell>
+                <TableCell>
+                  <span
+                    className="block max-w-64 truncate"
+                    title={role.description || undefined}
+                  >
+                    {role.description || '—'}
+                  </span>
+                </TableCell>
                 <TableCell>
                   {t(role.status === 1 ? 'common.enabled' : 'common.disabled')}
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       variant="outline"
                       size="sm"
@@ -467,7 +471,11 @@ export default function RoleListPage() {
                   colSpan={6}
                   className="text-center text-muted-foreground"
                 >
-                  {isFetching ? t('common.loadingData') : t('common.noData')}
+                  {isFetching
+                    ? t('common.loadingData')
+                    : roleListError
+                      ? t('role.listLoadFailed')
+                      : t('common.noData')}
                 </TableCell>
               </TableRow>
             )}
@@ -555,89 +563,107 @@ export default function RoleListPage() {
             ? (
                 <p>{t('common.loadingData')}</p>
               )
-            : (
-                <FieldGroup>
-                  <Field>
-                    <FieldLabel htmlFor="role-form-name">
-                      {t('role.name')}
-                    </FieldLabel>
-                    <Input
-                      id="role-form-name"
-                      required
-                      value={form.roleName}
-                      onChange={event =>
-                        setForm(value => ({
-                          ...value,
-                          roleName: event.target.value,
-                        }))}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="role-form-code">
-                      {t('role.code')}
-                    </FieldLabel>
-                    <Input
-                      id="role-form-code"
-                      required
-                      value={form.roleCode}
-                      onChange={event =>
-                        setForm(value => ({
-                          ...value,
-                          roleCode: event.target.value,
-                        }))}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="role-form-description">
-                      {t('role.description')}
-                    </FieldLabel>
-                    <Input
-                      id="role-form-description"
-                      value={form.description ?? ''}
-                      onChange={event =>
-                        setForm(value => ({
-                          ...value,
-                          description: event.target.value,
-                        }))}
-                    />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="role-form-status">
-                      {t('common.status')}
-                    </FieldLabel>
-                    <Select
-                      value={String(form.status)}
-                      onValueChange={value =>
-                        setForm(current => ({
-                          ...current,
-                          status: Number(value) as 0 | 1,
-                        }))}
-                    >
-                      <SelectTrigger id="role-form-status">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="1">{t('common.enabled')}</SelectItem>
-                          <SelectItem value="0">{t('common.disabled')}</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </Field>
-                  <Field>
-                    <FieldLabel>{t('role.authorization')}</FieldLabel>
-                    {menuTreeLoading
-                      ? (
-                          <p>{t('common.loadingData')}</p>
-                        )
-                      : (
-                          <ul>
-                            {availableMenuNodes.map(node => renderMenuNode(node))}
-                          </ul>
-                        )}
-                  </Field>
-                </FieldGroup>
-              )}
+            : editingRoleId && detailError
+              ? (
+                  <p role="alert" className="text-sm text-destructive">
+                    {t('role.detailLoadFailed')}
+                  </p>
+                )
+              : (
+                  <FieldGroup>
+                    <Field>
+                      <FieldLabel htmlFor="role-form-name">
+                        {t('role.name')}
+                      </FieldLabel>
+                      <Input
+                        id="role-form-name"
+                        required
+                        value={form.roleName}
+                        onChange={event =>
+                          setForm(value => ({
+                            ...value,
+                            roleName: event.target.value,
+                          }))}
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="role-form-code">
+                        {t('role.code')}
+                      </FieldLabel>
+                      <Input
+                        id="role-form-code"
+                        required
+                        value={form.roleCode}
+                        onChange={event =>
+                          setForm(value => ({
+                            ...value,
+                            roleCode: event.target.value,
+                          }))}
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="role-form-description">
+                        {t('role.description')}
+                      </FieldLabel>
+                      <Input
+                        id="role-form-description"
+                        value={form.description ?? ''}
+                        onChange={event =>
+                          setForm(value => ({
+                            ...value,
+                            description: event.target.value,
+                          }))}
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="role-form-status">
+                        {t('common.status')}
+                      </FieldLabel>
+                      <Select
+                        value={String(form.status)}
+                        onValueChange={value =>
+                          setForm(current => ({
+                            ...current,
+                            status: Number(value) as 0 | 1,
+                          }))}
+                      >
+                        <SelectTrigger id="role-form-status">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="1">{t('common.enabled')}</SelectItem>
+                            <SelectItem value="0">{t('common.disabled')}</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldLabel>{t('role.authorization')}</FieldLabel>
+                      {menuTreeLoading
+                        ? (
+                            <p>{t('common.loadingData')}</p>
+                          )
+                        : menuTreeError || (editingRoleId && allMenuTreeError)
+                          ? (
+                              <p role="alert" className="text-sm text-destructive">
+                                {t('role.authorizationLoadFailed')}
+                              </p>
+                            )
+                          : availableMenuNodes.length
+                            ? (
+                                <ul>
+                                  {availableMenuNodes.map(node => renderMenuNode(node))}
+                                </ul>
+                              )
+                            : (
+                                <p className="text-sm text-muted-foreground">
+                                  {t('role.noAvailableMenus')}
+                                </p>
+                              )}
+                    </Field>
+                  </FieldGroup>
+                )}
           <DialogFooter>
             <Button variant="outline" onClick={() => closeEditor(false)}>
               {t('common.cancel')}
@@ -649,6 +675,9 @@ export default function RoleListPage() {
                 || addRole.isPending
                 || editRole.isPending
                 || menuTreeLoading
+                || menuTreeError
+                || allMenuTreeError
+                || detailError
                 || Boolean(
                   editingRoleId
                   && (detailLoading || menuTreeLoading || allMenuTreeLoading),
@@ -677,32 +706,38 @@ export default function RoleListPage() {
             ? (
                 <p>{t('common.loadingData')}</p>
               )
-            : (
-                detail?.data && (
-                  <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
-                    <dt className="font-medium">{t('role.name')}</dt>
-                    <dd>{detail.data.roleName}</dd>
-                    <dt className="font-medium">{t('role.code')}</dt>
-                    <dd>{detail.data.roleCode}</dd>
-                    <dt className="font-medium">{t('role.description')}</dt>
-                    <dd>{detail.data.description}</dd>
-                    <dt className="font-medium">{t('common.status')}</dt>
-                    <dd>
-                      {t(
-                        detail.data.status === 1
-                          ? 'common.enabled'
-                          : 'common.disabled',
-                      )}
-                    </dd>
-                    <dt className="font-medium">{t('role.authorizedMenuIds')}</dt>
-                    <dd>
-                      {detail.data.menuIds.length
-                        ? detail.data.menuIds.join(', ')
-                        : t('common.noData')}
-                    </dd>
-                  </dl>
+            : detailError
+              ? (
+                  <p role="alert" className="text-sm text-destructive">
+                    {t('role.detailLoadFailed')}
+                  </p>
                 )
-              )}
+              : (
+                  detail?.data && (
+                    <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+                      <dt className="font-medium">{t('role.name')}</dt>
+                      <dd>{detail.data.roleName}</dd>
+                      <dt className="font-medium">{t('role.code')}</dt>
+                      <dd>{detail.data.roleCode}</dd>
+                      <dt className="font-medium">{t('role.description')}</dt>
+                      <dd>{detail.data.description}</dd>
+                      <dt className="font-medium">{t('common.status')}</dt>
+                      <dd>
+                        {t(
+                          detail.data.status === 1
+                            ? 'common.enabled'
+                            : 'common.disabled',
+                        )}
+                      </dd>
+                      <dt className="font-medium">{t('role.authorizedMenuIds')}</dt>
+                      <dd>
+                        {detail.data.menuIds.length
+                          ? detail.data.menuIds.join(', ')
+                          : t('common.noData')}
+                      </dd>
+                    </dl>
+                  )
+                )}
         </DialogContent>
       </Dialog>
     </main>

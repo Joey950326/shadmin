@@ -292,8 +292,8 @@ export default function UserManagementPage() {
         </Button>
       </div>
       <div className="overflow-x-auto rounded-md border">
-        <Table>
-          <TableHeader>
+        <Table className="table-auto">
+          <TableHeader className="[&_th]:text-center">
             <TableRow>
               <TableHead>
                 <Checkbox
@@ -312,7 +312,7 @@ export default function UserManagementPage() {
               <TableHead>{t('userManagement.actions')}</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="[&_td]:text-center [&_td>div]:justify-center">
             {rows.map(user => (
               <TableRow key={user.id}>
                 <TableCell>
@@ -325,9 +325,27 @@ export default function UserManagementPage() {
                       toggleUserSelection(user.id, checked === true)}
                   />
                 </TableCell>
-                <TableCell>{user.username}</TableCell>
-                <TableCell>{user.email ?? '—'}</TableCell>
-                <TableCell>{user.phone ?? '—'}</TableCell>
+                <TableCell>
+                  <span className="block max-w-40 truncate" title={user.username}>
+                    {user.username}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className="block max-w-52 truncate"
+                    title={user.email ?? undefined}
+                  >
+                    {user.email ?? '—'}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className="block max-w-36 truncate"
+                    title={user.phone ?? undefined}
+                  >
+                    {user.phone ?? '—'}
+                  </span>
+                </TableCell>
                 <TableCell>
                   {user.gender === 1
                     ? t('male')
@@ -350,12 +368,17 @@ export default function UserManagementPage() {
                   </span>
                 </TableCell>
                 <TableCell>
-                  {typeof user.role === 'string'
-                    ? user.role
-                    : (user.role?.name ?? '—')}
+                  <span
+                    className="block max-w-40 truncate"
+                    title={typeof user.role === 'string' ? user.role : user.role?.name ?? undefined}
+                  >
+                    {typeof user.role === 'string'
+                      ? user.role
+                      : (user.role?.name ?? '—')}
+                  </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <UserDetails user={user} />
                     <UserFormDialog key={user.id} user={user} />
                     <Button
