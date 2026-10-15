@@ -31,6 +31,17 @@
 3. 检查“用户”“角色”“菜单”分组，以及 `/user/menus`、`/menu/available-tree` 等新接口已出现，再确认导入。
 4. 在 Mock 环境为接口生成 Mock 响应；写操作当前以接口调用和统一成功响应为目标，Mock 不实现真实数据持久化或权限规则。
 
+### 配置演示登录账号及菜单权限
+
+如需在 Apifox Mock 中使用 `user` 演示受限菜单权限：
+
+1. 打开 `POST /login` 的“Mock”设置，启用 Mock 脚本，将 `login.mock.js` 的完整内容粘贴并保存。
+2. 打开 `POST /user/menus` 的“Mock”设置，启用 Mock 脚本，将 `user-menus.mock.js` 的完整内容粘贴并保存。
+3. 使用 `user` / `123456` 登录。登录请求中的密码会由前端转换为 MD5；脚本同时保留 `admin` / `123456`。
+4. 脚本分别返回不同的演示 token。`user` 的菜单仅包含首页、仪表盘、超级表格、表单和图表，不包含“系统管理”“常用组件”或“菜单嵌套”；`admin` 保留全部菜单权限。
+
+这两个脚本只模拟登录响应和菜单授权，不创建真实用户记录，也不持久化数据。若还希望 `user` 出现在用户管理列表中，需要另外配置 `/user/list` 的 Mock 数据；不能通过这两个脚本创建可供真实后端使用的账号。
+
 ### 配置本地前端访问 Apifox Mock
 
 仓库的 `vite.config.ts` 会将 `/api/*` 请求转发到 `.env.development` 的 `VITE_PROXY`，并移除 `/api` 前缀。请在 Apifox 的 Mock 服务中发布／启用已导入 API 的 Mock，并将 `VITE_PROXY` 设置为 Apifox 提供的 Mock 基础 URL（不要在这里附加 `/api`；具体路径前缀以 Apifox 生成的 URL 为准）。保存后重启 `pnpm dev`，确认浏览器请求会访问 `/api/role/list`、`/api/menu/tree` 等路径，并在 Apifox Mock 日志中看到对应调用。
