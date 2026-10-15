@@ -3077,6 +3077,7 @@
                       "menu-collapse-sub2-2",
                       "menu-collapse-sub3",
                       "menu-exception-403",
+                      "menu-permission-switch",
                       "menu-exception-404",
                       "menu-exception-500"
                     ]
@@ -3649,6 +3650,28 @@
                           "children": []
                         }
                       ]
+                    },
+                    {
+                      "id": "menu-system-features",
+                      "nameZh": "系统功能",
+                      "nameEn": "System Features",
+                      "type": "directory",
+                      "sort": 130,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-permission-switch",
+                          "nameZh": "切换权限",
+                          "nameEn": "Permission Switch",
+                          "parentId": "menu-system-features",
+                          "type": "page",
+                          "path": "/systemFeatures/permissionSwitch",
+                          "icon": "setting",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
                     }
                   ]
                 }
@@ -4065,6 +4088,28 @@
                           "children": []
                         }
                       ]
+                    },
+                    {
+                      "id": "menu-system-features",
+                      "nameZh": "系统功能",
+                      "nameEn": "System Features",
+                      "type": "directory",
+                      "sort": 130,
+                      "status": 1,
+                      "children": [
+                        {
+                          "id": "menu-permission-switch",
+                          "nameZh": "切换权限",
+                          "nameEn": "Permission Switch",
+                          "parentId": "menu-system-features",
+                          "type": "page",
+                          "path": "/systemFeatures/permissionSwitch",
+                          "icon": "setting",
+                          "sort": 1,
+                          "status": 1,
+                          "children": []
+                        }
+                      ]
                     }
                   ]
                 }
@@ -4182,7 +4227,7 @@
         "tags": ["用户"],
         "summary": "查询当前用户可访问菜单 ID",
         "operationId": "getCurrentUserMenuIds",
-        "description": "应用启动时调用一次；只返回当前用户有效的页面菜单 ID。admin 返回全部页面菜单，user 返回首页、仪表盘、表格、表单、图表及异常页面；目录节点由客户端根据页面菜单补齐。",
+        "description": "应用启动时调用一次；只返回当前用户有效的页面菜单 ID；两种演示账号均可访问“系统功能／切换权限”。",
         "responses": {
           "200": {
             "description": "查询当前用户可访问菜单 ID成功",
@@ -4219,9 +4264,59 @@
                       "menu-collapse-sub2-2",
                       "menu-collapse-sub3",
                       "menu-exception-403",
+                      "menu-permission-switch",
                       "menu-exception-404",
                       "menu-exception-500"
                     ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/permissions": {
+      "post": {
+        "tags": ["用户"],
+        "summary": "查询当前用户的有效操作权限码",
+        "operationId": "getCurrentUserPermissions",
+        "description": "根据当前 x-access-token 对应账号返回有效操作权限码，不接受客户端指定目标用户名。页面菜单授权仍由 /user/menus 独立控制。",
+        "responses": {
+          "200": {
+            "description": "查询成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPermissionCodesResponse"
+                },
+                "examples": {
+                  "user": {
+                    "summary": "普通用户仅拥有查看权限",
+                    "value": {
+                      "code": 200,
+                      "msg": "查询成功",
+                      "data": {
+                        "permissionCodes": ["demo:view"]
+                      }
+                    }
+                  },
+                  "admin": {
+                    "summary": "管理员拥有完整演示权限",
+                    "value": {
+                      "code": 200,
+                      "msg": "查询成功",
+                      "data": {
+                        "permissionCodes": [
+                          "demo:view",
+                          "demo:edit",
+                          "demo:delete"
+                        ]
+                      }
+                    }
                   }
                 }
               }
@@ -5291,6 +5386,32 @@
         "properties": {
           "id": {
             "type": "string"
+          }
+        }
+      },
+      "UserPermissionCodesResponse": {
+        "type": "object",
+        "required": ["code", "msg", "data"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          },
+          "msg": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "required": ["permissionCodes"],
+            "properties": {
+              "permissionCodes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["demo:view"]
+              }
+            }
           }
         }
       },

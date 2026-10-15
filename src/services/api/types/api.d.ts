@@ -37,6 +37,12 @@ declare namespace Api {
     }> {}
   }
 
+  namespace Permission {
+    interface CurrentUserResponse extends Base.ResponseData<{
+      permissionCodes: string[]
+    }> {}
+  }
+
   namespace Menu {
     interface Node {
       id: string

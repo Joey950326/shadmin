@@ -341,6 +341,10 @@
     "simplePieChart": "Simple pie chart example",
     "simpleRadialChart": "Simple radial chart example"
   },
+  "permissionDemo": {
+    "title": "Operation permission demo",
+    "view": "View"
+  },
   "role": {
     "title": "Roles",
     "create": "Create role",

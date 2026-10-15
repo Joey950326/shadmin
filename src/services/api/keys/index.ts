@@ -20,6 +20,9 @@ export const QUERY_KEYS = {
   MENU: {
     AUTHORIZED_NAVIGATION: (username: string | null) => ['authorized-navigation', username] as const,
   },
+  PERMISSION: {
+    CURRENT_USER: (username: string | null) => ['current-user-permissions', username] as const,
+  },
 }
 
 export const MUTATION_KEYS = {

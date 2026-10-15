@@ -42,6 +42,10 @@
   "subMenu2-2": "Sub Menu 2-2",
   "subMenu3": "Sub Menu 3",
   "systemManage": "System Management",
+  "permissionDemo": {
+    "systemFeatures": "System Features",
+    "switch": "Permission Switch"
+  },
   "externalLink": "External Link",
   "about": "About Us",
   "system": {

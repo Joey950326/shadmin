@@ -172,6 +172,14 @@ const dynamicRoutes = [
         ],
       },
       {
+        path: 'systemFeatures/permissionSwitch',
+        lazy: async () => {
+          const Component = (await import('@/pages/systemFeatures/permissionSwitch/index.tsx')).default
+          return { Component }
+        },
+        handle: { title: 'menu:permissionDemo.switch' },
+      },
+      {
         path: 'systemManage/userManage',
         lazy: async () => {
           const Component = (await import('@/pages/systemManagement/users/index.tsx')).default

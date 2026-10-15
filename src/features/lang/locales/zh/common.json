@@ -341,6 +341,10 @@
     "simplePieChart": "简单扇型图示例",
     "simpleRadialChart": "简单扇型图示例"
   },
+  "permissionDemo": {
+    "title": "操作权限演示",
+    "view": "查看"
+  },
   "role": {
     "title": "角色管理",
     "create": "新建角色",

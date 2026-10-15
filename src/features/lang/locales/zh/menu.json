@@ -42,6 +42,10 @@
   "subMenu2-2": "子菜单 2-2",
   "subMenu3": "子菜单 3",
   "systemManage": "系统管理",
+  "permissionDemo": {
+    "systemFeatures": "系统功能",
+    "switch": "切换权限"
+  },
   "externalLink": "外部链接",
   "about": "关于我们",
   "system": {

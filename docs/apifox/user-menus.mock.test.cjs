@@ -89,9 +89,10 @@ test('admin token retains the full set of page permissions', () => {
   const response = runScript('Bearer mock-access-token-2026')
 
   assert.equal(response.code, 200)
-  assert.equal(response.data.menuIds.length, 25)
+  assert.equal(response.data.menuIds.length, 26)
   assert.ok(exceptionPageIds.every(id => response.data.menuIds.includes(id)))
   assert.ok(response.data.menuIds.includes('menu-system-menu'))
+  assert.ok(response.data.menuIds.includes('menu-permission-switch'))
 })
 
 test('unknown token is rejected', () => {

@@ -4,6 +4,7 @@ const authorization = String(
 
 const userMenuIds = [
   'menu-home',
+  'menu-permission-switch',
   'menu-dashboard-data',
   'menu-table-basic',
   'menu-table-complex',
