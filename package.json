@@ -10,6 +10,7 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
+    "test:role-i18n": "node scripts/check-role-translations.mjs",
     "preview": "vite preview",
     "prepare": "husky",
     "diceui:add": "pnpm dlx shadcn@latest add --path src/components/diceui"

@@ -342,7 +342,7 @@ export default function RoleListPage() {
             />
           </Field>
           <Field>
-            <FieldLabel htmlFor="role-status">{t('common.status')}</FieldLabel>
+            <FieldLabel htmlFor="role-status">{t('status')}</FieldLabel>
             <Select
               value={filters.status}
               onValueChange={status =>
@@ -353,8 +353,8 @@ export default function RoleListPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="1">{t('common.enabled')}</SelectItem>
-                  <SelectItem value="0">{t('common.disabled')}</SelectItem>
+                  <SelectItem value="1">{t('enabled')}</SelectItem>
+                  <SelectItem value="0">{t('disabled')}</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -367,9 +367,9 @@ export default function RoleListPage() {
           {t('role.selectedCount', { count: selectedRoleIds.length })}
         </span>
         <div className="flex flex-wrap items-center gap-2">
-          <Button onClick={handleSearch}>{t('common.search')}</Button>
+          <Button onClick={handleSearch}>{t('search')}</Button>
           <Button variant="outline" onClick={handleReset}>
-            {t('common.reset')}
+            {t('reset')}
           </Button>
           <Button
             variant="destructive"
@@ -397,7 +397,7 @@ export default function RoleListPage() {
               <TableHead>{t('role.name')}</TableHead>
               <TableHead>{t('role.code')}</TableHead>
               <TableHead>{t('role.description')}</TableHead>
-              <TableHead>{t('common.status')}</TableHead>
+              <TableHead>{t('status')}</TableHead>
               <TableHead>{t('role.actions')}</TableHead>
             </TableRow>
           </TableHeader>
@@ -423,7 +423,7 @@ export default function RoleListPage() {
                   </span>
                 </TableCell>
                 <TableCell>
-                  {t(role.status === 1 ? 'common.enabled' : 'common.disabled')}
+                  {t(role.status === 1 ? 'enabled' : 'disabled')}
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-2">
@@ -432,14 +432,14 @@ export default function RoleListPage() {
                       size="sm"
                       onClick={() => setSelectedRoleId(role.id)}
                     >
-                      {t('common.view')}
+                      {t('view')}
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => openEditForm(role.id)}
                     >
-                      {t('common.edit')}
+                      {t('edit')}
                     </Button>
                     <Button
                       variant="outline"
@@ -459,7 +459,7 @@ export default function RoleListPage() {
                       disabled={deleteRole.isPending}
                       onClick={() => setDeleteRoleIds([role.id])}
                     >
-                      {t('common.delete')}
+                      {t('delete')}
                     </Button>
                   </div>
                 </TableCell>
@@ -472,10 +472,10 @@ export default function RoleListPage() {
                   className="text-center text-muted-foreground"
                 >
                   {isFetching
-                    ? t('common.loadingData')
+                    ? t('loadingData')
                     : roleListError
                       ? t('role.listLoadFailed')
-                      : t('common.noData')}
+                      : t('noData')}
                 </TableCell>
               </TableRow>
             )}
@@ -496,7 +496,7 @@ export default function RoleListPage() {
           onClick={() =>
             setQuery(value => ({ ...value, page: value.page - 1 }))}
         >
-          {t('common.pagination.previous')}
+          {t('pagination.previous')}
         </Button>
         <span className="text-sm">
           {query.page}
@@ -511,7 +511,7 @@ export default function RoleListPage() {
           onClick={() =>
             setQuery(value => ({ ...value, page: value.page + 1 }))}
         >
-          {t('common.pagination.next')}
+          {t('pagination.next')}
         </Button>
       </nav>
 
@@ -534,14 +534,14 @@ export default function RoleListPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteRole.isPending}>
-              {t('common.cancel')}
+              {t('cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={deleteRole.isPending}
               onClick={handleDelete}
             >
-              {deleteRole.isPending ? t('role.deleting') : t('common.confirm')}
+              {deleteRole.isPending ? t('role.deleting') : t('confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -561,7 +561,7 @@ export default function RoleListPage() {
           {editingRoleId
             && (detailLoading || menuTreeLoading || allMenuTreeLoading)
             ? (
-                <p>{t('common.loadingData')}</p>
+                <p>{t('loadingData')}</p>
               )
             : editingRoleId && detailError
               ? (
@@ -617,7 +617,7 @@ export default function RoleListPage() {
                     </Field>
                     <Field>
                       <FieldLabel htmlFor="role-form-status">
-                        {t('common.status')}
+                        {t('status')}
                       </FieldLabel>
                       <Select
                         value={String(form.status)}
@@ -632,8 +632,8 @@ export default function RoleListPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectItem value="1">{t('common.enabled')}</SelectItem>
-                            <SelectItem value="0">{t('common.disabled')}</SelectItem>
+                            <SelectItem value="1">{t('enabled')}</SelectItem>
+                            <SelectItem value="0">{t('disabled')}</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -642,7 +642,7 @@ export default function RoleListPage() {
                       <FieldLabel>{t('role.authorization')}</FieldLabel>
                       {menuTreeLoading
                         ? (
-                            <p>{t('common.loadingData')}</p>
+                            <p>{t('loadingData')}</p>
                           )
                         : menuTreeError || (editingRoleId && allMenuTreeError)
                           ? (
@@ -666,7 +666,7 @@ export default function RoleListPage() {
                 )}
           <DialogFooter>
             <Button variant="outline" onClick={() => closeEditor(false)}>
-              {t('common.cancel')}
+              {t('cancel')}
             </Button>
             <Button
               disabled={
@@ -687,7 +687,7 @@ export default function RoleListPage() {
             >
               {addRole.isPending || editRole.isPending
                 ? t('role.saving')
-                : t('common.save')}
+                : t('save')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -704,7 +704,7 @@ export default function RoleListPage() {
           </DialogHeader>
           {detailLoading
             ? (
-                <p>{t('common.loadingData')}</p>
+                <p>{t('loadingData')}</p>
               )
             : detailError
               ? (
@@ -721,19 +721,19 @@ export default function RoleListPage() {
                       <dd>{detail.data.roleCode}</dd>
                       <dt className="font-medium">{t('role.description')}</dt>
                       <dd>{detail.data.description}</dd>
-                      <dt className="font-medium">{t('common.status')}</dt>
+                      <dt className="font-medium">{t('status')}</dt>
                       <dd>
                         {t(
                           detail.data.status === 1
-                            ? 'common.enabled'
-                            : 'common.disabled',
+                            ? 'enabled'
+                            : 'disabled',
                         )}
                       </dd>
                       <dt className="font-medium">{t('role.authorizedMenuIds')}</dt>
                       <dd>
                         {detail.data.menuIds.length
                           ? detail.data.menuIds.join(', ')
-                          : t('common.noData')}
+                          : t('noData')}
                       </dd>
                     </dl>
                   )
