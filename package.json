@@ -13,6 +13,7 @@
     "test:role-i18n": "node scripts/check-role-translations.mjs",
     "test:request-auth": "node scripts/check-request-auth-token.mjs",
     "test:menu-cache": "node scripts/check-menu-cache-on-account-switch.mjs",
+    "test:can-permissions": "node scripts/check-can-permissions.mjs",
     "test:apifox-menu": "node --test docs/apifox/user-menus.mock.test.cjs",
     "test:apifox-permissions": "node --test docs/apifox/user-permissions.mock.test.cjs",
     "preview": "vite preview",
