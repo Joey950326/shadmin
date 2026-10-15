@@ -130,17 +130,18 @@ function UserDetails({ user }: { user: Api.User.UserInfo }) {
 
 export default function UserManagementPage() {
   const { t } = useTranslation()
-  const [filters, setFilters] = useState<UserFilters>(emptyFilters)
+  const [draftFilters, setDraftFilters] = useState<UserFilters>(emptyFilters)
+  const [appliedFilters, setAppliedFilters] = useState<UserFilters>(emptyFilters)
   const [page, setPage] = useState(1)
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([])
   const [deleteUserIds, setDeleteUserIds] = useState<string[]>([])
   const params: Api.User.ListParams = {
     page,
     pageSize: 10,
-    ...(filters.username && { username: filters.username }),
-    ...(filters.phone && { phone: filters.phone }),
-    ...(filters.gender && { gender: Number(filters.gender) }),
-    ...(filters.status && { status: Number(filters.status) }),
+    ...(appliedFilters.username && { username: appliedFilters.username }),
+    ...(appliedFilters.phone && { phone: appliedFilters.phone }),
+    ...(appliedFilters.gender && { gender: Number(appliedFilters.gender) }),
+    ...(appliedFilters.status && { status: Number(appliedFilters.status) }),
   }
   const { data, isFetching } = useUserList(params)
   const deleteUser = useDeleteUser()
@@ -205,8 +206,18 @@ export default function UserManagementPage() {
   }
 
   const updateFilter = (name: keyof UserFilters, value: string) => {
+    setDraftFilters(current => ({ ...current, [name]: value }))
+  }
+
+  const handleSearch = () => {
     setPage(1)
-    setFilters(current => ({ ...current, [name]: value }))
+    setAppliedFilters(draftFilters)
+  }
+
+  const handleResetFilters = () => {
+    setPage(1)
+    setDraftFilters(emptyFilters)
+    setAppliedFilters(emptyFilters)
   }
 
   return (
@@ -217,7 +228,7 @@ export default function UserManagementPage() {
           <Input
             id="filter-username"
             aria-label={t('userManagement.username')}
-            value={filters.username}
+            value={draftFilters.username}
             placeholder={t('userManagement.usernamePlaceholder')}
             onChange={event => updateFilter('username', event.target.value)}
           />
@@ -226,14 +237,14 @@ export default function UserManagementPage() {
           <Input
             id="filter-phone"
             aria-label={t('userManagement.phone')}
-            value={filters.phone}
+            value={draftFilters.phone}
             placeholder={t('userManagement.phonePlaceholder')}
             onChange={event => updateFilter('phone', event.target.value)}
           />
         </Field>
         <Field>
           <Select
-            value={filters.gender || 'all'}
+            value={draftFilters.gender || 'all'}
             onValueChange={value =>
               updateFilter('gender', value === 'all' ? '' : value)}
           >
@@ -253,7 +264,7 @@ export default function UserManagementPage() {
         </Field>
         <Field>
           <Select
-            value={filters.status || 'all'}
+            value={draftFilters.status || 'all'}
             onValueChange={value =>
               updateFilter('status', value === 'all' ? '' : value)}
           >
@@ -276,7 +287,11 @@ export default function UserManagementPage() {
         <span className="text-sm text-muted-foreground">
           {t('userManagement.selectedCount', { count: selectedUserIds.length })}
         </span>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <Button onClick={handleSearch}>{t('search')}</Button>
+          <Button variant="outline" onClick={handleResetFilters}>
+            {t('reset')}
+          </Button>
           <UserFormDialog />
           <Button
             variant="destructive"
@@ -329,7 +344,7 @@ export default function UserManagementPage() {
                   </TableCell>
                   <TableCell>
                     <span
-                      className="block max-w-52 truncate"
+                      className="mx-auto block max-w-52 truncate text-center"
                       title={user.email ?? undefined}
                     >
                       {user.email ?? '—'}
