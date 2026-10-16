@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">SHAdmin 架构概览</title>
+  <desc id="desc">展示 SHAdmin 的 React 路由与授权、业务页面、TanStack Query 与 Axios 请求链路，以及 Redux、主题、多语言和可复用 UI 等共享能力。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9" fill="none" stroke="#687386" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .card { fill: #ffffff; stroke: #dce1e8; stroke-width: 1.5; }
+      .heading { fill: #172033; font-size: 23px; font-weight: 650; }
+      .body { fill: #596579; font-size: 18px; }
+      .section { fill: #687386; font-size: 16px; font-weight: 650; letter-spacing: 1.4px; }
+      .connector { fill: none; stroke: #8993a3; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1200" height="620" rx="24" fill="#f5f7fa" />
+  <path d="M 54 112 H 1146" stroke="#dce1e8" stroke-width="1.5" />
+
+  <text x="60" y="48" class="section mono">SHADMIN / APPLICATION MAP</text>
+  <text x="60" y="88" fill="#172033" font-size="31" font-weight="700">从路由与授权，到页面和 API</text>
+  <text x="1140" y="56" text-anchor="end" class="body">React 19 · TypeScript · Vite</text>
+
+  <rect x="60" y="142" width="205" height="132" rx="14" class="card" />
+  <rect x="60" y="142" width="5" height="132" rx="2.5" fill="#2563eb" />
+  <text x="82" y="184" class="heading">应用入口</text>
+  <text x="82" y="218" class="body">React · Vite</text>
+  <text x="82" y="246" class="body">Store / Query Providers</text>
+
+  <path d="M 272 208 H 302" class="connector" />
+  <rect x="312" y="142" width="220" height="132" rx="14" class="card" />
+  <text x="334" y="184" class="heading">路由树</text>
+  <text x="334" y="218" class="body">React Router</text>
+  <text x="334" y="246" class="body">静态路由 · 页面按需加载</text>
+
+  <path d="M 540 208 H 570" class="connector" />
+  <rect x="580" y="142" width="230" height="132" rx="14" class="card" />
+  <text x="602" y="184" class="heading">访问控制</text>
+  <text x="602" y="218" class="body">登录 Token</text>
+  <text x="602" y="246" class="body">菜单授权 · 操作权限码</text>
+
+  <path d="M 818 208 H 848" class="connector" />
+  <rect x="858" y="142" width="282" height="132" rx="14" class="card" />
+  <rect x="1135" y="142" width="5" height="132" rx="2.5" fill="#2563eb" />
+  <text x="880" y="184" class="heading">业务页面</text>
+  <text x="880" y="218" class="body">表格 · 表单 · 图表</text>
+  <text x="880" y="246" class="body">仪表盘 · 系统管理</text>
+
+  <text x="60" y="326" class="section mono">DATA FLOW / API</text>
+  <path d="M 999 274 V 302 H 154 V 350" fill="none" stroke="#a7b0bd" stroke-width="1.5" stroke-dasharray="5 6" marker-end="url(#arrow)" />
+
+  <rect x="60" y="366" width="190" height="108" rx="14" class="card" />
+  <text x="78" y="406" class="heading">页面 hooks</text>
+  <text x="78" y="440" class="body">query · mutation</text>
+  <path d="M 256 420 H 277" class="connector" />
+
+  <rect x="286" y="366" width="190" height="108" rx="14" class="card" />
+  <text x="304" y="406" class="heading">TanStack Query</text>
+  <text x="304" y="440" class="body">服务端数据与缓存</text>
+  <path d="M 482 420 H 503" class="connector" />
+
+  <rect x="512" y="366" width="190" height="108" rx="14" class="card" />
+  <text x="530" y="406" class="heading">Axios</text>
+  <text x="530" y="440" class="body">请求封装 · Token</text>
+  <path d="M 708 420 H 729" class="connector" />
+
+  <rect x="738" y="366" width="190" height="108" rx="14" class="card" />
+  <text x="756" y="406" class="heading">Vite 代理</text>
+  <text x="756" y="440" class="body">重写 /api 前缀</text>
+  <path d="M 934 420 H 955" class="connector" />
+
+  <rect x="964" y="366" width="176" height="108" rx="14" fill="#eaf0ff" stroke="#b8c9fa" stroke-width="1.5" />
+  <text x="982" y="406" fill="#1d4ed8" font-size="22" font-weight="650">Mock / API</text>
+  <text x="982" y="440" class="body">Apifox · 后端服务</text>
+
+  <path d="M 60 510 H 1140" stroke="#dce1e8" stroke-width="1.5" />
+  <text x="60" y="548" class="section mono">SHARED FOUNDATIONS</text>
+
+  <rect x="60" y="566" width="320" height="42" rx="12" fill="#e9edf3" />
+  <text x="80" y="594" fill="#344054" font-size="18" font-weight="600">Redux Toolkit · 状态持久化</text>
+
+  <rect x="396" y="566" width="380" height="42" rx="12" fill="#e9edf3" />
+  <text x="416" y="594" fill="#344054" font-size="18" font-weight="600">主题 · 中英文 · 水印 · 路由标签</text>
+
+  <rect x="792" y="566" width="348" height="42" rx="12" fill="#e9edf3" />
+  <text x="812" y="594" fill="#344054" font-size="18" font-weight="600">shadcn/ui · 可复用组件</text>
+</svg>

@@ -1,0 +1,94 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SHAdmin README 本地预览</title><style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:#1f2328;background:#f6f8fa}*{box-sizing:border-box}body{margin:0;padding:30px 20px 72px}.markdown-body{max-width:1012px;margin:auto;padding:40px 48px;border:1px solid #d1d9e0;border-radius:8px;background:#fff;font-size:16px;line-height:1.6}h1,h2{line-height:1.25;font-weight:600}h1{margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid #d1d9e0;font-size:2em}h2{margin:28px 0 16px;padding-bottom:8px;border-bottom:1px solid #d8dee4;font-size:1.5em}p{margin:0 0 16px}img{max-width:100%;height:auto}ul{padding-left:2em;margin:0 0 16px}li+li{margin-top:4px}blockquote{margin:0 0 16px;padding:0 1em;border-left:4px solid #0969da;color:#59636e}code{padding:.2em .4em;border-radius:6px;background:#eff1f3;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em}pre{overflow:auto;padding:16px;border-radius:8px;background:#0d1117;color:#e6edf3;line-height:1.45}pre code{padding:0;background:transparent;color:inherit}table{width:100%;margin:0 0 16px;border-collapse:collapse;display:block;overflow-x:auto}th,td{padding:8px 13px;border:1px solid #d1d9e0;text-align:left}th{background:#f6f8fa}a{color:#0969da;text-decoration:none}@media(max-width:640px){body{padding:0}.markdown-body{padding:24px 16px;border:0;border-radius:0;font-size:15px}}
+</style><body><main class="markdown-body"><h1>SHAdmin</h1>
+<p><strong>一个面向前端开发者的 React 后台管理项目。</strong> 从可交互的表格、表单和图表，到动态路由、菜单授权与操作权限，提供可阅读、可运行、可按需改造的实现示例。</p>
+<p align="center">
+  <strong>React 19</strong> · <strong>TypeScript</strong> · <strong>Vite 7</strong> · <strong>React Router 7</strong> · <strong>TanStack Query</strong> · <strong>Redux Toolkit</strong> · <strong>Tailwind CSS 4</strong> · <strong>shadcn/ui</strong>
+</p><p align="center">
+  <img src="./assets/readme/dashboard-preview.png" width="100%" alt="SHAdmin 深色主题下的数据可视化仪表盘，展示侧边导航、路由标签、统计卡片和趋势图" />
+</p><p align="center"><sub>仪表盘实机预览 · 图表与指标为演示数据</sub></p><h2>功能亮点</h2>
+<ul>
+<li><strong>可定制主题</strong>：基于 Redux Toolkit、<code>redux-persist</code> 与 CSS 变量，实现亮色、暗色和跟随系统三种模式、8 种预设主题色，以及灰度和色弱滤镜；外观设置会在刷新后保留。色弱模式目前使用 <code>invert(80%)</code> 滤镜，不等同于经过验证的色觉模拟。</li>
+<li><strong>四种后台布局</strong>：基于可组合的 React 布局模块，实现垂直、经典、水平和分栏布局，并支持运行时切换。</li>
+<li><strong>全局水印</strong>：基于 <code>WatermarkProvider</code> 和 Canvas 生成重复水印图层，支持全局开关，并可使用 CSS 主题变量跟随主题色。</li>
+<li><strong>表格、表单与树形选择器</strong>：基于 TanStack Table 和 TanStack Query，实现基础表格、复杂表格、树形筛选及数据分页；基于 React Hook Form 与 Zod 实现基础、复杂和动态表单；基于 React Context 实现支持搜索、展开、父子联动和半选状态的 <code>TreeSelector</code>。</li>
+<li><strong>shadcn/ui 风格组件</strong>：基于 shadcn/ui 的组件组织方式、Radix UI 原语和 Tailwind CSS，提供保留在仓库中的本地组件源码，便于阅读、组合和按需定制；同时包含上传器、日期/时间选择器等业务组件。</li>
+<li><strong>RBAC 访问控制</strong>：基于 React Router 守卫、服务端菜单数据和 <code>menuIds</code> 控制页面路由与菜单；基于 <code>permissionCodes</code> 和 <code>&lt;Can&gt;</code> 组件控制页面内操作的显示，支持 all/any 权限组合。前端控制不替代后端 API 鉴权。</li>
+<li><strong>常见图表</strong>：基于 Recharts 实现仪表盘及柱状、折线、面积、饼图、雷达和径向图示例；图表指标为演示数据。</li>
+<li><strong>多级菜单嵌套</strong>：基于递归菜单树和嵌套路由实现目录、子目录与页面的多级导航，并按用户菜单授权筛选可见项。</li>
+<li><strong>可定制路由标签</strong>：基于 React Router、Redux Toolkit 与 <code>redux-persist</code> 实现随路由联动的标签导航，支持关闭标签、设置或重置自定义标题，并在刷新后保留状态。</li>
+<li><strong>中英文界面</strong>：基于 i18next 与 react-i18next 实现中英文切换，并让界面文案随当前语言更新。</li>
+<li><strong>统一请求与数据管理</strong>：基于 Axios 与 TanStack Query 封装 API 请求和服务端状态管理，实现 Token 注入、查询缓存、重复请求取消，以及对网络和服务端错误的有限次重试；开发环境可通过 Vite <code>/api</code> 代理连接 Mock 或后端。</li>
+<li><strong>系统管理与权限演示</strong>：基于 API hooks 提供用户、角色和菜单管理页面；基于按用户名区分的权限缓存和开发环境账号切换，演示不同用户的菜单与操作权限差异。</li>
+<li><strong>认证与表单示例</strong>：基于 React Hook Form 与 Zod 实现登录和注册表单校验，并提供验证码登录页面；注册和验证码流程需接入相应后端 API。</li>
+<li><strong>后台导航与状态反馈</strong>：基于 React Router 导航状态实现路由加载进度提示，基于浏览器 Fullscreen API 实现全屏切换，并提供 403、404、500 状态页。</li>
+</ul>
+<blockquote>
+<p>仪表盘和图表使用演示数据；Apifox Mock 用于接口联调，写操作不保证持久化；前端权限控制不替代后端 API 鉴权。文件下载组件目前是示例实现，并非实际的 Excel 二进制导出。</p>
+</blockquote>
+<h2>架构一览</h2>
+<p><img src="assets/readme/architecture.svg" alt="SHAdmin 架构图：路由授权、业务页面、API 请求链路和共享能力"></p>
+<p>页面通过 hooks 使用 TanStack Query 管理服务端数据；Axios 负责请求与 Token，开发时由 Vite 将 <code>/api</code> 转发到 Mock 或后端服务。Redux Toolkit 管理客户端状态，应用外层提供主题、多语言、水印等共享能力。</p>
+<pre><code class="language-text">src/
+├── pages/          路由页面
+├── components/     可复用 UI 与业务组件
+├── layout/         后台框架与布局
+├── features/       路由、主题、多语言、水印、路由标签等能力
+├── routers/        静态路由与按需加载的业务路由
+├── services/api/   Axios、API 模块、Query hooks 与类型
+└── store/          Redux Toolkit 状态
+</code></pre>
+<h2>本地运行</h2>
+<p>需要 Node.js（满足 Vite 7 的运行要求）和 pnpm。</p>
+<pre><code class="language-bash">pnpm install
+pnpm dev
+</code></pre>
+<p>前端需要兼容的 API 服务才能登录并访问依赖接口的页面。<code>.env</code> 中的 <code>VITE_BASE_URL</code> 用于 API 路径前缀（本地代理通常为 <code>/api</code>）；在 <code>.env.development</code> 中设置 <code>VITE_PROXY</code> 指向本地后端或 Apifox Mock。Vite 默认代理目标为 <code>http://localhost:3000</code>，并会在转发时移除 <code>/api</code> 前缀。修改配置后重启开发服务器。</p>
+<p>如需配置 Apifox 登录、菜单、权限及 Mock 响应，请看 <a href="docs/apifox/README.md"><code>docs/apifox/README.md</code></a>。Mock 写操作不保证持久化；演示数据和账号不可用于生产环境。</p>
+<h2>开发命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pnpm dev</code></td>
+<td>启动开发服务器</td>
+</tr>
+<tr>
+<td><code>pnpm typecheck</code></td>
+<td>TypeScript 类型检查</td>
+</tr>
+<tr>
+<td><code>pnpm lint</code></td>
+<td>ESLint 检查</td>
+</tr>
+<tr>
+<td><code>pnpm build</code></td>
+<td>类型检查并生成生产构建</td>
+</tr>
+<tr>
+<td><code>pnpm preview</code></td>
+<td>本地预览生产构建</td>
+</tr>
+</tbody></table>
+<p>聚焦验证脚本：</p>
+<pre><code class="language-bash">pnpm test:role-i18n
+pnpm test:request-auth
+pnpm test:menu-cache
+pnpm test:can-permissions
+pnpm test:user-action-permissions
+pnpm test:role-permissions
+pnpm test:apifox-menu
+pnpm test:apifox-permissions
+</code></pre>
+<h2>进一步了解</h2>
+<ul>
+<li><a href="docs/apifox/README.md">API、Mock 与权限配置</a></li>
+<li><a href="docs/%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2%E5%8A%9F%E8%83%BD%E6%96%87%E6%A1%A3.md">主题切换</a></li>
+<li><a href="docs/%E5%9B%BD%E9%99%85%E5%8C%96%E6%90%AD%E5%BB%BA%E6%96%87%E6%A1%A3.md">国际化搭建</a></li>
+<li><a href="docs/%E4%BD%BF%E7%94%A8axios%E5%92%8Ctanstack%20query%E5%B0%81%E8%A3%85%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%83%BD%E5%8A%9B.md">Axios 与 TanStack Query 请求封装</a></li>
+</ul>
+</main></body></html>

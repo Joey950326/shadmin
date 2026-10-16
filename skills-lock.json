@@ -25,6 +25,12 @@
       "skillPath": "skills/automate-me/SKILL.md",
       "computedHash": "22b337be659df5c74c933f7e7e3bdda26771def30ab74eeb79fc1c1ee29d98be"
     },
+    "beautify-github-readme": {
+      "source": "oil-oil/beautify-github-readme",
+      "sourceType": "github",
+      "skillPath": "skills/beautify-github-readme/SKILL.md",
+      "computedHash": "9e42ffcf32d0852b2cb2a574c00d251400891671e3c9027886189e264cd27487"
+    },
     "benchmark-checklist": {
       "source": "backnotprop/pstack",
       "sourceType": "github",
