@@ -26,7 +26,7 @@ No automated test framework or coverage threshold is currently configured. Befor
 
 ## Commit & Pull Request Guidelines
 
-Commits follow Conventional Commits, enforced by commitlint: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `chore:`, or `revert:`. Subjects may be Chinese or English; keep them brief and imperative, for example `fix: 修复登录布局背景颜色`. Pre-commit hooks run lint-staged and type checking, while pre-push builds the project. Pull requests should describe the change, verification performed, and linked issue; include screenshots or recordings for visible UI changes and call out configuration or translation updates.
+Commits follow Conventional Commits, enforced by commitlint: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `chore:`, or `revert:`. Write commit subjects and bodies in Chinese while preserving the required Conventional Commit prefix. Keep subjects brief and imperative, for example `fix: 修复登录布局背景颜色`. Pre-commit hooks run lint-staged and type checking, while pre-push builds the project. Pull requests should describe the change, verification performed, and linked issue; include screenshots or recordings for visible UI changes and call out configuration or translation updates.
 
 ## Agent skills
 

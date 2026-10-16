@@ -1,4 +1,4 @@
-import { CaptionsIcon, ChartAreaIcon, ChartColumnBigIcon, ChartLineIcon, ChartPieIcon, ComponentIcon, FormIcon, GaugeIcon, Grid2x2Icon, Grid3X3Icon, HomeIcon, InfoIcon, KeyIcon, LinkIcon, ListCollapseIcon, ListPlusIcon, ListTreeIcon, MapIcon, RadarIcon, RadiationIcon, SettingsIcon, Table2Icon, TableCellsMergeIcon, TelescopeIcon, WallpaperIcon } from 'lucide-react'
+import { CaptionsIcon, ChartAreaIcon, ChartColumnBigIcon, ChartLineIcon, ChartPieIcon, ComponentIcon, FormIcon, GaugeIcon, Grid2x2Icon, Grid3X3Icon, HomeIcon, InfoIcon, KeyIcon, LinkIcon, ListCollapseIcon, ListPlusIcon, ListTreeIcon, MapIcon, RadarIcon, RadiationIcon, SettingsIcon, Table2Icon, TableCellsMergeIcon, TagsIcon, TelescopeIcon, WallpaperIcon } from 'lucide-react'
 import { createElement } from 'react'
 
 const IconMap: Record<string, React.ComponentType> = {
@@ -19,6 +19,7 @@ const IconMap: Record<string, React.ComponentType> = {
   'chart': ChartPieIcon,
   'menu-collapse': ListCollapseIcon,
   'system-manage': SettingsIcon,
+  'tabs': TagsIcon,
   'extral-link': LinkIcon,
   'about': InfoIcon,
   'map': MapIcon,

@@ -1,10 +1,8 @@
-export interface RouteTab {
-  title: string
-  path: string
-  active?: boolean
-}
+import type { RouteTabView } from '@/features/routeTabs'
+
+export type RouteTab = RouteTabView
 
 export interface ChangeEvent {
   type: 'select' | 'remove'
-  tabItem: RouteTab
+  tabItem: RouteTabView
 }

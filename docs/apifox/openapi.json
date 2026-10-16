@@ -2951,7 +2951,7 @@
                         "id": "role-admin",
                         "roleName": "系统管理员",
                         "roleCode": "admin",
-                        "description": "全部菜单权限",
+                        "description": "全部页面菜单及系统管理操作权限",
                         "status": 1
                       },
                       {
@@ -3051,16 +3051,82 @@
                       "description": "查看权限演示页面内容"
                     },
                     {
+                      "code": "demo:edit",
+                      "nameZh": "编辑演示内容",
+                      "nameEn": "Edit demo content",
+                      "description": "查看权限演示页面的编辑操作"
+                    },
+                    {
+                      "code": "demo:delete",
+                      "nameZh": "删除演示内容",
+                      "nameEn": "Delete demo content",
+                      "description": "查看权限演示页面的删除操作"
+                    },
+                    {
                       "code": "user:create",
                       "nameZh": "新增用户",
                       "nameEn": "Create user",
                       "description": "创建用户账号"
                     },
                     {
+                      "code": "user:edit",
+                      "nameZh": "编辑用户",
+                      "nameEn": "Edit user",
+                      "description": "修改用户信息"
+                    },
+                    {
+                      "code": "user:delete",
+                      "nameZh": "删除用户",
+                      "nameEn": "Delete user",
+                      "description": "删除用户账号"
+                    },
+                    {
+                      "code": "user:change-status",
+                      "nameZh": "修改用户状态",
+                      "nameEn": "Change user status",
+                      "description": "启用或停用用户账号"
+                    },
+                    {
+                      "code": "role:create",
+                      "nameZh": "新增角色",
+                      "nameEn": "Create role",
+                      "description": "创建角色"
+                    },
+                    {
                       "code": "role:edit",
                       "nameZh": "编辑角色",
                       "nameEn": "Edit role",
                       "description": "修改角色信息及授权"
+                    },
+                    {
+                      "code": "role:delete",
+                      "nameZh": "删除角色",
+                      "nameEn": "Delete role",
+                      "description": "删除角色"
+                    },
+                    {
+                      "code": "role:change-status",
+                      "nameZh": "修改角色状态",
+                      "nameEn": "Change role status",
+                      "description": "启用或停用角色"
+                    },
+                    {
+                      "code": "menu:create",
+                      "nameZh": "新增菜单",
+                      "nameEn": "Create menu",
+                      "description": "创建菜单或页面"
+                    },
+                    {
+                      "code": "menu:edit",
+                      "nameZh": "编辑菜单",
+                      "nameEn": "Edit menu",
+                      "description": "修改菜单或页面"
+                    },
+                    {
+                      "code": "menu:delete",
+                      "nameZh": "删除菜单",
+                      "nameEn": "Delete menu",
+                      "description": "删除菜单或页面"
                     },
                     {
                       "code": "menu:change-status",
@@ -3111,7 +3177,7 @@
                     "id": "role-admin",
                     "roleName": "系统管理员",
                     "roleCode": "admin",
-                    "description": "全部菜单权限",
+                    "description": "全部页面菜单及系统管理操作权限",
                     "status": 1,
                     "menuIds": [
                       "menu-home",
@@ -3139,12 +3205,24 @@
                       "menu-exception-403",
                       "menu-permission-switch",
                       "menu-exception-404",
-                      "menu-exception-500"
+                      "menu-exception-500",
+                      "menu-route-tabs"
                     ],
                     "permissionCodes": [
+                      "demo:view",
+                      "demo:edit",
+                      "demo:delete",
                       "user:create",
                       "user:edit",
+                      "user:delete",
+                      "user:change-status",
+                      "role:create",
                       "role:edit",
+                      "role:delete",
+                      "role:change-status",
+                      "menu:create",
+                      "menu:edit",
+                      "menu:delete",
                       "menu:change-status"
                     ]
                   }
@@ -3180,7 +3258,7 @@
                   "menu-dashboard-data",
                   "menu-form-basic"
                 ],
-                "permissionCodes": ["demo:view", "user:create", "role:edit"]
+                "permissionCodes": ["demo:view"]
               }
             }
           }
@@ -3211,7 +3289,7 @@
                 "id": "role-admin",
                 "roleName": "系统管理员",
                 "roleCode": "admin",
-                "description": "全部菜单权限",
+                "description": "全部页面菜单及系统管理操作权限",
                 "status": 1,
                 "menuIds": [
                   "menu-home",
@@ -3238,9 +3316,26 @@
                   "menu-collapse-sub3",
                   "menu-exception-403",
                   "menu-exception-404",
-                  "menu-exception-500"
+                  "menu-exception-500",
+                  "menu-route-tabs"
                 ],
-                "permissionCodes": ["demo:view", "user:create", "role:edit"]
+                "permissionCodes": [
+                  "demo:view",
+                  "demo:edit",
+                  "demo:delete",
+                  "user:create",
+                  "user:edit",
+                  "user:delete",
+                  "user:change-status",
+                  "role:create",
+                  "role:edit",
+                  "role:delete",
+                  "role:change-status",
+                  "menu:create",
+                  "menu:edit",
+                  "menu:delete",
+                  "menu:change-status"
+                ]
               }
             }
           }
@@ -3738,6 +3833,18 @@
                           "sort": 1,
                           "status": 1,
                           "children": []
+                        },
+                        {
+                          "id": "menu-route-tabs",
+                          "nameZh": "标签页",
+                          "nameEn": "Route Tabs",
+                          "parentId": "menu-system-features",
+                          "type": "page",
+                          "path": "/systemFeatures/tabs",
+                          "icon": "tabs",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
                         }
                       ]
                     }
@@ -4176,6 +4283,18 @@
                           "sort": 1,
                           "status": 1,
                           "children": []
+                        },
+                        {
+                          "id": "menu-route-tabs",
+                          "nameZh": "标签页",
+                          "nameEn": "Route Tabs",
+                          "parentId": "menu-system-features",
+                          "type": "page",
+                          "path": "/systemFeatures/tabs",
+                          "icon": "tabs",
+                          "sort": 2,
+                          "status": 1,
+                          "children": []
                         }
                       ]
                     }
@@ -4295,7 +4414,7 @@
         "tags": ["用户"],
         "summary": "查询当前用户可访问菜单 ID",
         "operationId": "getCurrentUserMenuIds",
-        "description": "应用启动时调用一次；只返回当前用户有效的页面菜单 ID；两种演示账号均可访问“系统功能／切换权限”。",
+        "description": "应用启动时调用一次；只返回当前用户有效的页面菜单 ID；两种演示账号均可访问“系统功能／切换权限”和“系统功能／标签页”。",
         "responses": {
           "200": {
             "description": "查询当前用户可访问菜单 ID成功",
@@ -4333,6 +4452,7 @@
                       "menu-collapse-sub3",
                       "menu-exception-403",
                       "menu-permission-switch",
+                      "menu-route-tabs",
                       "menu-exception-404",
                       "menu-exception-500"
                     ]
@@ -4373,7 +4493,7 @@
                     }
                   },
                   "admin": {
-                    "summary": "管理员拥有完整演示权限",
+                    "summary": "管理员拥有演示权限及全部系统管理操作权限",
                     "value": {
                       "code": 200,
                       "msg": "查询成功",
@@ -4381,7 +4501,19 @@
                         "permissionCodes": [
                           "demo:view",
                           "demo:edit",
-                          "demo:delete"
+                          "demo:delete",
+                          "user:create",
+                          "user:edit",
+                          "user:delete",
+                          "user:change-status",
+                          "role:create",
+                          "role:edit",
+                          "role:delete",
+                          "role:change-status",
+                          "menu:create",
+                          "menu:edit",
+                          "menu:delete",
+                          "menu:change-status"
                         ]
                       }
                     }

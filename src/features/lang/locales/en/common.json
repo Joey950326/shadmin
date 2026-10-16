@@ -60,7 +60,10 @@
   "changePassword": "Change Password",
   "logout": "Log Out",
   "moreMenu": "More Menus",
-  "pagination": { "previous": "Previous", "next": "Next" },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
   "file": {
     "downloadContent": "Download Content",
     "downloadWarning": "Large downloads may take a little longer. Please wait.",
@@ -401,5 +404,27 @@
     "disable": "Disable",
     "statusChangeSuccess": "Role status updated successfully",
     "statusChangeFailed": "Failed to update role status. Please try again."
+  },
+  "routeTabsDemo": {
+    "title": "Route Tabs Demo",
+    "description": "Create tabs by navigating, then try closing tabs and setting a custom title. Tabs use pathname identity, so query strings do not create separate tabs.",
+    "routeActionsTitle": "Route tab actions",
+    "routeActionsDescription": "Navigate to an authorized page and it will appear in the top tab bar.",
+    "openPagesSection": "Open pages",
+    "openHome": "Open home",
+    "openPermissionSwitch": "Open permission switch",
+    "closeCurrent": "Close tab",
+    "closeOtherTabs": "Close other tabs",
+    "closeAllTabs": "Close all tabs",
+    "closePermissionSwitch": "Close permission switch tab",
+    "titleActionsTitle": "Custom tab title",
+    "titleActionsDescription": "Custom titles persist. Reset restores the menu title in the current language.",
+    "editTitleSection": "Edit the current tab title",
+    "titleLabel": "Custom title",
+    "titlePlaceholder": "Enter a custom title",
+    "applyTitle": "Apply title",
+    "resetTitle": "Reset title",
+    "noCurrentTab": "The current route is not in the tabs list yet.",
+    "homeCannotClose": "The home tab is pinned."
   }
 }

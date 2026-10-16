@@ -44,7 +44,8 @@
   "systemManage": "System Management",
   "permissionDemo": {
     "systemFeatures": "System Features",
-    "switch": "Permission Switch"
+    "switch": "Permission Switch",
+    "tabs": "Route Tabs"
   },
   "externalLink": "External Link",
   "about": "About Us",

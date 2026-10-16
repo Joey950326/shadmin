@@ -2,17 +2,20 @@
 
 ## 文件说明
 
-- `openapi.json`：OpenAPI 3.0.3 定义，包含现有认证、用户、部门接口及 13 个系统管理接口，共 24 个接口。
+- `openapi.json`：OpenAPI 3.0.3 定义，共 26 个接口；菜单树示例包含 `/systemFeatures/tabs`，当前用户菜单及管理员角色示例也包含 `menu-route-tabs`。
 - 接口路径不包含 `/api`；本地服务地址已配置为 `http://localhost:5173/api`。Vite 会把 `/api` 请求代理到 `.env.development` 的 `VITE_PROXY`，并移除 `/api` 前缀。
 - 请求与响应结构来自 `modules/`、`hooks/`、类型声明和页面消费逻辑。示例用户、Token、URL 和部门数据仅用于 Apifox 调试与 Mock。
 
-## 导入 Apifox
+## 更新已有 Apifox 项目
 
-1. 登录 [Apifox](https://app.apifox.com/)，新建或进入目标项目。
-2. 打开项目设置中的“导入数据”，选择“手动导入”。
-3. 选择 OpenAPI/Swagger，上传本目录的 `openapi.json`。
-4. 预览 25 个接口及数据模型；可开启“自动生成接口用例”和“导入 Servers 为环境”，然后确认导入。
-5. 再次导入更新后的文件时，建议按 `operationId` 智能合并，避免产生重复接口。
+1. 登录 [Apifox](https://app.apifox.com/)，打开已有的 `SHAdmin API` 项目。
+2. 进入“项目设置 → 数据管理 → 导入数据”，选择 `OpenAPI/Swagger`，上传仓库中的 `docs/apifox/openapi.json`。
+3. 在导入预览中选择已有模块 `SHAdmin API`，不要新建模块；确认“接口 (26)”已勾选。
+4. 对相同 Method & Path 的接口选择“覆盖已有接口”；目录不一致时保留已有目录。这样会更新 `/menu/tree`、`/menu/available-tree`、`/user/menus`、`/user/permissions`、`/permission/catalog` 及角色相关示例，不会产生重复接口。
+5. 确认导入结果中接口有新增或修改。若“接口/文档”显示 0 项，先不要认为同步成功：返回预览确认接口节点已勾选、目标模块正确，再导入。
+6. 导入后检查 `POST /menu/tree` 和 `POST /menu/available-tree` 的 200 示例：`menu-system-features` 下应有启用状态的 `menu-route-tabs`，路径为 `/systemFeatures/tabs`；检查 `POST /user/menus` 的 `menuIds` 包含 `menu-route-tabs`，`POST /permission/catalog` 包含全部 15 个稳定权限码，`POST /user/permissions` 的管理员示例包含演示权限及用户、角色、菜单管理操作权限。
+
+Apifox 的高级 Mock 期望和接口 Mock 脚本可能覆盖导入的响应示例。若上述接口已有自定义期望或 Mock 脚本，也要检查其返回值是否包含新菜单节点。
 
 ## 系统管理接口与 Mock 部署
 
@@ -24,31 +27,39 @@
 
 所有系统管理接口均使用 POST、JSON 请求体和现有 `{ code, msg, data }` 响应结构；除登录外需要 `x-access-token: Bearer <access_token>`。列表分页使用 `page`、`pageSize`；用户及角色批量删除使用 `{ "id": ["..."] }`，菜单删除使用 `{ "id": "..." }`。
 
-### 将接口导入 Apifox
+### 系统管理接口 Mock 配置
 
-1. 在 Apifox 项目中选择“导入数据”→“手动导入”→“OpenAPI/Swagger”。
-2. 上传仓库中的 `docs/apifox/openapi.json`。若已有这份 API，选择按 `operationId` 智能合并，避免重复创建。
-3. 检查“用户”“角色”“菜单”分组，以及 `/user/menus`、`/menu/available-tree` 等新接口已出现，再确认导入。
-4. 为 `POST /permission/catalog` 配置 Mock 脚本，将 `permission-catalog.mock.js` 完整内容粘贴到脚本设置中。目录包含演示页及用户、角色、菜单管理操作权限，角色表单必须从该目录选择，不接受自由输入权限码。
-5. 在 Mock 环境为接口生成 Mock 响应；角色新增、编辑等写操作仅返回成功结构，不承诺持久化，重新查询时不保证反映刚才的写入，也不实现服务端权限规则。
+`POST /permission/catalog` 使用 `permission-catalog.mock.js` 返回权限目录。若 Apifox 项目未配置此接口脚本，将该文件完整内容粘贴到“Mock → Mock 脚本”并保存。目录只用于角色表单展示，不接受自由输入权限码。
+
+角色新增、编辑等写操作仅返回成功结构，不承诺持久化；重新查询时不保证反映刚才的写入，也不实现服务端权限规则。
 
 ### 配置演示登录账号及菜单权限
 
-如需在 Apifox Mock 中使用 `user` 演示受限菜单权限：
+配置演示账号时：
 
 1. 打开 `POST /login` 的“Mock”设置，启用 Mock 脚本，将 `login.mock.js` 的完整内容粘贴并保存。
-2. 打开 `POST /user/menus` 的“Mock”设置，启用 Mock 脚本，将 `user-menus.mock.js` 的完整内容粘贴并保存。脚本用 Apifox 支持的 `$$.mockRequest.headers.get('x-access-token')` 读取鉴权头。
-3. 打开 `POST /user/permissions` 的“Mock”设置，启用 Mock 脚本，将 `user-permissions.mock.js` 的完整内容粘贴并保存。普通用户返回 `demo:view`，管理员返回 `demo:view`、`demo:edit` 和 `demo:delete`；未知或缺失 Token 返回 401。
-4. 使用 `user` / `123456` 登录。登录请求中的密码会由前端转换为 MD5；脚本同时保留 `admin` / `123456`。
-5. 脚本分别返回不同的演示 token。`user` 的菜单包含首页、仪表盘、超级表格、表单和图表，并额外允许访问“系统功能／切换权限”；不包含“系统管理”“常用组件”或“菜单嵌套”；`admin` 保留全部菜单权限。角色权限目录脚本返回 `code`、`nameZh`、`nameEn` 和 `description`；角色详情及新增／编辑契约分别以 `permissionCodes` 表达操作授权、以原有 `menuIds` 表达页面授权，两者相互独立。Mock 角色写操作不持久化，目录仅供选项展示。
+2. 打开 `POST /user/menus` 的“Mock”设置，启用 Mock 脚本，将 `user-menus.mock.js` 的完整内容粘贴并保存。脚本通过 `$$.mockRequest.headers.get('x-access-token')` 识别演示 Token。
+3. 打开 `POST /user/permissions` 的“Mock”设置，启用 Mock 脚本，将 `user-permissions.mock.js` 的完整内容粘贴并保存。普通用户仅返回 `demo:view`；管理员返回 `demo:view`、`demo:edit`、`demo:delete`，以及当前前端要求的系统管理操作权限：`user:create`、`user:edit`、`user:delete`、`user:change-status`，`role:create`、`role:edit`、`role:delete`、`role:change-status`，`menu:create`、`menu:edit`、`menu:delete`、`menu:change-status`。未知或缺失 Token 返回 401。
+4. 使用 `user` / `123456` 或 `admin` / `123456` 登录；密码由前端转换为 MD5。登录脚本为两种账号返回不同 Token。
 
-登录、菜单及当前用户权限脚本只模拟对应响应，不创建真实用户记录，也不持久化数据。`permission-catalog.mock.js` 仅返回静态目录；角色新增／编辑等 Mock 写操作同样不承诺持久化。若还希望 `user` 出现在用户管理列表中，需要另外配置 `/user/list` 的 Mock 数据；不能通过这两个脚本创建可供真实后端使用的账号。
+`user-menus.mock.js` 已将 `menu-route-tabs` 授权给两个演示账号；`admin` 保留完整页面菜单权限。操作权限由独立的 `/user/permissions` 响应控制：管理员 Mock 应包含上列 `user:*`、`role:*`、`menu:*` 权限码，普通用户仅有 `demo:view`。`permission-catalog.mock.js` 提供可分配权限目录，不会自动授予权限；页面菜单 `menuIds` 与操作权限 `permissionCodes` 必须分别配置。`/menu/tree` 菜单节点由 `openapi.json` 的 200 响应示例提供，不需要额外 Mock 脚本。若重新导入后接口响应仍不一致，检查并更新覆盖响应的自定义 Mock 期望或脚本。
+
+这些脚本只模拟响应，不创建用户记录、不保存角色写操作，也不修改生产后端的菜单或授权。生产部署仍需由后端添加 `/systemFeatures/tabs` 菜单节点，并分别为 `user`、`admin` 配置页面菜单授权（`menuIds`）和操作权限码（`permissionCodes`）；管理员需拥有前端管理页要求的上述操作权限。
 
 ### 配置本地前端访问 Apifox Mock
 
 仓库的 `vite.config.ts` 会将 `/api/*` 请求转发到 `.env.development` 的 `VITE_PROXY`，并移除 `/api` 前缀。请在 Apifox 的 Mock 服务中发布／启用已导入 API 的 Mock，并将 `VITE_PROXY` 设置为 Apifox 提供的 Mock 基础 URL（不要在这里附加 `/api`；具体路径前缀以 Apifox 生成的 URL 为准）。保存后重启 `pnpm dev`，确认浏览器请求会访问 `/api/role/list`、`/api/menu/tree` 等路径，并在 Apifox Mock 日志中看到对应调用。
 
 若使用本地后端而非 Apifox Mock，将 `VITE_PROXY` 改为本地后端地址。前端请求路径仍使用 `/api/<接口路径>`，由 Vite 代理剥除 `/api` 后转发。修改环境变量后必须重启 Vite。
+
+### 管理员验收
+
+1. 在 Apifox Cloud Mock 验证 `POST /menu/tree` 返回 `menu-route-tabs`，`POST /user/menus` 的管理员 `menuIds` 包含该 ID，并确认 `POST /user/permissions` 的管理员响应含前端要求的全部操作权限码。
+2. 重启 `pnpm dev`，退出后重新使用 `admin` / `123456` 登录，让应用重新读取菜单和权限。
+3. 确认侧边栏出现“系统功能 → 标签页”，点击后能打开 `/systemFeatures/tabs`；也可直接访问该路径验证路由授权。
+4. 若接口响应已有该节点但页面仍不显示，检查 `/user/menus` 的 Token 授权、浏览器网络中的两个响应，以及 Apifox 的 Mock 期望/脚本覆盖。
+
+本地合同测试可运行 `pnpm test:apifox-menu`、`pnpm test:apifox-permissions`、`pnpm test:role-permissions`，以及 `node --test docs/apifox/permission-catalog.mock.test.cjs`。
 
 > 初始密码 `123456` 的 MD5 示例只用于已确认的当前契约及 Mock；所有新用户共用该初始密码，按需求本期不强制首次登录修改，不应直接用于真实生产账号。
 

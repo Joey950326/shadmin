@@ -44,7 +44,8 @@
   "systemManage": "系统管理",
   "permissionDemo": {
     "systemFeatures": "系统功能",
-    "switch": "切换权限"
+    "switch": "切换权限",
+    "tabs": "标签页"
   },
   "externalLink": "外部链接",
   "about": "关于我们",

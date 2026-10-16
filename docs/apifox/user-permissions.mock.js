@@ -2,8 +2,26 @@ const authorization = String(
   $$.mockRequest.headers.get('x-access-token') || '',
 ).replace(/^Bearer\s+/i, '')
 
+const adminPermissionCodes = [
+  'demo:view',
+  'demo:edit',
+  'demo:delete',
+  'user:create',
+  'user:edit',
+  'user:delete',
+  'user:change-status',
+  'role:create',
+  'role:edit',
+  'role:delete',
+  'role:change-status',
+  'menu:create',
+  'menu:edit',
+  'menu:delete',
+  'menu:change-status',
+]
+
 const permissionCodesByToken = {
-  'mock-access-token-2026': ['demo:view', 'demo:edit', 'demo:delete'],
+  'mock-access-token-2026': adminPermissionCodes,
   'mock-access-token-user': ['demo:view'],
 }
 const permissionCodes = permissionCodesByToken[authorization]

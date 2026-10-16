@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react'
-import type { RouteTab } from './types'
+import type { RouteTabView } from '@/features/routeTabs'
 import { XIcon } from 'lucide-react'
 import { memo } from 'react'
 import { useNavigate } from 'react-router'
@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils'
 import { useRouteTabListContext } from './hooks'
 
 interface RouteTabItemProps {
-  tabItem: RouteTab
-  onClick?: (tabItem: RouteTab) => void
-  onClose?: (path: RouteTab) => void
+  tabItem: RouteTabView
+  onClick?: (tabItem: RouteTabView) => void
+  onClose?: (path: RouteTabView) => void
 }
 
 function RouteTabItem({ tabItem, onClick, onClose }: RouteTabItemProps) {
@@ -46,7 +46,7 @@ function RouteTabItem({ tabItem, onClick, onClose }: RouteTabItemProps) {
     >
       <span className={cn('p-2 flex items-center text-xs')}>{title}</span>
       {tabItem.path !== '/home/index' && (
-        <Button variant="ghost" className="size-6 rounded-full hover:bg-foreground/10" onClick={handleCloseClick}>
+        <Button variant="ghost" className="size-6 rounded-full hover:bg-foreground/10" onClick={handleCloseClick} aria-label={`Close ${title}`}>
           <XIcon size={8} />
         </Button>
       )}
