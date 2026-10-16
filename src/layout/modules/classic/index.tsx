@@ -23,10 +23,10 @@ export default function ClassicLayout() {
           <Sider />
 
           {/* 主要内容区 */}
-          <div className="flex-1 w-full h-full flex-col overflow-hidden">
+          <div className="flex-1 w-full min-h-0 flex flex-col overflow-hidden">
             <RouteTabs />
             <main
-              className="flex-1 h-full overflow-auto p-2 bg-primary/10"
+              className="flex-1 min-h-0 overflow-hidden p-2 bg-primary/10"
             >
               <ChildrenRoute />
             </main>

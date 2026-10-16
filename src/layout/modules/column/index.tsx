@@ -99,7 +99,7 @@ export default function ColumnLayout() {
           <div className="flex-1 h-full bg-primary/10 flex flex-col size-full overflow-hidden">
             <Header className="shrink-0" />
             <RouteTabs />
-            <main className="flex-1 overflow-auto p-2">
+            <main className="flex-1 min-h-0 overflow-hidden p-2">
               <ChildrenRoute />
             </main>
           </div>

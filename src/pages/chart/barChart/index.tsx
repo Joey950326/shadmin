@@ -138,14 +138,17 @@ export default function BarChartCmp() {
     setHoverOpacity(prev => ({ ...prev, ...{ [datakey]: 1 } }))
   }, [setHoverOpacity])
   return (
-    <Card className="size-full">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>{t('chart.barTitle')}</CardTitle>
         <CardDescription>{t('chart.simpleBarChart')}</CardDescription>
       </CardHeader>
       {/* 这里必须加上overflow-hidden 否则图表无法响应式 */}
       <CardContent className="overflow-hidden">
-        <ChartContainer config={chartConfig} className="size-full min-h-75">
+        <ChartContainer
+          config={chartConfig}
+          className="w-full aspect-auto h-[clamp(16.5rem,min(56.25vw,calc(100vh-19rem)),32rem)]"
+        >
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis

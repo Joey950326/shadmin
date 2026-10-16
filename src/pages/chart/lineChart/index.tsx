@@ -134,7 +134,7 @@ function LineChartCmp() {
   }, [setHoverOpacity])
 
   return (
-    <Card className="size-full py-4 sm:py-0">
+    <Card className="w-full py-4 sm:py-0">
       <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
           <CardTitle>{t('chart.lineTitle')}</CardTitle>
@@ -165,7 +165,7 @@ function LineChartCmp() {
       <CardContent className="overflow-hidden px-2 md:px-4">
         <ChartContainer
           config={chartConfig}
-          className="size-full min-h-[300px]"
+          className="w-full aspect-auto h-[clamp(16.5rem,min(56.25vw,calc(100vh-19rem)),32rem)]"
         >
           <LineChart
             accessibilityLayer
