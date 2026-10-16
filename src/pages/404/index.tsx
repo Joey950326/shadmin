@@ -13,7 +13,7 @@ function Expection404() {
         data={svgSrc}
         type="image/svg+xml"
         aria-hidden="true"
-        className="h-auto w-full max-w-[28rem]"
+        className="h-auto w-full max-w-md"
       />
       <div className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight">{t('notFound.title')}</h1>

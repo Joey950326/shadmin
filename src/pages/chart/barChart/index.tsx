@@ -145,7 +145,7 @@ export default function BarChartCmp() {
       </CardHeader>
       {/* 这里必须加上overflow-hidden 否则图表无法响应式 */}
       <CardContent className="overflow-hidden">
-        <ChartContainer config={chartConfig} className="size-full min-h-[300px]">
+        <ChartContainer config={chartConfig} className="size-full min-h-75">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
