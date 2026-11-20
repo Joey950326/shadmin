@@ -26,7 +26,7 @@ const dynamicRoutes = [
       // 表格
       {
         path: 'proTable',
-        handle: { title: '超级表格' },
+        handle: { title: 'menu:proTable' },
         children: [
           {
             index: true,

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Navigate, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
 import { useAppSelector } from '@/store/hooks'
@@ -8,6 +9,7 @@ interface NoAuthGateProps {
 }
 
 export default function NoAuthGate({ children }: NoAuthGateProps) {
+  const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const token = useAppSelector(selectToken)
   const isManualLogin = useAppSelector(selectIsManualLogin)
@@ -17,7 +19,7 @@ export default function NoAuthGate({ children }: NoAuthGateProps) {
   if (hasToken) {
     const redirectPath = searchParams.get('redirect') || '/home/index'
     if (!isManualLogin) {
-      toast.error('您已登录，无需访问此页面', { position: 'top-center', id: 'no-auth-gate' })
+      toast.error(t('auth:login.alreadyLoggedInNoNeed'), { position: 'top-center', id: 'no-auth-gate' })
     }
     return <Navigate to={redirectPath} replace />
   }

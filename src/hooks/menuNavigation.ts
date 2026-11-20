@@ -1,5 +1,6 @@
 import type { MenuItem } from '@/layout/components/MenuItem'
 import type { Api } from '@/services/api/types/api'
+import { resolveMenuIconName } from '@/layout/shared'
 
 export function isAuthorizedPagePath(
   tree: Api.Menu.Node[],
@@ -47,7 +48,7 @@ export function buildAuthorizedMenu(
           name: node.id,
           path: node.path,
           meta: {
-            icon: node.icon,
+            icon: resolveMenuIconName(node.icon, node.id),
             title: language.startsWith('zh') ? node.nameZh : node.nameEn,
           },
         }]
@@ -62,7 +63,7 @@ export function buildAuthorizedMenu(
         name: node.id,
         path: node.path || '#',
         meta: {
-          icon: node.icon,
+          icon: resolveMenuIconName(node.icon, node.id),
           title: language.startsWith('zh') ? node.nameZh : node.nameEn,
         },
         children,

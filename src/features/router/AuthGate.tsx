@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
 import { useAppSelector } from '@/store/hooks'
@@ -8,6 +9,7 @@ interface AuthGateProps {
 }
 
 export default function AuthGate({ children }: AuthGateProps) {
+  const { t } = useTranslation()
   const location = useLocation()
   const [searchParams] = useSearchParams()
   const token = useAppSelector(selectToken)
@@ -19,12 +21,12 @@ export default function AuthGate({ children }: AuthGateProps) {
   if (!hasToken) {
     const redirectPath = `/auth/login?redirect=${encodeURIComponent(location.pathname)}`
     if (!isManualLogout) {
-      toast.error('您需要登录才能访问此页面', { position: 'top-center', id: 'auth-gate' })
+      toast.error(t('auth:login.loginRequiredToAccess'), { position: 'top-center', id: 'auth-gate' })
     }
     return <Navigate to={redirectPath} replace />
   }
   if (searchParams.get('redirect')) {
-    toast.success('正在跳转...', { position: 'top-center', id: 'auth-gate-redirect' })
+    toast.success(t('auth:login.redirecting'), { position: 'top-center', id: 'auth-gate-redirect' })
     return <Navigate to={searchParams.get('redirect')!} />
   }
   return <>{children}</>
